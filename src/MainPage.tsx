@@ -50,15 +50,19 @@ function App() {
   const [outgoingMessageTextColor, setOutgoingMessageTextColor] = useState("");
   const [messageFieldTextColor, setMessageFieldTextColor] = useState("");
 
-  const botId = queryParams.get("botId") || "7";
-  const ID = createUUID();
+  const botId = queryParams.get("botId") || "2";
+  const [ID, setID] = useState(createUUID());
 
   const getData = async () => {
     const response = await axios.get(
-      "https://chat-dev.witlingo.com/api/chat/" + botId + "/"
+      "https://chat.witlingo.com/api/chat/" + botId + "/"
     );
     return response.data.data;
   };
+
+  // useEffect(() => {
+  //   ID = createUUID();
+  // }, []);
 
   useEffect(() => {
     const data = getData();
