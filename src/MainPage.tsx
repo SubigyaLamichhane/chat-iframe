@@ -51,7 +51,7 @@ function App() {
   const [messageFieldTextColor, setMessageFieldTextColor] = useState("");
 
   const botId = queryParams.get("botId") || "2";
-  const [ID, setID] = useState(createUUID());
+  const [ID, setID] = useState(crypto.randomUUID());
 
   const getData = async () => {
     const response = await axios.get(
