@@ -29,6 +29,7 @@ function App() {
   const [fetched, setFetched] = useState(false);
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const inputBoxRef = useRef<HTMLInputElement>(null);
   // console.log(location.search);
   const queryParams = new URLSearchParams(location.search);
   const parent = useRef(null);
@@ -81,21 +82,15 @@ function App() {
   });
 
   const botId = queryParams.get("botId") || "2";
-  // const botUuid = queryParams.get("botUuid");
   const [ID, setID] = useState(crypto.randomUUID());
 
   const getData = async () => {
     const response = await axios.get(apiURL + "chat/" + botId + "/");
-    // console.log(response.data.data);
     return response.data.data;
   };
 
   const getSidebarData = async () => {
-    //make api call for sidebar data
-
     const response2 = await axios.get(apiURL + "chat/" + botId + "/");
-
-    // console.log(response2.data.data);
 
     const response = {
       data: {
@@ -175,14 +170,6 @@ function App() {
         {fetched && (
           <div
             className="hidden md:block w-1/3 transition-all duration-500 ease-in-out"
-            // classNames={{
-            //   enter: "transform transition duration-[500ms] ease-in-out",
-            //   enterFrom: "translate-x-full",
-            //   enterTo: "translate-x-0",
-            //   leave: "transform transition duration-[500ms] ease-in-out",
-            //   leaveFrom: "translate-x-0",
-            //   leaveTo: "translate-x-full",
-            // }}
             style={{
               backgroundColor: sidebarCustomization.background_color,
             }}
@@ -303,13 +290,14 @@ function App() {
                   },
                 ]);
                 messageParent.current && autoAnimate(messageParent.current);
-                // console.log(bottomRef.current);
+
                 bottomRef.current?.scrollIntoView();
-                //   handleMessageSubmit(message);
               }}
             >
               <div className="flex">
                 <input
+                  autoFocus
+                  ref={inputBoxRef}
                   value={message}
                   placeholder="Type your message..."
                   onChange={(e) => setMessage(e.target.value)}
