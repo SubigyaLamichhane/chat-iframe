@@ -64,6 +64,7 @@ function App() {
     background_color: "#E6F5F7",
     // background_color: "#FFFFFF",
     logo: "https://witlingo.com/wp-content/uploads/2019/07/witlingo_logo.png",
+    text_color: "#000000",
     // logo: "",
     links: [
       {
@@ -97,6 +98,7 @@ function App() {
         background_color: response2.data.data.background_color,
         logo: response2.data.data.avatar,
         links: response2.data.data.urls as { name: string; url: string }[],
+        text_color: response2.data.data.text_color,
       },
     };
 
@@ -197,7 +199,7 @@ function App() {
                 <ul
                   className="p-2 list-disc"
                   style={{
-                    color: "#008ea4",
+                    color: sidebarCustomization.text_color,
                   }}
                 >
                   {sidebarCustomization.links.map((link, index) => (
@@ -206,7 +208,8 @@ function App() {
                         key={index}
                         className="text-left font-bold text-sm"
                         style={{
-                          color: "#008ea4",
+                          // color: sidebarCustomization.text_color,
+                          color: sidebarCustomization.text_color,
                         }}
                         href={link.url}
                         target="_blank"
