@@ -51,11 +51,11 @@ function App() {
   //   queryParams.get("messageFieldTextColor") || "#ffffff";
 
   const [backgroundColor, setBackgroundColor] = useState("ffffff");
-  const [messageFieldColor, setMessageFieldColor] = useState("6a16b0");
+  const [messageFieldColor, setMessageFieldColor] = useState("194850");
   const [incommingMessageColor, setIncommingMessageColor] = useState("134f9c");
   const [incommingMessageTextColor, setIncommingMessageTextColor] =
     useState("ffffff");
-  const [outgoingMessageColor, setOutgoingMessageColor] = useState("02764c");
+  const [outgoingMessageColor, setOutgoingMessageColor] = useState("194850");
   const [outgoingMessageTextColor, setOutgoingMessageTextColor] =
     useState("ffffff");
   const [answering, setAnswering] = useState(false);
@@ -121,7 +121,7 @@ function App() {
     const sidebarData = getSidebarData();
     sidebarData.then((data) => {
       setSidebarCustomization(data);
-      // console.log(data);
+      console.log(data);
       setFetched(true);
       parent.current && autoAnimate(parent.current);
     });
