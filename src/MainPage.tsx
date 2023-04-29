@@ -20,7 +20,6 @@ function createUUID() {
 }
 
 function App() {
-  const [count, setCount] = useState(0);
   const location = useLocation();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
@@ -59,6 +58,7 @@ function App() {
   const [outgoingMessageColor, setOutgoingMessageColor] = useState("02764c");
   const [outgoingMessageTextColor, setOutgoingMessageTextColor] =
     useState("ffffff");
+  const [answering, setAnswering] = useState(false);
   const [messageFieldTextColor, setMessageFieldTextColor] = useState("ffffff");
   const [sidebarCustomization, setSidebarCustomization] = useState({
     background_color: "#E6F5F7",
@@ -127,15 +127,15 @@ function App() {
 
   const renderMessages = () => {
     return messages.map((message, index) => (
-      <div
+      <ul
         key={index}
         ref={messageParent}
         className={`flex items-center ${
           message.from === "us" ? "justify-end" : "justify-start"
         }`}
       >
-        <div
-          className={`py-1 px-4 mb-2 max-w-1/2 ${
+        <li
+          className={`fadeIn py-1 px-4 mb-2 max-w-1/2 ${
             message.from === "us"
               ? "rounded-tl-lg rounded-br-lg"
               : "max-w-lg rounded-tr-lg rounded-bl-lg"
@@ -153,8 +153,8 @@ function App() {
           }
         >
           <p className="w-full text-justify max-w-full">{message.message}</p>
-        </div>
-      </div>
+        </li>
+      </ul>
     ));
   };
   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -254,6 +254,41 @@ function App() {
               </div>
             ))}
           </div> */}
+            {answering && (
+              <div className="w-full p-2 fade-in">
+                <div
+                  className="flex justify-start w-fit p-2 rounded-full"
+                  style={{
+                    backgroundColor: "#" + messageFieldColor,
+                  }}
+                >
+                  <div className="container relative">
+                    <div
+                      className="bouncing-ball "
+                      style={{
+                        backgroundColor: "#" + backgroundColor,
+                      }}
+                    ></div>
+                  </div>
+                  <div className="container  relative">
+                    <div
+                      className="bouncing-ball2  "
+                      style={{
+                        backgroundColor: "#" + backgroundColor,
+                      }}
+                    ></div>
+                  </div>
+                  <div className="container  relative">
+                    <div
+                      className="bouncing-ball "
+                      style={{
+                        backgroundColor: "#" + backgroundColor,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            )}
             <form
               className="w-full"
               onSubmit={async (e) => {
@@ -267,6 +302,7 @@ function App() {
                   },
                 ]);
                 messageParent.current && autoAnimate(messageParent.current);
+                setAnswering(true);
                 bottomRef.current?.scrollIntoView({ behavior: "smooth" });
                 const prevMessage = message;
                 setMessage("");
@@ -276,7 +312,8 @@ function App() {
                   apiURL + `chat/${botId}/${ID}/`,
                   bodyFormData
                 );
-                console.log(response.data);
+
+                setAnswering(false);
 
                 setMessages([
                   ...messages,
