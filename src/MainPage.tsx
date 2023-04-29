@@ -51,8 +51,8 @@ function App() {
   //   queryParams.get("messageFieldTextColor") || "#ffffff";
 
   const [backgroundColor, setBackgroundColor] = useState("ffffff");
-  const [messageFieldColor, setMessageFieldColor] = useState("3b3b3b");
-  const [incommingMessageColor, setIncommingMessageColor] = useState("04aa6d");
+  const [messageFieldColor, setMessageFieldColor] = useState("6a16b0");
+  const [incommingMessageColor, setIncommingMessageColor] = useState("134f9c");
   const [incommingMessageTextColor, setIncommingMessageTextColor] =
     useState("ffffff");
   const [outgoingMessageColor, setOutgoingMessageColor] = useState("02764c");
@@ -116,10 +116,12 @@ function App() {
         setMessageFieldTextColor(data.settings.messageFieldTextColor);
         setBackgroundColor(data.settings.backgroundColor);
       }
+      // console.log("data", data);
     });
     const sidebarData = getSidebarData();
     sidebarData.then((data) => {
       setSidebarCustomization(data);
+      // console.log(data);
       setFetched(true);
       parent.current && autoAnimate(parent.current);
     });
@@ -135,10 +137,10 @@ function App() {
         }`}
       >
         <li
-          className={`fadeIn py-1 px-4 mb-2 max-w-1/2 ${
+          className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
             message.from === "us"
-              ? "rounded-tl-lg rounded-br-lg"
-              : "max-w-lg rounded-tr-lg rounded-bl-lg"
+              ? "rounded-br-xl rounded-tl-xl"
+              : "max-w-lg rounded-bl-xl rounded-tr-xl"
           }`}
           style={
             message.from === "us"
@@ -166,6 +168,13 @@ function App() {
       }}
       className="h-screen"
     >
+      <style>
+        {`
+        input::placeholder {
+          color: #${backgroundColor};
+        }
+        `}
+      </style>
       <div className="flex" ref={parent}>
         {fetched && (
           <div
@@ -178,7 +187,7 @@ function App() {
               <div className=" h-1/4"></div>
               <div className="flex flex-col items-center">
                 <img
-                  className="w-1/2"
+                  className="w-1/2 fadeIn"
                   src={sidebarCustomization.logo}
                   alt="logo"
                 />

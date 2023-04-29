@@ -75,3 +75,9 @@
 .fade-in {
   animation: 4s ease-out 0s 1 slideInFromLeft;
 }
+
+input::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  /* color: white; */
+  opacity: 0.8; /* Firefox */
+}
