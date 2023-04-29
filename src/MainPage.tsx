@@ -34,6 +34,8 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
+  const apiURL = "https://chat-dev.witlingo.com/api/";
+
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
 
   // const messageFieldColor = queryParams.get("messageFieldColor") || "#fff";
@@ -79,13 +81,11 @@ function App() {
   });
 
   const botId = queryParams.get("botId") || "2";
-  const botUuid = queryParams.get("botUuid");
+  // const botUuid = queryParams.get("botUuid");
   const [ID, setID] = useState(crypto.randomUUID());
 
   const getData = async () => {
-    const response = await axios.get(
-      "https://chat.witlingo.com/api/chat/" + botId + "/"
-    );
+    const response = await axios.get(apiURL + "chat/" + botId + "/");
     // console.log(response.data.data);
     return response.data.data;
   };
@@ -93,9 +93,7 @@ function App() {
   const getSidebarData = async () => {
     //make api call for sidebar data
 
-    const response2 = await axios.get(
-      "https://chat-dev.witlingo.com/api/chat/" + botId + "/"
-    );
+    const response2 = await axios.get(apiURL + "chat/" + botId + "/");
 
     // console.log(response2.data.data);
 
@@ -288,7 +286,7 @@ function App() {
                 const bodyFormData = new FormData();
                 bodyFormData.append("message", prevMessage);
                 const response = await axios.post(
-                  `https://chat.witlingo.com/api/chat/${botId}/${ID}/`,
+                  apiURL + `chat/${botId}/${ID}/`,
                   bodyFormData
                 );
                 console.log(response.data);
