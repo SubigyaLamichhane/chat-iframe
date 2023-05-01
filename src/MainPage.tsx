@@ -129,6 +129,11 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    // 👇️ scroll to bottom every time messages change
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const renderMessages = () => {
     return messages.map((message, index) => (
       <ul
@@ -243,11 +248,46 @@ function App() {
               <div
                 // id="message-box"
                 ref={messageDivRef}
-                className="w-full p-4 overflow-y-auto overflow-x-hidden"
+                className="w-full p-4 pb-0 overflow-y-auto overflow-x-hidden"
               >
                 {renderMessages()}
-                <div ref={bottomRef} className="h-6"></div>
-              </div>
+                <div ref={bottomRef} className="h-6"></div>{" "}
+                {answering && (
+                  <div className="w-full p-2 fade-in">
+                    <div
+                      className="flex justify-start w-fit p-2 rounded-full"
+                      style={{
+                        backgroundColor: "#" + messageFieldColor,
+                      }}
+                    >
+                      <div className="container relative">
+                        <div
+                          className="bouncing-ball "
+                          style={{
+                            backgroundColor: "#" + backgroundColor,
+                          }}
+                        ></div>
+                      </div>
+                      <div className="container  relative">
+                        <div
+                          className="bouncing-ball2  "
+                          style={{
+                            backgroundColor: "#" + backgroundColor,
+                          }}
+                        ></div>
+                      </div>
+                      <div className="container  relative">
+                        <div
+                          className="bouncing-ball "
+                          style={{
+                            backgroundColor: "#" + backgroundColor,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>{" "}
             </div>
 
             {/* <div className="md:hidden p-4 w-full flex justify-between">
@@ -266,41 +306,7 @@ function App() {
               </div>
             ))}
           </div> */}
-            {answering && (
-              <div className="w-full p-2 fade-in">
-                <div
-                  className="flex justify-start w-fit p-2 rounded-full"
-                  style={{
-                    backgroundColor: "#" + messageFieldColor,
-                  }}
-                >
-                  <div className="container relative">
-                    <div
-                      className="bouncing-ball "
-                      style={{
-                        backgroundColor: "#" + backgroundColor,
-                      }}
-                    ></div>
-                  </div>
-                  <div className="container  relative">
-                    <div
-                      className="bouncing-ball2  "
-                      style={{
-                        backgroundColor: "#" + backgroundColor,
-                      }}
-                    ></div>
-                  </div>
-                  <div className="container  relative">
-                    <div
-                      className="bouncing-ball "
-                      style={{
-                        backgroundColor: "#" + backgroundColor,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            )}
+
             <form
               className="w-full"
               onSubmit={async (e) => {
@@ -315,7 +321,7 @@ function App() {
                 ]);
                 messageParent.current && autoAnimate(messageParent.current);
                 setAnswering(true);
-                bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+                bottomRef.current?.scrollIntoView();
                 const prevMessage = message;
                 setMessage("");
                 const bodyFormData = new FormData();
@@ -325,6 +331,7 @@ function App() {
                   bodyFormData
                 );
 
+                bottomRef.current?.scrollIntoView();
                 setAnswering(false);
 
                 setMessages([
