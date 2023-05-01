@@ -161,7 +161,9 @@ function App() {
                 }
           }
         >
-          <p className="w-full text-justify max-w-full">{message.message}</p>
+          <p className="w-full md:text-justify text-left max-w-full">
+            {message.message}
+          </p>
         </li>
       </ul>
     ));
