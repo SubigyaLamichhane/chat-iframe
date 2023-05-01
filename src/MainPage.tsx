@@ -239,7 +239,7 @@ function App() {
                 />
               </div>
             )}
-            <div className="flex-grow flex flex-col w-full justify-end">
+            <div className="flex-grow flex flex-col w-full justify-end overflow-auto">
               <div
                 // id="message-box"
                 ref={messageDivRef}
