@@ -34,7 +34,8 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
-  const apiURL = "https://chat-dev.witlingo.com/api/";
+  const apiURL = "https://chat.witlingo.com/api/";
+  // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
 
