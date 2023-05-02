@@ -239,11 +239,13 @@ function App() {
                   backgroundColor: sidebarCustomization.background_color,
                 }}
               >
-                <img
-                  className="h-12"
-                  src={sidebarCustomization.logo}
-                  alt="logo"
-                />
+                {sidebarCustomization.logo && (
+                  <img
+                    className="h-12"
+                    src={sidebarCustomization.logo}
+                    alt="logo"
+                  />
+                )}
               </div>
             )}
             <div className="flex-grow flex flex-col w-full justify-end overflow-auto">
