@@ -34,7 +34,7 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
-  const apiURL = "https://chat.witlingo.com/api/";
+  const apiURL = "https://chat-dev.witlingo.com/api/";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
@@ -124,7 +124,7 @@ function App() {
     const sidebarData = getSidebarData();
     sidebarData.then((data) => {
       setSidebarCustomization(data);
-      console.log(data);
+      // console.log(data);
       setFetched(true);
       parent.current && autoAnimate(parent.current);
     });
@@ -157,8 +157,8 @@ function App() {
                   color: "#" + outgoingMessageTextColor,
                 }
               : {
-                  backgroundColor: "#" + incommingMessageColor,
-                  color: "#" + incommingMessageTextColor,
+                  backgroundColor: sidebarCustomization.background_color,
+                  color: sidebarCustomization.text_color,
                 }
           }
         >
