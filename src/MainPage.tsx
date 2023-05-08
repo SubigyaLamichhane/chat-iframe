@@ -34,7 +34,7 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
-  const apiURL = "https://chat.witlingo.com/api/";
+  const apiURL = "https://chat-dev.witlingo.com/api/";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
@@ -102,6 +102,16 @@ function App() {
         text_color: response2.data.data.text_color,
       },
     };
+
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      //@ts-ignore
+      link.rel = "icon";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    }
+    //@ts-ignore
+    link.href = response.data.logo;
 
     return response.data;
   };
