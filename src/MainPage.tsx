@@ -264,7 +264,7 @@ function App() {
               <div
                 // id="message-box"
                 ref={messageDivRef}
-                className="w-full p-4 pb-0 max-h-[calc(100vh-150px)] md:max-h-screen overflow-y-auto overflow-x-hidden"
+                className="w-full p-4 pb-0 max-h-[calc(100vh-9rem)] md:max-h-screen overflow-y-auto overflow-x-hidden"
               >
                 {renderMessages()}
                 <div ref={bottomRef} className="h-6"></div>{" "}
