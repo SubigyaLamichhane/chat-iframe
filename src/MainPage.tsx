@@ -34,7 +34,7 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
-  const apiURL = "https://chat.witlingo.com/api/";
+  const apiURL = "https://chat-dev.witlingo.com/api/";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
@@ -186,7 +186,7 @@ function App() {
       style={{
         backgroundColor: "#" + backgroundColor,
       }}
-      className="h-screen"
+      className="md:h-screen "
     >
       <style>
         {`
@@ -203,7 +203,7 @@ function App() {
               backgroundColor: sidebarCustomization.background_color,
             }}
           >
-            <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-col items-center justify-center md:h-screen">
               <div className=" h-1/4"></div>
               <div className="flex flex-col items-center">
                 <img
@@ -242,7 +242,7 @@ function App() {
           </div>
         )}
         {fetched && (
-          <div className="flex-grow flex flex-col h-screen justify-end items-end">
+          <div className="flex-grow flex flex-col md:h-screen justify-end items-end">
             {fetched && (
               <div
                 className="md:hidden w-full h-20 flex justify-center items-center"
@@ -259,7 +259,8 @@ function App() {
                 )}
               </div>
             )}
-            <div className="flex-grow flex flex-col w-full justify-end overflow-auto">
+            {/* <div className=" bg-black min-h-full"></div> */}
+            <div className="fixed bottom-16 md:relative md:bottom-0 flex-grow flex flex-col w-full justify-end overflow-auto">
               <div
                 // id="message-box"
                 ref={messageDivRef}
@@ -365,7 +366,7 @@ function App() {
                 bottomRef.current?.scrollIntoView();
               }}
             >
-              <div className="flex">
+              <div className="flex fixed bottom-0 w-full md:relative">
                 <input
                   autoFocus
                   ref={inputBoxRef}
