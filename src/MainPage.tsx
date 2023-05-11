@@ -34,7 +34,7 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
-  const apiURL = "https://chat.witlingo.com/api/";
+  const apiURL = "https://chat-dev.witlingo.com/api/";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
@@ -323,7 +323,7 @@ function App() {
           </div> */}
 
             <form
-              className="w-full absolute  md:flex"
+              className="w-full absolute bottom-0 md:relative flex"
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (message === "") return;
@@ -365,7 +365,7 @@ function App() {
                 bottomRef.current?.scrollIntoView();
               }}
             >
-              <div className="flex">
+              <div className="flex w-full">
                 <input
                   autoFocus
                   ref={inputBoxRef}
