@@ -263,7 +263,7 @@ function App() {
               <div
                 // id="message-box"
                 ref={messageDivRef}
-                className="w-full p-4 pb-0 overflow-y-auto overflow-x-hidden"
+                className="w-full p-4 pb-20 md:pb-0 overflow-y-auto overflow-x-hidden"
               >
                 {renderMessages()}
                 <div ref={bottomRef} className="h-6"></div>{" "}
@@ -323,7 +323,7 @@ function App() {
           </div> */}
 
             <form
-              className="w-full"
+              className="w-full absolute  md:flex"
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (message === "") return;
