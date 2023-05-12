@@ -150,10 +150,10 @@ function App() {
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, answering]);
 
   const renderMessages = () => {
-    return messages.map((message, index) => (
+    return messages.map((message: any, index: any) => (
       <ul
         key={index}
         ref={messageParent}
@@ -179,7 +179,7 @@ function App() {
                 }
           }
         >
-          <p className="w-full md:text-justify text-left max-w-full">
+          <p className="w-full lg:text-justify text-left max-w-full">
             {message.message}
           </p>
         </li>
@@ -205,7 +205,7 @@ function App() {
       <div className="flex" ref={parent}>
         {fetched && (
           <div
-            className="hidden md:block w-1/3 transition-all duration-500 ease-in-out"
+            className="hidden lg:block w-1/3 transition-all duration-500 ease-in-out"
             style={{
               backgroundColor: sidebarCustomization.background_color,
             }}
@@ -252,7 +252,7 @@ function App() {
           <div className="flex-grow flex flex-col h-screen justify-end items-end">
             {fetched && (
               <div
-                className="md:hidden w-full h-20 flex justify-center items-center"
+                className="lg:hidden w-full h-20 flex justify-center items-center"
                 style={{
                   backgroundColor: sidebarCustomization.background_color,
                 }}
@@ -270,7 +270,7 @@ function App() {
               <div
                 // id="message-box"
                 ref={messageDivRef}
-                className="w-full p-4 pb-20 md:pb-0 overflow-y-auto overflow-x-hidden"
+                className="w-full p-4 pb-20 lg:pb-0 overflow-y-auto overflow-x-hidden"
               >
                 {renderMessages()}
                 <div ref={bottomRef} className="h-6"></div>{" "}
@@ -312,7 +312,7 @@ function App() {
               </div>{" "}
             </div>
 
-            {/* <div className="md:hidden p-4 w-full flex justify-between">
+            {/* <div className="lg:hidden p-4 w-full flex justify-between">
             {sidebarCustomization.links.map((link, index) => (
               <div className="flex-1 flex justify-center p-2">
                 <a
@@ -330,7 +330,7 @@ function App() {
           </div> */}
 
             <form
-              className="w-full absolute bottom-0 md:relative flex"
+              className="w-full absolute bottom-0 lg:relative flex"
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (message === "") return;
