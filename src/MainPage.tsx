@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import autoAnimate from "@formkit/auto-animate";
+// import react markdown
+import  ReactMarkdown  from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 function createUUID() {
   // http://www.ietf.org/rfc/rfc4122.txt
@@ -25,7 +28,7 @@ function App() {
   const [messages, setMessages] = useState<
     { message: string; from: "us" | "them" }[]
   >([]);
-  const [fetched, setFetched] = useState(false);
+  const [fetched, setFetched] = useState(true);
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputBoxRef = useRef<HTMLInputElement>(null);
@@ -34,7 +37,7 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
-  const apiURL = "https://chat-dev.witlingo.com/api/";
+  const apiURL = "http://localhost:5000";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
@@ -59,12 +62,13 @@ function App() {
   const [outgoingMessageColor, setOutgoingMessageColor] = useState("194850");
   const [outgoingMessageTextColor, setOutgoingMessageTextColor] =
     useState("ffffff");
+  const [thread, setThread] = useState("");
   const [answering, setAnswering] = useState(false);
   const [messageFieldTextColor, setMessageFieldTextColor] = useState("ffffff");
   const [sidebarCustomization, setSidebarCustomization] = useState({
     background_color: "#E6F5F7",
     // background_color: "#FFFFFF",
-    logo: "https://witlingo.com/wp-content/uploads/2019/07/witlingo_logo.png",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s",
     text_color: "#000000",
     // logo: "",
     links: [
@@ -116,34 +120,49 @@ function App() {
     return response.data;
   };
 
-  useEffect(() => {
-    const data = getData();
-    data.then((data) => {
-      // console.log(data);
-      if (data.settings) {
-        setMessageFieldColor(data.settings.messageFieldColor);
-        setIncommingMessageColor(data.settings.incommingMessageColor);
-        setIncommingMessageTextColor(data.settings.incommingMessageTextColor);
-        setOutgoingMessageColor(data.settings.outgoingMessageColor);
-        setOutgoingMessageTextColor(data.settings.outgoingMessageTextColor);
-        setMessageFieldTextColor(data.settings.messageFieldTextColor);
-        setBackgroundColor(data.settings.backgroundColor);
-      }
-      // console.log("data", data);
-    });
-    const sidebarData = getSidebarData();
-    sidebarData.then((data) => {
-      setSidebarCustomization(data);
-      // console.log(data);
-      setFetched(true);
-      parent.current && autoAnimate(parent.current);
-    });
-  }, []);
+  // useEffect(() => {
+  //   const data = getData();
+  //   data.then((data) => {
+  //     // console.log(data);
+  //     if (data.settings) {
+  //       setMessageFieldColor(data.settings.messageFieldColor);
+  //       setIncommingMessageColor(data.settings.incommingMessageColor);
+  //       setIncommingMessageTextColor(data.settings.incommingMessageTextColor);
+  //       setOutgoingMessageColor(data.settings.outgoingMessageColor);
+  //       setOutgoingMessageTextColor(data.settings.outgoingMessageTextColor);
+  //       setMessageFieldTextColor(data.settings.messageFieldTextColor);
+  //       setBackgroundColor(data.settings.backgroundColor);
+  //     }
+  //     // console.log("data", data);
+  //   });
+  //   const sidebarData = getSidebarData();
+  //   sidebarData.then((data) => {
+  //     setSidebarCustomization(data);
+  //     // console.log(data);
+  //     setFetched(true);
+  //     parent.current && autoAnimate(parent.current);
+  //   });
+  // }, []);
 
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const getThread = async () => {
+    const response = await axios.get(apiURL + `/get-thread`);
+    return response.data;
+  }
+
+  useEffect(() => {
+    // get thread id 
+    const thread = getThread();
+    thread.then((data) => {
+      setThread(data.thread_id);
+    })
+  
+  }, []);
+    
 
   const renderMessages = () => {
     return messages.map((message, index) => (
@@ -173,7 +192,12 @@ function App() {
           }
         >
           <p className="w-full md:text-justify text-left max-w-full">
-            {message.message}
+             <ReactMarkdown
+                          // linkTarget="_blank"
+                          rehypePlugins={[rehypeRaw]}
+                        >
+                          {message.message}
+                        </ReactMarkdown>
           </p>
         </li>
       </ul>
@@ -340,12 +364,16 @@ function App() {
                 bottomRef.current?.scrollIntoView();
                 const prevMessage = message;
                 setMessage("");
-                const bodyFormData = new FormData();
-                bodyFormData.append("message", prevMessage);
-                const response = await axios.post(
-                  apiURL + `chat/${botId}/${ID}/`,
-                  bodyFormData
-                );
+                // const bodyFormData = new FormData();
+                // bodyFormData.append("message", prevMessage);
+                // const response = await axios.post(
+                //   apiURL + `chat/${botId}/${ID}/`,
+                //   bodyFormData
+                // );
+
+                const response = await axios.get(
+                  apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
+                )
 
                 bottomRef.current?.scrollIntoView();
                 setAnswering(false);
@@ -357,7 +385,7 @@ function App() {
                     from: "us",
                   },
                   {
-                    message: response.data.answer,
+                    message: response.data.message,
                     from: "them",
                   },
                 ]);
