@@ -9,5 +9,15 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Set up the url for our iframe, and get the current domain
+      var url    = 'http://localhost:3000';
+      var domain = window.location.protocol + '//' + window.location.host;
+      // Create the iframe
+      var iframe = document.createElement('iframe');
+      document.body.appendChild(iframe);
+      // Set the src, and pass along the domain as a query param
+      iframe.src = url + '?domain=' + domain;
+    </script>
   </body>
 </html>
