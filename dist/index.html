@@ -5,21 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Witlingo ChatGPT</title>
-    <script type="module" crossorigin src="/assets/index-f4b58d69.js"></script>
-    <link rel="stylesheet" href="/assets/index-8cb6b336.css">
+    <script type="module" crossorigin src="/assets/index-e04a1024.js"></script>
+    <link rel="stylesheet" href="/assets/index-62f99f4f.css">
   </head>
   <body>
     <div id="root"></div>
     
     <script>
       // Set up the url for our iframe, and get the current domain
-      var url    = 'http://localhost:3000';
-      var domain = window.location.protocol + '//' + window.location.host;
+      // var url    = 'http://localhost:3000';
+      // var domain = window.location.protocol + '//' + window.location.host;
       // Create the iframe
-      var iframe = document.createElement('iframe');
-      document.body.appendChild(iframe);
+      // var iframe = document.createElement('iframe');
+      // document.body.appendChild(iframe);
       // Set the src, and pass along the domain as a query param
-      iframe.src = url + '?domain=' + domain;
+      // iframe.src = url + '?domain=' + domain;
+      console.log(window.top.location.host);
+      const allowedDomains = ["localhost:5173", "appraisal.gnowsie.com", "gnowsie.com", "localhost:3000"];
+      if (!allowedDomains.includes(window.top.location.host)) {
+          document.body.innerHTML = "Access Denied";
+      }
     </script>
   </body>
 </html>

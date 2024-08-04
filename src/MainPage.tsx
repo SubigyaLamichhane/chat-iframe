@@ -220,51 +220,7 @@ function App() {
         `}
       </style>
       <div className="flex" ref={parent}>
-        {fetched && (
-          <div
-            className="hidden md:block w-1/3 transition-all duration-500 ease-in-out"
-            style={{
-              backgroundColor: sidebarCustomization.background_color,
-            }}
-          >
-            <div className="flex flex-col items-center justify-center md:h-screen">
-              <div className=" h-1/4"></div>
-              <div className="flex flex-col items-center">
-                <img
-                  className="w-1/2 fadeIn"
-                  src={sidebarCustomization.logo}
-                  alt="logo"
-                />
-              </div>
-              <div className="pb-16"></div>
-              <div className="">
-                <ul
-                  className="p-2 list-disc"
-                  style={{
-                    color: sidebarCustomization.text_color,
-                  }}
-                >
-                  {sidebarCustomization.links.map((link, index) => (
-                    <li className="flex-1 p-2" key={index}>
-                      <a
-                        key={index}
-                        className="text-left font-bold text-sm"
-                        style={{
-                          // color: sidebarCustomization.text_color,
-                          color: sidebarCustomization.text_color,
-                        }}
-                        href={link.url}
-                        target="_blank"
-                      >
-                        {link.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
+        
         {fetched && (
           <div className="flex-grow flex flex-col md:h-screen justify-end items-end">
             {fetched && (
