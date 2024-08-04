@@ -37,7 +37,7 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
-  const apiURL = "http://localhost:5000";
+  const apiURL = "https://property-valuation.subigyalamichhane.com.np";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
