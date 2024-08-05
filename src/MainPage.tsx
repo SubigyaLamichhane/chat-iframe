@@ -23,11 +23,17 @@ function createUUID() {
 }
 
 function App() {
+  const defaultMessages: { message: string; from: "us" | "them" }[] = [
+    {
+      message: "Please enter the address you would like to analyze.",
+      from: "them",
+    },
+  ]; 
   const location = useLocation();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
     { message: string; from: "us" | "them" }[]
-  >([]);
+  >(defaultMessages);
   const [fetched, setFetched] = useState(true);
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -55,21 +61,21 @@ function App() {
   //   queryParams.get("messageFieldTextColor") || "#ffffff";
 
   const [backgroundColor, setBackgroundColor] = useState("ffffff");
-  const [messageFieldColor, setMessageFieldColor] = useState("194850");
+  const [messageFieldColor, setMessageFieldColor] = useState("131317");
   const [incommingMessageColor, setIncommingMessageColor] = useState("134f9c");
   const [incommingMessageTextColor, setIncommingMessageTextColor] =
     useState("ffffff");
-  const [outgoingMessageColor, setOutgoingMessageColor] = useState("194850");
+  const [outgoingMessageColor, setOutgoingMessageColor] = useState("ffffff");
   const [outgoingMessageTextColor, setOutgoingMessageTextColor] =
-    useState("ffffff");
+    useState("000000");
   const [thread, setThread] = useState("");
   const [answering, setAnswering] = useState(false);
   const [messageFieldTextColor, setMessageFieldTextColor] = useState("ffffff");
   const [sidebarCustomization, setSidebarCustomization] = useState({
-    background_color: "#E6F5F7",
+    background_color: "#131317",
     // background_color: "#FFFFFF",
     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s",
-    text_color: "#000000",
+    text_color: "#ffffff",
     // logo: "",
     links: [
       {
@@ -176,7 +182,7 @@ function App() {
         <li
           className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
             message.from === "us"
-              ? "rounded-br-xl rounded-tl-xl"
+              ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
               : "max-w-lg rounded-bl-xl rounded-tr-xl"
           }`}
           style={
@@ -223,7 +229,7 @@ function App() {
         
         {fetched && (
           <div className="flex-grow flex flex-col md:h-screen justify-end items-end">
-            {fetched && (
+            {/* {fetched && (
               <div
                 className="md:hidden w-full h-20 flex justify-center items-center"
                 style={{
@@ -238,7 +244,7 @@ function App() {
                   />
                 )}
               </div>
-            )}
+            )} */}
             {/* <div className=" bg-black min-h-full"></div> */}
             <div className="fixed bottom-16 md:relative md:bottom-0 flex-grow flex flex-col w-full justify-end overflow-auto">
               <div
@@ -406,7 +412,7 @@ function App() {
           </div>
         )}
       </div>
-      {/* <iframe src="http://localhost:5000" className="w-full h-screen"></iframe> */}
+      {/* <iframe src="https://property-valuation.subigyalamichhane.com.np" className="w-full h-screen"></iframe> */}
     </div>
   );
 }
