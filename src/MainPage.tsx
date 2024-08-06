@@ -43,7 +43,7 @@ function App() {
   const parent = useRef(null);
   const messageParent = useRef(null);
 
-  const apiURL = "https://property-valuation.subigyalamichhane.com.np";
+  const apiURL = "https://intelligenthomevaluation.com";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
@@ -412,7 +412,7 @@ function App() {
           </div>
         )}
       </div>
-      {/* <iframe src="https://property-valuation.subigyalamichhane.com.np" className="w-full h-screen"></iframe> */}
+       {/* <iframe src="https://intelligenthomevaluation.com" className="w-full h-screen"></iframe>  */}
     </div>
   );
 }
