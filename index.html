@@ -19,7 +19,7 @@
       // Set the src, and pass along the domain as a query param
       // iframe.src = url + '?domain=' + domain;
       console.log(window.top.location.host);
-      const allowedDomains = ["localhost:5173", "appraisal.gnowsie.com", "gnowsie.com", "localhost:3000"];
+      const allowedDomains = ["localhost:5173", "appraisal.gnowsie.com", "gnowsie.com", "localhost:3000", "localhost:5000"];
       if (!allowedDomains.includes(window.top.location.host)) {
           document.body.innerHTML = "Access Denied";
       }

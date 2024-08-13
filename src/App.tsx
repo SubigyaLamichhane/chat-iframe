@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import MainPage from "./MainPage";
+import DatabaseChatbot from "./DatabaseChatbot";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -10,6 +11,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" Component={MainPage} />
+          <Route path="/database-chatbot" Component={DatabaseChatbot} />
         </Routes>
       </Router>
     </div>
