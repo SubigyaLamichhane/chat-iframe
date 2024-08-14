@@ -3,8 +3,10 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import autoAnimate from "@formkit/auto-animate";
 // import react markdown
-import  ReactMarkdown  from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import PropertyGrid from "./components/PropertyGrid";
+import { Property } from "./types";
 
 function createUUID() {
   // http://www.ietf.org/rfc/rfc4122.txt
@@ -23,17 +25,24 @@ function createUUID() {
 }
 
 function App() {
-  const defaultMessages: { message: string; from: "us" | "them" }[] = [
+  const defaultMessages: {
+    message: string;
+    from: "us" | "them";
+    properties?: Property[];
+  }[] = [
     {
-      message: "Hi there, I can help you find the properties you are after. Please enter any criteria you have or you want to look for property in specific address or municipality.",
+      message:
+        "Hi there, I can help you find the properties you are after. Please enter any criteria you have or you want to look for property in specific address or municipality.",
       from: "them",
+      // properties: properties
     },
-  ]; 
+  ];
   const location = useLocation();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<
-    { message: string; from: "us" | "them" }[]
-  >(defaultMessages);
+  const [messages, setMessages] =
+    useState<
+      { message: string; from: "us" | "them"; properties?: Property[] }[]
+    >(defaultMessages);
   const [fetched, setFetched] = useState(true);
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -158,56 +167,98 @@ function App() {
   const getThread = async () => {
     const response = await axios.get(apiURL + `/get-thread`);
     return response.data;
-  }
+  };
 
   useEffect(() => {
-    // get thread id 
+    // get thread id
     const thread = getThread();
     thread.then((data) => {
       setThread(data.thread_id);
-    })
-  
+    });
   }, []);
-    
 
   const renderMessages = () => {
-    return messages.map((message, index) => (
-      <ul
-        key={index}
-        ref={messageParent}
-        className={`flex items-center ${
-          message.from === "us" ? "justify-end" : "justify-start"
-        }`}
-      >
-        <li
-          className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
-            message.from === "us"
-              ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
-              : "max-w-lg rounded-bl-xl rounded-tr-xl"
+    return messages.map((message, index) => {
+      if (message.properties) {
+        return (
+          <div>
+            <PropertyGrid properties={message.properties} />
+            <ul
+              key={index}
+              ref={messageParent}
+              className={`flex items-center ${
+                message.from === "us" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <li
+                className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+                  message.from === "us"
+                    ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
+                    : "max-w-lg rounded-bl-xl rounded-tr-xl"
+                }`}
+                style={
+                  message.from === "us"
+                    ? {
+                        backgroundColor: "#" + outgoingMessageColor,
+                        color: "#" + outgoingMessageTextColor,
+                      }
+                    : {
+                        backgroundColor: sidebarCustomization.background_color,
+                        color: sidebarCustomization.text_color,
+                      }
+                }
+              >
+                <p className="w-full md:text-justify text-left max-w-full">
+                  <ReactMarkdown
+                    // linkTarget="_blank"
+                    rehypePlugins={[rehypeRaw]}
+                  >
+                    {message.message}
+                  </ReactMarkdown>
+                </p>
+              </li>
+            </ul>
+          </div>
+        );
+      }
+      return (
+        <ul
+          key={index}
+          ref={messageParent}
+          className={`flex items-center ${
+            message.from === "us" ? "justify-end" : "justify-start"
           }`}
-          style={
-            message.from === "us"
-              ? {
-                  backgroundColor: "#" + outgoingMessageColor,
-                  color: "#" + outgoingMessageTextColor,
-                }
-              : {
-                  backgroundColor: sidebarCustomization.background_color,
-                  color: sidebarCustomization.text_color,
-                }
-          }
         >
-          <p className="w-full md:text-justify text-left max-w-full">
-             <ReactMarkdown
-                          // linkTarget="_blank"
-                          rehypePlugins={[rehypeRaw]}
-                        >
-                          {message.message}
-                        </ReactMarkdown>
-          </p>
-        </li>
-      </ul>
-    ));
+          <li
+            className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+              message.from === "us"
+                ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
+                : "max-w-lg rounded-bl-xl rounded-tr-xl"
+            }`}
+            style={
+              message.from === "us"
+                ? {
+                    backgroundColor: "#" + outgoingMessageColor,
+                    color: "#" + outgoingMessageTextColor,
+                  }
+                : {
+                    backgroundColor: sidebarCustomization.background_color,
+                    color: sidebarCustomization.text_color,
+                  }
+            }
+          >
+            <p className="w-full md:text-justify text-left max-w-full">
+              <ReactMarkdown
+                // linkTarget="_blank"
+                rehypePlugins={[rehypeRaw]}
+              >
+                {message.message}
+              </ReactMarkdown>
+            </p>
+          </li>
+        </ul>
+      );
+    });
   };
   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 
@@ -226,7 +277,6 @@ function App() {
         `}
       </style>
       <div className="flex" ref={parent}>
-        
         {fetched && (
           <div className="flex-grow flex flex-col md:h-screen justify-end items-end">
             {/* {fetched && (
@@ -335,7 +385,7 @@ function App() {
 
                 const response = await axios.get(
                   apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
-                )
+                );
 
                 bottomRef.current?.scrollIntoView();
                 setAnswering(false);
@@ -349,6 +399,9 @@ function App() {
                   {
                     message: response.data.message,
                     from: "them",
+                    properties: response.data.properties
+                      ? JSON.parse(response.data.properties)
+                      : null,
                   },
                 ]);
                 messageParent.current && autoAnimate(messageParent.current);
@@ -406,13 +459,12 @@ function App() {
                     </g>
                   </svg>
                 </button>
-
               </div>
             </form>
           </div>
         )}
       </div>
-       {/* <iframe src="https://intelligenthomevaluation.com" className="w-full h-screen"></iframe>  */}
+      {/* <iframe src="https://intelligenthomevaluation.com/database-chatbot" className="w-full h-screen"></iframe>  */}
     </div>
   );
 }
