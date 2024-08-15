@@ -54,59 +54,11 @@ function App() {
     from: "us" | "them";
     properties?: Property[] | null;
   }[] = [
-    // {
-    //   message:
-    //     "Hi there, I can help you find the properties you are after. Please enter any criteria you have or you want to look for property in specific address or municipality.",
-    //   from: "them",
-    //   // properties: properties
-    // },
-
     {
       message:
         "Hi there, I can help you find the properties you are after. Please enter any criteria you have or you want to look for property in specific address or municipality.",
       from: "them",
-    },
-    {
-      message: "import remarkGfm from 'remark-gfm'",
-      from: "us",
-    },
-    {
-      message:
-        "It looks like you're trying to import a plugin for a code or markdown environment. However, that doesn't seem directly related to querying the property database. Could you please provide details or criteria related to the properties you are interested in? For example, you can specify criteria like location, price range, property type, etc.",
-      from: "them",
-      properties: null,
-    },
-    {
-      message:
-        "find me investment opportunities in toronto city with 1 million dollars with a compination of different properties. and also do make sure to diversify the properties and present me with two different scenarios",
-      from: "us",
-    },
-    {
-      message:
-        "It appears that no properties were found that matched the criteria for each of the scenarios in Toronto. This might be due to the specific price limits set for each property type.\n\nWould you like to adjust the price ranges or criteria, or perhaps focus on another area or type of property? Let me know how you'd like to proceed.",
-      from: "them",
-      properties: null,
-    },
-    {
-      message: "try again",
-      from: "us",
-    },
-    {
-      message:
-        "It appears that even with the adjusted price limits, no properties were found matching the criteria in Toronto. \n\nToronto's real estate market might currently have limited availability or higher prices for these specific property types and price ranges.\n\nWould you like to:\n\n1. Increase the price limits further?\n2. Search in a different city or municipality?\n3. Change the property types or mix?\n4. Explore other criteria? \n\nPlease let me know how you'd like to proceed or if you have any other specific requirements.",
-      from: "them",
-      properties: null,
-    },
-    {
-      message:
-        "can you show me the list of properties in toronto under 400k without using show_properties function",
-      from: "us",
-    },
-    {
-      message:
-        "Here are three properties in Toronto under $400,000:\n\n### Property 1\n**Address:** [15 Maplewood Ave, Toronto, Apt. 703](https://portal.gnowise.com/C9050617)\n- **Price:** $399,999.00\n- **County:** Ontario\n- **Municipality:** Toronto\n- **Property Type:** Condo Apt\n- **Style:** Apartment\n\n**![Image](https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=C9050617)**\n\n### Property 2\n**Address:** [135 East Liberty St, Toronto, Apt. 711](https://portal.gnowise.com/C9240770)\n- **Price:** $399,999.00\n- **County:** Ontario\n- **Municipality:** Toronto\n- **Property Type:** Condo Apt\n- **Style:** Apartment\n\n**![Image](https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=C9240770)**\n\n### Property 3\n**Address:** [15 Beverley St, Toronto, Apt. 707](https://portal.gnowise.com/C9242733)\n- **Price:** $399,999.00\n- **County:** Ontario\n- **Municipality:** Toronto\n- **Property Type:** Condo Apt\n- **Style:** Apartment\n\n**![Image](https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=C9242733)**\n\nThese properties could be potential investment opportunities in Toronto. Let me know if you need further details or if you would like to explore other options.",
-      from: "them",
-      properties: null,
+      // properties: properties
     },
   ];
   const location = useLocation();
