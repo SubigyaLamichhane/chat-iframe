@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import React, {
+  LegacyRef,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import autoAnimate from "@formkit/auto-animate";
@@ -9,6 +15,22 @@ import PropertyGrid from "./components/PropertyGrid";
 import { Property } from "./types";
 import remarkGfm from "remark-gfm";
 import remarkExternalLinks from "remark-external-links";
+
+interface MyLinkProps {
+  children: ReactNode;
+  target: "_blank";
+  className: string;
+  ref?: LegacyRef<HTMLAnchorElement>;
+  // Other props...
+}
+
+const MyLink: React.FC<MyLinkProps> = React.forwardRef((props, ref) => {
+  return (
+    <a ref={ref} className={props.className} target={props.target}>
+      {props.children}
+    </a>
+  );
+});
 
 function createUUID() {
   // http://www.ietf.org/rfc/rfc4122.txt
@@ -319,12 +341,18 @@ function App() {
                   // linkTarget="_blank"
                   // linkTargets="_blank"
                   rehypePlugins={[rehypeRaw]}
-                  remarkPlugins={[remarkGfm]}
-                  // renderers={{
-                  //   link: (props) => {
+                  remarkPlugins={[
+                    [
+                      // @ts-ignore
+                      remarkExternalLinks,
+                      { target: "_blank", rel: "noopener noreferrer" },
+                    ],
+                  ]}
+                  // components={{
+                  //   a: ({ node, ...props }) => {
                   //     return (
                   //       <a
-                  //         href={props.href}
+                  //         {...props}
                   //         target="_blank"
                   //         className="text-yellow-500"
                   //       >
