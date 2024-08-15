@@ -24,7 +24,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
         alt="Property"
         className="w-full h-48 object-cover rounded-md mb-4"
       />
-      <h2 className="text-lg font-bold">{property.addr}</h2>
+      <h2 className="text-lg font-bold">
+        <a
+          target="_blank"
+          className="text-blue-400"
+          href={`https://portal.gnowise.com/${property.ml_num}`}
+        >
+          {property.addr}
+        </a>
+      </h2>
       {property.lp_dol && (
         <p className="text-gray-400">Price: ${property.lp_dol}</p>
       )}

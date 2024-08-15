@@ -55,5 +55,5 @@ export default {
       pointer: "pointer",
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };

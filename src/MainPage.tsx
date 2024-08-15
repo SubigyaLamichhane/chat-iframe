@@ -3,8 +3,9 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import autoAnimate from "@formkit/auto-animate";
 // import react markdown
-import  ReactMarkdown  from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 function createUUID() {
   // http://www.ietf.org/rfc/rfc4122.txt
@@ -28,12 +29,11 @@ function App() {
       message: "Please enter the address you would like to analyze.",
       from: "them",
     },
-  ]; 
+  ];
   const location = useLocation();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<
-    { message: string; from: "us" | "them" }[]
-  >(defaultMessages);
+  const [messages, setMessages] =
+    useState<{ message: string; from: "us" | "them" }[]>(defaultMessages);
   const [fetched, setFetched] = useState(true);
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -158,17 +158,15 @@ function App() {
   const getThread = async () => {
     const response = await axios.get(apiURL + `/get-thread`);
     return response.data;
-  }
+  };
 
   useEffect(() => {
-    // get thread id 
+    // get thread id
     const thread = getThread();
     thread.then((data) => {
       setThread(data.thread_id);
-    })
-  
+    });
   }, []);
-    
 
   const renderMessages = () => {
     return messages.map((message, index) => (
@@ -197,14 +195,21 @@ function App() {
                 }
           }
         >
-          <p className="w-full md:text-justify text-left max-w-full">
-             <ReactMarkdown
-                          // linkTarget="_blank"
-                          rehypePlugins={[rehypeRaw]}
-                        >
-                          {message.message}
-                        </ReactMarkdown>
-          </p>
+          {message.from === "them" ? (
+            <p className="w-full md:text-justify text-left max-w-full markdown-body">
+              <ReactMarkdown
+                // linkTarget="_blank"
+                rehypePlugins={[rehypeRaw]}
+                remarkPlugins={[remarkGfm]}
+              >
+                {message.message}
+              </ReactMarkdown>
+            </p>
+          ) : (
+            <p className="w-full md:text-justify text-left max-w-full">
+              {message.message}
+            </p>
+          )}
         </li>
       </ul>
     ));
@@ -226,7 +231,6 @@ function App() {
         `}
       </style>
       <div className="flex" ref={parent}>
-        
         {fetched && (
           <div className="flex-grow flex flex-col md:h-screen justify-end items-end">
             {/* {fetched && (
@@ -333,9 +337,13 @@ function App() {
                 //   bodyFormData
                 // );
 
+                // while (thread === "") {
+                //   console.log("waiting for thread");
+                // }
+
                 const response = await axios.get(
                   apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
-                )
+                );
 
                 bottomRef.current?.scrollIntoView();
                 setAnswering(false);
@@ -371,6 +379,7 @@ function App() {
                 ></input>
                 <button
                   type="submit"
+                  disabled={thread === ""}
                   style={{
                     backgroundColor: "#" + messageFieldColor,
                     color: "#" + messageFieldTextColor,
@@ -406,13 +415,12 @@ function App() {
                     </g>
                   </svg>
                 </button>
-
               </div>
             </form>
           </div>
         )}
       </div>
-       {/* <iframe src="https://intelligenthomevaluation.com" className="w-full h-screen"></iframe>  */}
+      {/* <iframe src="https://intelligenthomevaluation.com" className="w-full h-screen"></iframe>  */}
     </div>
   );
 }

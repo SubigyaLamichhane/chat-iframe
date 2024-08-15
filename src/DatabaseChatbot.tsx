@@ -7,6 +7,8 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import PropertyGrid from "./components/PropertyGrid";
 import { Property } from "./types";
+import remarkGfm from "remark-gfm";
+import remarkExternalLinks from "remark-external-links";
 
 function createUUID() {
   // http://www.ietf.org/rfc/rfc4122.txt
@@ -28,20 +30,68 @@ function App() {
   const defaultMessages: {
     message: string;
     from: "us" | "them";
-    properties?: Property[];
+    properties?: Property[] | null;
   }[] = [
+    // {
+    //   message:
+    //     "Hi there, I can help you find the properties you are after. Please enter any criteria you have or you want to look for property in specific address or municipality.",
+    //   from: "them",
+    //   // properties: properties
+    // },
+
     {
       message:
         "Hi there, I can help you find the properties you are after. Please enter any criteria you have or you want to look for property in specific address or municipality.",
       from: "them",
-      // properties: properties
+    },
+    {
+      message: "import remarkGfm from 'remark-gfm'",
+      from: "us",
+    },
+    {
+      message:
+        "It looks like you're trying to import a plugin for a code or markdown environment. However, that doesn't seem directly related to querying the property database. Could you please provide details or criteria related to the properties you are interested in? For example, you can specify criteria like location, price range, property type, etc.",
+      from: "them",
+      properties: null,
+    },
+    {
+      message:
+        "find me investment opportunities in toronto city with 1 million dollars with a compination of different properties. and also do make sure to diversify the properties and present me with two different scenarios",
+      from: "us",
+    },
+    {
+      message:
+        "It appears that no properties were found that matched the criteria for each of the scenarios in Toronto. This might be due to the specific price limits set for each property type.\n\nWould you like to adjust the price ranges or criteria, or perhaps focus on another area or type of property? Let me know how you'd like to proceed.",
+      from: "them",
+      properties: null,
+    },
+    {
+      message: "try again",
+      from: "us",
+    },
+    {
+      message:
+        "It appears that even with the adjusted price limits, no properties were found matching the criteria in Toronto. \n\nToronto's real estate market might currently have limited availability or higher prices for these specific property types and price ranges.\n\nWould you like to:\n\n1. Increase the price limits further?\n2. Search in a different city or municipality?\n3. Change the property types or mix?\n4. Explore other criteria? \n\nPlease let me know how you'd like to proceed or if you have any other specific requirements.",
+      from: "them",
+      properties: null,
+    },
+    {
+      message:
+        "can you show me the list of properties in toronto under 400k without using show_properties function",
+      from: "us",
+    },
+    {
+      message:
+        "Here are three properties in Toronto under $400,000:\n\n### Property 1\n**Address:** [15 Maplewood Ave, Toronto, Apt. 703](https://portal.gnowise.com/C9050617)\n- **Price:** $399,999.00\n- **County:** Ontario\n- **Municipality:** Toronto\n- **Property Type:** Condo Apt\n- **Style:** Apartment\n\n**![Image](https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=C9050617)**\n\n### Property 2\n**Address:** [135 East Liberty St, Toronto, Apt. 711](https://portal.gnowise.com/C9240770)\n- **Price:** $399,999.00\n- **County:** Ontario\n- **Municipality:** Toronto\n- **Property Type:** Condo Apt\n- **Style:** Apartment\n\n**![Image](https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=C9240770)**\n\n### Property 3\n**Address:** [15 Beverley St, Toronto, Apt. 707](https://portal.gnowise.com/C9242733)\n- **Price:** $399,999.00\n- **County:** Ontario\n- **Municipality:** Toronto\n- **Property Type:** Condo Apt\n- **Style:** Apartment\n\n**![Image](https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=C9242733)**\n\nThese properties could be potential investment opportunities in Toronto. Let me know if you need further details or if you would like to explore other options.",
+      from: "them",
+      properties: null,
     },
   ];
   const location = useLocation();
   const [message, setMessage] = useState("");
   const [messages, setMessages] =
     useState<
-      { message: string; from: "us" | "them"; properties?: Property[] }[]
+      { message: string; from: "us" | "them"; properties?: Property[] | null }[]
     >(defaultMessages);
   const [fetched, setFetched] = useState(true);
   const messageDivRef = useRef<HTMLDivElement>(null);
@@ -208,10 +258,26 @@ function App() {
                       }
                 }
               >
-                <p className="w-full md:text-justify text-left max-w-full">
+                <p className="w-full md:text-justify text-left max-w-full markdown-body">
                   <ReactMarkdown
-                    // linkTarget="_blank"
-                    rehypePlugins={[rehypeRaw]}
+                    // components={
+                    //   {
+                    //     // a: ({ node, ...props }) => {
+                    //     //   return (
+                    //     //     <a
+                    //     //       {...props}
+                    //     //       target="_blank"
+                    //     //       className="text-blue-500"
+                    //     //     >
+                    //     //       {props.children}
+                    //     //     </a>
+                    //     //   );
+                    //     // },
+                    //   }
+                    // }
+                    // rehypePlugins={[rehypeRaw]}
+                    remarkPlugins={[remarkGfm]}
+                    className="markdown-body"
                   >
                     {message.message}
                   </ReactMarkdown>
@@ -247,14 +313,35 @@ function App() {
                   }
             }
           >
-            <p className="w-full md:text-justify text-left max-w-full">
-              <ReactMarkdown
-                // linkTarget="_blank"
-                rehypePlugins={[rehypeRaw]}
-              >
+            {message.from === "them" ? (
+              <p className="w-full md:text-justify text-left max-w-full markdown-body">
+                <ReactMarkdown
+                  // linkTarget="_blank"
+                  // linkTargets="_blank"
+                  rehypePlugins={[rehypeRaw]}
+                  remarkPlugins={[remarkGfm]}
+                  // renderers={{
+                  //   link: (props) => {
+                  //     return (
+                  //       <a
+                  //         href={props.href}
+                  //         target="_blank"
+                  //         className="text-yellow-500"
+                  //       >
+                  //         {props.children}
+                  //       </a>
+                  //     );
+                  //   },
+                  // }}
+                >
+                  {message.message}
+                </ReactMarkdown>
+              </p>
+            ) : (
+              <p className="w-full md:text-justify text-left max-w-full">
                 {message.message}
-              </ReactMarkdown>
-            </p>
+              </p>
+            )}
           </li>
         </ul>
       );
@@ -376,6 +463,12 @@ function App() {
                 bottomRef.current?.scrollIntoView();
                 const prevMessage = message;
                 setMessage("");
+
+                // loop until thread exists
+                // while (thread === "") {
+                //   console.log("waiting for thread");
+                // }
+
                 // const bodyFormData = new FormData();
                 // bodyFormData.append("message", prevMessage);
                 // const response = await axios.post(
@@ -424,6 +517,8 @@ function App() {
                 ></input>
                 <button
                   type="submit"
+                  // dissabled if no thread
+                  disabled={thread === ""}
                   style={{
                     backgroundColor: "#" + messageFieldColor,
                     color: "#" + messageFieldTextColor,
