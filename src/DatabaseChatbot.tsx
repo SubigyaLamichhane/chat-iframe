@@ -215,24 +215,21 @@ function App() {
     bottomRef.current?.scrollIntoView();
     const prevMessage = message;
     setMessage("");
+    // loop until thread exists
+    // while (thread === "") {
+    //   console.log("waiting for thread");
+    // }
     // const bodyFormData = new FormData();
     // bodyFormData.append("message", prevMessage);
     // const response = await axios.post(
     //   apiURL + `chat/${botId}/${ID}/`,
     //   bodyFormData
     // );
-
-    // while (thread === "") {
-    //   console.log("waiting for thread");
-    // }
-
     const response = await axios.get(
       apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
     );
-
     bottomRef.current?.scrollIntoView();
     setAnswering(false);
-
     setMessages([
       ...messages,
       {
@@ -242,10 +239,12 @@ function App() {
       {
         message: response.data.message,
         from: "them",
+        properties: response.data.properties
+          ? JSON.parse(response.data.properties)
+          : null,
       },
     ]);
     messageParent.current && autoAnimate(messageParent.current);
-
     bottomRef.current?.scrollIntoView();
   };
 
