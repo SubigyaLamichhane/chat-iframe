@@ -6,6 +6,7 @@ import autoAnimate from "@formkit/auto-animate";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import InitialQuestions from "./components/InitialQuestions";
 
 function createUUID() {
   // http://www.ietf.org/rfc/rfc4122.txt
@@ -96,6 +97,53 @@ function App() {
   const botId = queryParams.get("botId") || "2";
   const [ID, setID] = useState(crypto.randomUUID());
 
+  const submitData = async (message: string) => {
+    setMessages([
+      ...messages,
+      {
+        message,
+        from: "us",
+      },
+    ]);
+    messageParent.current && autoAnimate(messageParent.current);
+    setAnswering(true);
+    bottomRef.current?.scrollIntoView();
+    const prevMessage = message;
+    setMessage("");
+    // const bodyFormData = new FormData();
+    // bodyFormData.append("message", prevMessage);
+    // const response = await axios.post(
+    //   apiURL + `chat/${botId}/${ID}/`,
+    //   bodyFormData
+    // );
+
+    // while (thread === "") {
+    //   console.log("waiting for thread");
+    // }
+
+    const response = await axios.get(
+      apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
+    );
+
+    bottomRef.current?.scrollIntoView();
+    setAnswering(false);
+
+    setMessages([
+      ...messages,
+      {
+        message: prevMessage,
+        from: "us",
+      },
+      {
+        message: response.data.message,
+        from: "them",
+      },
+    ]);
+    messageParent.current && autoAnimate(messageParent.current);
+
+    bottomRef.current?.scrollIntoView();
+  };
+
   const getData = async () => {
     const response = await axios.get(apiURL + "chat/" + botId + "/");
     return response.data.data;
@@ -169,6 +217,9 @@ function App() {
   }, []);
 
   const renderMessages = () => {
+    // if (messages.length === 0) {
+    //   return <InitialQuestions submitData={submitData} />;
+    // }
     return messages.map((message, index) => (
       <ul
         key={index}
@@ -318,50 +369,7 @@ function App() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (message === "") return;
-                setMessages([
-                  ...messages,
-                  {
-                    message,
-                    from: "us",
-                  },
-                ]);
-                messageParent.current && autoAnimate(messageParent.current);
-                setAnswering(true);
-                bottomRef.current?.scrollIntoView();
-                const prevMessage = message;
-                setMessage("");
-                // const bodyFormData = new FormData();
-                // bodyFormData.append("message", prevMessage);
-                // const response = await axios.post(
-                //   apiURL + `chat/${botId}/${ID}/`,
-                //   bodyFormData
-                // );
-
-                // while (thread === "") {
-                //   console.log("waiting for thread");
-                // }
-
-                const response = await axios.get(
-                  apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
-                );
-
-                bottomRef.current?.scrollIntoView();
-                setAnswering(false);
-
-                setMessages([
-                  ...messages,
-                  {
-                    message: prevMessage,
-                    from: "us",
-                  },
-                  {
-                    message: response.data.message,
-                    from: "them",
-                  },
-                ]);
-                messageParent.current && autoAnimate(messageParent.current);
-
-                bottomRef.current?.scrollIntoView();
+                submitData(message);
               }}
             >
               <div className="flex fixed bottom-0 w-full md:relative">

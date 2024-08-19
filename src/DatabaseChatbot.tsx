@@ -15,6 +15,7 @@ import PropertyGrid from "./components/PropertyGrid";
 import { Property } from "./types";
 import remarkGfm from "remark-gfm";
 import remarkExternalLinks from "remark-external-links";
+import InitialQuestions from "./components/InitialQuestions";
 
 interface MyLinkProps {
   children: ReactNode;
@@ -54,12 +55,12 @@ function App() {
     from: "us" | "them";
     properties?: Property[] | null;
   }[] = [
-    {
-      message:
-        "Hi there, I can help you find the properties you are after. Please enter any criteria you have or you want to look for property in specific address or municipality.",
-      from: "them",
-      // properties: properties
-    },
+    // {
+    //   message:
+    //     "Hi there, I can help you find the properties you are after. Please enter any criteria you have or you want to look for property in specific address or municipality.",
+    //   from: "them",
+    //   // properties: properties
+    // },
   ];
   const location = useLocation();
   const [message, setMessage] = useState("");
@@ -201,7 +202,57 @@ function App() {
     });
   }, []);
 
+  const submitData = async (message: string) => {
+    setMessages([
+      ...messages,
+      {
+        message,
+        from: "us",
+      },
+    ]);
+    messageParent.current && autoAnimate(messageParent.current);
+    setAnswering(true);
+    bottomRef.current?.scrollIntoView();
+    const prevMessage = message;
+    setMessage("");
+    // const bodyFormData = new FormData();
+    // bodyFormData.append("message", prevMessage);
+    // const response = await axios.post(
+    //   apiURL + `chat/${botId}/${ID}/`,
+    //   bodyFormData
+    // );
+
+    // while (thread === "") {
+    //   console.log("waiting for thread");
+    // }
+
+    const response = await axios.get(
+      apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
+    );
+
+    bottomRef.current?.scrollIntoView();
+    setAnswering(false);
+
+    setMessages([
+      ...messages,
+      {
+        message: prevMessage,
+        from: "us",
+      },
+      {
+        message: response.data.message,
+        from: "them",
+      },
+    ]);
+    messageParent.current && autoAnimate(messageParent.current);
+
+    bottomRef.current?.scrollIntoView();
+  };
+
   const renderMessages = () => {
+    if (messages.length === 0) {
+      return <InitialQuestions submitData={submitData} />;
+    }
     return messages.map((message, index) => {
       if (message.properties) {
         return (
@@ -431,55 +482,56 @@ function App() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (message === "") return;
-                setMessages([
-                  ...messages,
-                  {
-                    message,
-                    from: "us",
-                  },
-                ]);
-                messageParent.current && autoAnimate(messageParent.current);
-                setAnswering(true);
-                bottomRef.current?.scrollIntoView();
-                const prevMessage = message;
-                setMessage("");
+                submitData(message);
+                // setMessages([
+                //   ...messages,
+                //   {
+                //     message,
+                //     from: "us",
+                //   },
+                // ]);
+                // messageParent.current && autoAnimate(messageParent.current);
+                // setAnswering(true);
+                // bottomRef.current?.scrollIntoView();
+                // const prevMessage = message;
+                // setMessage("");
 
-                // loop until thread exists
-                // while (thread === "") {
-                //   console.log("waiting for thread");
-                // }
+                // // loop until thread exists
+                // // while (thread === "") {
+                // //   console.log("waiting for thread");
+                // // }
 
-                // const bodyFormData = new FormData();
-                // bodyFormData.append("message", prevMessage);
-                // const response = await axios.post(
-                //   apiURL + `chat/${botId}/${ID}/`,
-                //   bodyFormData
+                // // const bodyFormData = new FormData();
+                // // bodyFormData.append("message", prevMessage);
+                // // const response = await axios.post(
+                // //   apiURL + `chat/${botId}/${ID}/`,
+                // //   bodyFormData
+                // // );
+
+                // const response = await axios.get(
+                //   apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
                 // );
 
-                const response = await axios.get(
-                  apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
-                );
+                // bottomRef.current?.scrollIntoView();
+                // setAnswering(false);
 
-                bottomRef.current?.scrollIntoView();
-                setAnswering(false);
+                // setMessages([
+                //   ...messages,
+                //   {
+                //     message: prevMessage,
+                //     from: "us",
+                //   },
+                //   {
+                //     message: response.data.message,
+                //     from: "them",
+                //     properties: response.data.properties
+                //       ? JSON.parse(response.data.properties)
+                //       : null,
+                //   },
+                // ]);
+                // messageParent.current && autoAnimate(messageParent.current);
 
-                setMessages([
-                  ...messages,
-                  {
-                    message: prevMessage,
-                    from: "us",
-                  },
-                  {
-                    message: response.data.message,
-                    from: "them",
-                    properties: response.data.properties
-                      ? JSON.parse(response.data.properties)
-                      : null,
-                  },
-                ]);
-                messageParent.current && autoAnimate(messageParent.current);
-
-                bottomRef.current?.scrollIntoView();
+                // bottomRef.current?.scrollIntoView();
               }}
             >
               <div className="flex fixed bottom-0 w-full md:relative">
