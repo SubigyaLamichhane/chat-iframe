@@ -7,7 +7,7 @@ interface InitialQuestionsProps {
 const InitialQuestions = ({ submitData }: InitialQuestionsProps) => {
   return (
     <div className="flex items-center justify-center ">
-      <div className="absolute inset-0 bg-gray-800/80 opacity-50"></div>
+      <div className="absolute inset-0"></div>
       <div className="relative z-10 flex flex-col items-center w-full h-full justify-center space-y-4">
         <button
           onClick={() =>
