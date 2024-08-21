@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import MainPage from "./MainPage";
+import MainPage from "./ProxyPage";
 import DatabaseChatbot from "./DatabaseChatbot";
 
 function App() {

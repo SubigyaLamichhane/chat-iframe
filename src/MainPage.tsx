@@ -8,21 +8,12 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import InitialQuestions from "./components/InitialQuestions";
 
-function createUUID() {
-  // http://www.ietf.org/rfc/rfc4122.txt
-  var s = [];
-  var hexDigits = "0123456789abcdef";
-  for (var i = 0; i < 36; i++) {
-    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-  }
-  s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
-  // @ts-ignore
-  s[19] = parseInt(hexDigits.substr((s[19] & 0x3) | 0x8, 1)); // bits 6-7 of the clock_seq_hi_and_reserved to 01
-  s[8] = s[13] = s[18] = s[23] = "-";
-
-  var uuid = s.join("");
-  return uuid;
-}
+const messages: { message: string; from: "us" | "them" }[] = [
+  {
+    message: "Please enter the address you would like to analyze.",
+    from: "them",
+  },
+];
 
 function App() {
   const defaultMessages: { message: string; from: "us" | "them" }[] = [
@@ -33,8 +24,9 @@ function App() {
   ];
   const location = useLocation();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] =
-    useState<{ message: string; from: "us" | "them" }[]>(defaultMessages);
+  // const [messages, setMessages] =
+  //   useState<{ message: string; from: "us" | "them" }[]>(defaultMessages);
+  const [messageCount, setMessageCount] = useState(0);
   const [fetched, setFetched] = useState(true);
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -97,19 +89,91 @@ function App() {
   const botId = queryParams.get("botId") || "2";
   const [ID, setID] = useState(crypto.randomUUID());
 
+  // Voice-related state
+  const [transcript, setTranscript] = useState("");
+  const [listening, setListening] = useState(false);
+  const [isSpeechRecognitionStarted, setSpeechRecognitionStarted] =
+    useState(false);
+  const [language, setLanguage] = useState<"en-US" | "ne-NP">("en-US");
+
+  let wasLastMessageVoice = false;
+  const recognition = new (window as any).webkitSpeechRecognition();
+
+  const startRecording = () => {
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+    recognition.start();
+    recognition.onstart = () => {
+      setTimeout(() => {
+        setListening(true);
+        setSpeechRecognitionStarted(true);
+        console.log("started");
+      }, 1000);
+      // setListening(true);
+      // setSpeechRecognitionStarted(true);
+      // console.log("started");
+    };
+
+    let finalTranscript = "";
+
+    recognition.onresult = (event: any) => {
+      let interimTranscript = "";
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          recognition.stop();
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+      if (interimTranscript !== "") {
+        finalTranscript = interimTranscript;
+        // setTranscript(interimTranscript);
+        // setMessage(interimTranscript);
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+    };
+
+    recognition.onend = () => {
+      console.log("Speech recognition ended.");
+      setListening(false);
+      // setTranscript("");
+      if (finalTranscript !== "") {
+        wasLastMessageVoice = true;
+        submitData(finalTranscript);
+      }
+    };
+  };
+
+  const stopRecording = () => {
+    setListening(false);
+    setSpeechRecognitionStarted(false);
+    // const recognition = new (window as any).webkitSpeechRecognition();
+    recognition.stop();
+  };
+
   const submitData = async (message: string) => {
-    setMessages([
-      ...messages,
-      {
-        message,
-        from: "us",
-      },
-    ]);
-    messageParent.current && autoAnimate(messageParent.current);
     setAnswering(true);
+    setMessage("");
+    // setMessages([
+    //   ...messages,
+    //   {
+    //     message,
+    //     from: "us",
+    //   },
+    // ]);
+    messages.push({
+      message,
+      from: "us",
+    });
+    setMessageCount(messageCount + 1);
+    messageParent.current && autoAnimate(messageParent.current);
     bottomRef.current?.scrollIntoView();
     const prevMessage = message;
-    setMessage("");
     // const bodyFormData = new FormData();
     // bodyFormData.append("message", prevMessage);
     // const response = await axios.post(
@@ -121,24 +185,56 @@ function App() {
     //   console.log("waiting for thread");
     // }
 
-    const response = await axios.get(
-      apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
-    );
+    // const response = await axios.get(
+    //   apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
+    // );
+
+    // create fake response with timeout of 3 seconds
+    const response: any = await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          data: {
+            message: "This is a fake response.",
+          },
+        });
+      }, 3000);
+    });
 
     bottomRef.current?.scrollIntoView();
     setAnswering(false);
 
-    setMessages([
-      ...messages,
-      {
-        message: prevMessage,
-        from: "us",
-      },
-      {
-        message: response.data.message,
-        from: "them",
-      },
-    ]);
+    // setMessages([
+    //   ...messages,
+    //   {
+    //     message: prevMessage,
+    //     from: "us",
+    //   },
+    //   {
+    //     message: response.data.message,
+    //     from: "them",
+    //   },
+    // ]);
+    messages.push({
+      message: response.data.message,
+      from: "them",
+    });
+    setMessageCount(messageCount + 1);
+
+    if (wasLastMessageVoice) {
+      const utterance = new SpeechSynthesisUtterance();
+      utterance.lang = language;
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      utterance.text = response.data.message;
+      speechSynthesis.speak(utterance);
+      wasLastMessageVoice = false;
+      // wait for utterance to be spoken
+      utterance.onend = () => {
+        startRecording();
+      };
+      // startRecording();
+    }
     messageParent.current && autoAnimate(messageParent.current);
 
     bottomRef.current?.scrollIntoView();
@@ -228,6 +324,7 @@ function App() {
           message.from === "us" ? "justify-end" : "justify-start"
         }`}
       >
+        <p className="hidden">{messageCount}</p>
         <li
           className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
             message.from === "us"
@@ -364,6 +461,7 @@ function App() {
             ))}
           </div> */}
 
+            {listening && <p>Listening...</p>}
             <form
               className="w-full"
               onSubmit={async (e) => {
@@ -376,7 +474,7 @@ function App() {
                 <input
                   autoFocus
                   ref={inputBoxRef}
-                  value={message}
+                  value={transcript ? transcript : message}
                   placeholder="Type your message..."
                   onChange={(e) => setMessage(e.target.value)}
                   style={{
@@ -385,6 +483,68 @@ function App() {
                   }}
                   className="h-16 p-4 flex-grow rounded-none "
                 ></input>
+                <button
+                  onClick={() => {
+                    if (!listening) {
+                      startRecording();
+                    } else {
+                      stopRecording();
+                    }
+                  }}
+                  className="h-16 w-16 rounded-none bg-gray-700"
+                  type="button"
+                >
+                  <svg
+                    height="30px"
+                    width="30px"
+                    version="1.1"
+                    id="Layer_1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 278.163 278.163"
+                    xmlSpace="preserve"
+                    fill="#e5e7eb"
+                    stroke="#e5e7eb"
+                  >
+                    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      {" "}
+                      <g>
+                        {" "}
+                        <g>
+                          {" "}
+                          <path
+                            style={{ fill: "#15803d" }}
+                            d="M225.235,94.987h-25.17V69.762c0-29.47-23.281-53.436-51.902-53.436 c-28.594,0-51.875,23.965-51.875,53.436v25.225H69.283c-3.834,0-6.957,3.177-6.957,7.148v50.067 c0,45.794,34.4,83.454,78.004,87.097v24.568h-20.596c-3.834,0-6.929,3.177-6.929,7.148c0,3.944,3.095,7.148,6.929,7.148h54.12 c3.834,0,6.957-3.204,6.957-7.148c0-3.971-3.122-7.148-6.957-7.148h-19.665v-24.568c43.603-3.643,77.976-41.302,77.976-87.097 v-50.067C232.165,98.165,229.07,94.987,225.235,94.987z M218.279,152.203c0,40.316-31.853,73.128-71.019,73.128 s-71.047-32.812-71.047-73.128v-42.918h20.076v41.713c0,29.443,23.281,53.436,51.875,53.436c28.621,0,51.902-23.993,51.902-53.436 v-41.713h18.214C218.279,109.284,218.279,152.203,218.279,152.203z"
+                          ></path>{" "}
+                          <g id="XMLID_18_">
+                            {" "}
+                            <g>
+                              {" "}
+                              {/* <path
+                                  style={{ fill: '#e5e7eb' }}
+                                  d="M169.852,114.513v20.158c0,21.582-17.036,39.139-38.016,39.139 c-20.952,0-37.988-17.556-37.988-39.139v-20.158h7.176c3.807,0,6.929-3.204,6.929-7.149c0-3.944-3.122-7.148-6.929-7.148h-7.176 V63.433h7.176c3.807,0,6.929-3.204,6.929-7.149s-3.122-7.149-6.929-7.149h-6.929c2.082-19.556,18.214-34.839,37.742-34.839 c19.556,0,35.688,15.283,37.769,34.839h-7.258c-3.834,0-6.929,3.205-6.929,7.149s3.095,7.149,6.929,7.149h7.505v36.783h-7.505 c-3.834,0-6.929,3.204-6.929,7.148s3.095,7.149,6.929,7.149C162.348,114.513,169.852,114.513,169.852,114.513z"
+                                ></path>{' '} */}
+                              <path
+                                style={{ fill: "#e5e7eb" }}
+                                d="M53.458,137.824L53.458,137.824c-4.18,0-7.359,3.659-6.907,7.814 c1.137,10.443,4.073,20.331,8.474,29.336c1.175,2.407,3.607,3.949,6.286,3.949h0.063c5.122,0,8.526-5.368,6.253-9.956 c-3.782-7.625-6.302-16.02-7.272-24.888C59.968,140.532,57.026,137.824,53.458,137.824z"
+                              ></path>{" "}
+                              <path
+                                style={{ fill: "#e5e7eb" }}
+                                d="M208.909,78.661h-25.17V53.436C183.738,23.965,160.458,0,131.836,0 c-28.594,0-51.875,23.965-51.875,53.436v25.225H52.956c-3.834,0-6.957,3.177-6.957,7.149v40.818 c0,3.834,3.109,6.943,6.943,6.943l0,0c3.834,0,6.943-3.109,6.943-6.943v-33.67h20.076v41.713 c0,29.443,23.281,53.436,51.875,53.436c28.621,0,51.902-23.993,51.902-53.436V92.958h18.214v42.918 c0,40.316-31.853,73.128-71.019,73.128c-20.528,0-39.048-9.016-52.025-23.401c-1.364-1.512-3.265-2.427-5.302-2.427l0,0 c-6.023,0-9.304,7.138-5.302,11.638c14.07,15.825,33.708,26.321,55.701,28.159v24.568h-20.596c-3.834,0-6.929,3.177-6.929,7.148 c0,3.944,3.095,7.149,6.929,7.149h54.12c3.834,0,6.957-3.204,6.957-7.149c0-3.971-3.122-7.148-6.957-7.148h-19.665v-24.568 c43.603-3.643,77.976-41.302,77.976-87.097V85.809C215.838,81.838,212.743,78.661,208.909,78.661z M169.852,100.216h-7.505 c-3.834,0-6.929,3.204-6.929,7.148s3.095,7.149,6.929,7.149h7.505v20.158c0,21.582-17.036,39.139-38.016,39.139 c-20.952,0-37.988-17.556-37.988-39.139v-20.158h7.176c3.807,0,6.929-3.204,6.929-7.149c0-3.944-3.122-7.148-6.929-7.148h-7.176 V63.433h7.176c3.807,0,6.929-3.204,6.929-7.149s-3.122-7.149-6.929-7.149h-6.929c2.082-19.556,18.214-34.839,37.742-34.839 c19.556,0,35.688,15.283,37.769,34.839h-7.258c-3.834,0-6.929,3.205-6.929,7.149s3.095,7.149,6.929,7.149h7.505v36.783H169.852z "
+                              ></path>{" "}
+                            </g>{" "}
+                          </g>{" "}
+                        </g>{" "}
+                      </g>{" "}
+                    </g>
+                  </svg>
+                </button>
                 <button
                   type="submit"
                   disabled={thread === ""}
