@@ -7,6 +7,9 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import InitialQuestions from "./components/InitialQuestions";
+import MicroPhoneIcon from "./assets/microphone.png";
+import MicroPhoneListeningIcon from "./assets/microphone-listening.png";
+import StartRecordingSound from "./assets/start-recording.mp3";
 
 const messages: { message: string; from: "us" | "them" }[] = [
   {
@@ -14,6 +17,8 @@ const messages: { message: string; from: "us" | "them" }[] = [
     from: "them",
   },
 ];
+
+let listen = false;
 
 function App() {
   const defaultMessages: { message: string; from: "us" | "them" }[] = [
@@ -100,16 +105,20 @@ function App() {
   const recognition = new (window as any).webkitSpeechRecognition();
 
   const startRecording = () => {
+    listen = true;
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-US";
     recognition.start();
     recognition.onstart = () => {
       setTimeout(() => {
+        const audio = new Audio(StartRecordingSound);
+        audio.play();
         setListening(true);
         setSpeechRecognitionStarted(true);
         console.log("started");
-      }, 1000);
+        // play a tudu sound
+      }, 500);
       // setListening(true);
       // setSpeechRecognitionStarted(true);
       // console.log("started");
@@ -124,12 +133,14 @@ function App() {
         if (event.results[i].isFinal) {
           recognition.stop();
         } else {
-          interimTranscript += event.results[i][0].transcript;
+          if (listen) {
+            interimTranscript += event.results[i][0].transcript;
+          }
         }
       }
       if (interimTranscript !== "") {
         finalTranscript = interimTranscript;
-        // setTranscript(interimTranscript);
+        setTranscript(interimTranscript);
         // setMessage(interimTranscript);
       }
     };
@@ -141,7 +152,7 @@ function App() {
     recognition.onend = () => {
       console.log("Speech recognition ended.");
       setListening(false);
-      // setTranscript("");
+      setTranscript("");
       if (finalTranscript !== "") {
         wasLastMessageVoice = true;
         submitData(finalTranscript);
@@ -150,6 +161,7 @@ function App() {
   };
 
   const stopRecording = () => {
+    listen = false;
     setListening(false);
     setSpeechRecognitionStarted(false);
     // const recognition = new (window as any).webkitSpeechRecognition();
@@ -185,20 +197,20 @@ function App() {
     //   console.log("waiting for thread");
     // }
 
-    // const response = await axios.get(
-    //   apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
-    // );
+    const response = await axios.get(
+      apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
+    );
 
     // create fake response with timeout of 3 seconds
-    const response: any = await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: {
-            message: "This is a fake response.",
-          },
-        });
-      }, 3000);
-    });
+    // const response: any = await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve({
+    //       data: {
+    //         message: "This is a fake response.",
+    //       },
+    //     });
+    //   }, 3000);
+    // });
 
     bottomRef.current?.scrollIntoView();
     setAnswering(false);
@@ -491,59 +503,17 @@ function App() {
                       stopRecording();
                     }
                   }}
-                  className="h-16 w-16 rounded-none bg-gray-700"
+                  className="h-16 w-16 rounded-none bg-black flex justify-center items-center"
                   type="button"
                 >
-                  <svg
-                    height="30px"
-                    width="30px"
-                    version="1.1"
-                    id="Layer_1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                    viewBox="0 0 278.163 278.163"
-                    xmlSpace="preserve"
-                    fill="#e5e7eb"
-                    stroke="#e5e7eb"
-                  >
-                    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                    <g
-                      id="SVGRepo_tracerCarrier"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></g>
-                    <g id="SVGRepo_iconCarrier">
-                      {" "}
-                      <g>
-                        {" "}
-                        <g>
-                          {" "}
-                          <path
-                            style={{ fill: "#15803d" }}
-                            d="M225.235,94.987h-25.17V69.762c0-29.47-23.281-53.436-51.902-53.436 c-28.594,0-51.875,23.965-51.875,53.436v25.225H69.283c-3.834,0-6.957,3.177-6.957,7.148v50.067 c0,45.794,34.4,83.454,78.004,87.097v24.568h-20.596c-3.834,0-6.929,3.177-6.929,7.148c0,3.944,3.095,7.148,6.929,7.148h54.12 c3.834,0,6.957-3.204,6.957-7.148c0-3.971-3.122-7.148-6.957-7.148h-19.665v-24.568c43.603-3.643,77.976-41.302,77.976-87.097 v-50.067C232.165,98.165,229.07,94.987,225.235,94.987z M218.279,152.203c0,40.316-31.853,73.128-71.019,73.128 s-71.047-32.812-71.047-73.128v-42.918h20.076v41.713c0,29.443,23.281,53.436,51.875,53.436c28.621,0,51.902-23.993,51.902-53.436 v-41.713h18.214C218.279,109.284,218.279,152.203,218.279,152.203z"
-                          ></path>{" "}
-                          <g id="XMLID_18_">
-                            {" "}
-                            <g>
-                              {" "}
-                              {/* <path
-                                  style={{ fill: '#e5e7eb' }}
-                                  d="M169.852,114.513v20.158c0,21.582-17.036,39.139-38.016,39.139 c-20.952,0-37.988-17.556-37.988-39.139v-20.158h7.176c3.807,0,6.929-3.204,6.929-7.149c0-3.944-3.122-7.148-6.929-7.148h-7.176 V63.433h7.176c3.807,0,6.929-3.204,6.929-7.149s-3.122-7.149-6.929-7.149h-6.929c2.082-19.556,18.214-34.839,37.742-34.839 c19.556,0,35.688,15.283,37.769,34.839h-7.258c-3.834,0-6.929,3.205-6.929,7.149s3.095,7.149,6.929,7.149h7.505v36.783h-7.505 c-3.834,0-6.929,3.204-6.929,7.148s3.095,7.149,6.929,7.149C162.348,114.513,169.852,114.513,169.852,114.513z"
-                                ></path>{' '} */}
-                              <path
-                                style={{ fill: "#e5e7eb" }}
-                                d="M53.458,137.824L53.458,137.824c-4.18,0-7.359,3.659-6.907,7.814 c1.137,10.443,4.073,20.331,8.474,29.336c1.175,2.407,3.607,3.949,6.286,3.949h0.063c5.122,0,8.526-5.368,6.253-9.956 c-3.782-7.625-6.302-16.02-7.272-24.888C59.968,140.532,57.026,137.824,53.458,137.824z"
-                              ></path>{" "}
-                              <path
-                                style={{ fill: "#e5e7eb" }}
-                                d="M208.909,78.661h-25.17V53.436C183.738,23.965,160.458,0,131.836,0 c-28.594,0-51.875,23.965-51.875,53.436v25.225H52.956c-3.834,0-6.957,3.177-6.957,7.149v40.818 c0,3.834,3.109,6.943,6.943,6.943l0,0c3.834,0,6.943-3.109,6.943-6.943v-33.67h20.076v41.713 c0,29.443,23.281,53.436,51.875,53.436c28.621,0,51.902-23.993,51.902-53.436V92.958h18.214v42.918 c0,40.316-31.853,73.128-71.019,73.128c-20.528,0-39.048-9.016-52.025-23.401c-1.364-1.512-3.265-2.427-5.302-2.427l0,0 c-6.023,0-9.304,7.138-5.302,11.638c14.07,15.825,33.708,26.321,55.701,28.159v24.568h-20.596c-3.834,0-6.929,3.177-6.929,7.148 c0,3.944,3.095,7.149,6.929,7.149h54.12c3.834,0,6.957-3.204,6.957-7.149c0-3.971-3.122-7.148-6.957-7.148h-19.665v-24.568 c43.603-3.643,77.976-41.302,77.976-87.097V85.809C215.838,81.838,212.743,78.661,208.909,78.661z M169.852,100.216h-7.505 c-3.834,0-6.929,3.204-6.929,7.148s3.095,7.149,6.929,7.149h7.505v20.158c0,21.582-17.036,39.139-38.016,39.139 c-20.952,0-37.988-17.556-37.988-39.139v-20.158h7.176c3.807,0,6.929-3.204,6.929-7.149c0-3.944-3.122-7.148-6.929-7.148h-7.176 V63.433h7.176c3.807,0,6.929-3.204,6.929-7.149s-3.122-7.149-6.929-7.149h-6.929c2.082-19.556,18.214-34.839,37.742-34.839 c19.556,0,35.688,15.283,37.769,34.839h-7.258c-3.834,0-6.929,3.205-6.929,7.149s3.095,7.149,6.929,7.149h7.505v36.783H169.852z "
-                              ></path>{" "}
-                            </g>{" "}
-                          </g>{" "}
-                        </g>{" "}
-                      </g>{" "}
-                    </g>
-                  </svg>
+                  {listening ? (
+                    <img
+                      src={MicroPhoneListeningIcon}
+                      alt="microphone-listening-icon"
+                    />
+                  ) : (
+                    <img src={MicroPhoneIcon} alt="microphone-icon" />
+                  )}
                 </button>
                 <button
                   type="submit"
