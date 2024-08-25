@@ -5,8 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Intilligent Valuation</title>
-    <script type="module" crossorigin src="/assets/index-8179f7c7.js"></script>
-    <link rel="stylesheet" href="/assets/index-bdaef26c.css">
+    <script type="module" crossorigin src="/assets/index-05f6ba62.js"></script>
+    <link rel="stylesheet" href="/assets/index-f690c2d7.css">
   </head>
   <body>
     <div id="root"></div>
@@ -21,9 +21,16 @@
       // Set the src, and pass along the domain as a query param
       // iframe.src = url + '?domain=' + domain;
       console.log(window.top.location.host);
-      const allowedDomains = ["localhost:5173", "appraisal.gnowsie.com", "gnowsie.com", "localhost:3000", "localhost:5000"];
+      const allowedDomains = [
+        "localhost:5173",
+        "appraisal.gnowsie.com",
+        "gnowsie.com",
+        "localhost:3000",
+        "localhost:5000",
+        "127.0.0.1:5173",
+      ];
       if (!allowedDomains.includes(window.top.location.host)) {
-          document.body.innerHTML = "Access Denied";
+        document.body.innerHTML = "Access Denied";
       }
     </script>
   </body>

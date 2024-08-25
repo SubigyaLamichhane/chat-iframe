@@ -40,6 +40,7 @@ function App() {
   const queryParams = new URLSearchParams(location.search);
   const parent = useRef(null);
   const messageParent = useRef(null);
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
 
   const apiURL = "https://intelligenthomevaluation.com";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
@@ -69,6 +70,7 @@ function App() {
   const [thread, setThread] = useState("");
   const [answering, setAnswering] = useState(false);
   const [messageFieldTextColor, setMessageFieldTextColor] = useState("ffffff");
+  const [uttering, setUttering] = useState(false);
   const [sidebarCustomization, setSidebarCustomization] = useState({
     background_color: "#131317",
     // background_color: "#FFFFFF",
@@ -103,6 +105,41 @@ function App() {
 
   let wasLastMessageVoice = false;
   const recognition = new (window as any).webkitSpeechRecognition();
+
+  useEffect(() => {
+    const loadVoices = () => {
+      const synth = window.speechSynthesis;
+      const voiceList = synth.getVoices();
+      console.log(voiceList);
+
+      // if microsoft mark is available use it
+      const microsoftMark = voiceList.find(
+        (voice) => voice.name === "Microsoft Mark - English (United States)"
+      );
+
+      // if google Us English is available use it
+      const googleUsEnglish = voiceList.find(
+        (voice) => voice.name === "Google US English"
+      );
+
+      if (googleUsEnglish) {
+        setVoice(googleUsEnglish);
+      } else if (microsoftMark) {
+        setVoice(microsoftMark);
+      } else {
+        setVoice(voiceList[0]);
+      }
+    };
+
+    loadVoices();
+
+    if (
+      typeof window !== "undefined" &&
+      window.speechSynthesis.onvoiceschanged !== undefined
+    ) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }, []);
 
   const startRecording = () => {
     listen = true;
@@ -233,7 +270,11 @@ function App() {
     setMessageCount(messageCount + 1);
 
     if (wasLastMessageVoice) {
+      setUttering(true);
+      // use Google English (en-US) voice if available if not use Microsoft David if not use default voice
       const utterance = new SpeechSynthesisUtterance();
+      // utterance.voice = "Microsoft Mark - English (United States)";
+      utterance.voice = voice;
       utterance.lang = language;
       utterance.rate = 1;
       utterance.pitch = 1;
@@ -243,6 +284,7 @@ function App() {
       wasLastMessageVoice = false;
       // wait for utterance to be spoken
       utterance.onend = () => {
+        setUttering(false);
         startRecording();
       };
       // startRecording();
@@ -308,8 +350,8 @@ function App() {
 
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messageCount]);
 
   const getThread = async () => {
     const response = await axios.get(apiURL + `/get-thread`);
@@ -418,6 +460,7 @@ function App() {
               >
                 {renderMessages()}
                 <div ref={bottomRef} className="h-6"></div>{" "}
+                {listening && <p>Listening...</p>}
                 {answering && (
                   <div className="w-full p-2 fade-in">
                     <div
@@ -473,7 +516,6 @@ function App() {
             ))}
           </div> */}
 
-            {listening && <p>Listening...</p>}
             <form
               className="w-full"
               onSubmit={async (e) => {
@@ -496,6 +538,7 @@ function App() {
                   className="h-16 p-4 flex-grow rounded-none "
                 ></input>
                 <button
+                  disabled={!!uttering || answering}
                   onClick={() => {
                     if (!listening) {
                       startRecording();

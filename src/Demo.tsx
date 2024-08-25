@@ -62,7 +62,7 @@ const VoiceTester = () => {
       >
         {voices.map((voice, index) => (
           <option key={index} value={voice.name}>
-            {voice.name} ({voice.lang})
+            {voice.name} ------ ({voice.lang})
           </option>
         ))}
       </select>
