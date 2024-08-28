@@ -10,6 +10,8 @@ import InitialQuestions from "./components/InitialQuestions";
 import MicroPhoneIcon from "./assets/microphone.png";
 import MicroPhoneListeningIcon from "./assets/microphone-listening.png";
 import StartRecordingSound from "./assets/start-recording.mp3";
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
+import AddressTooltip from "./components/AddressTooltip";
 
 const messages: { message: string; from: "us" | "them" }[] = [
   {
@@ -102,6 +104,65 @@ function App() {
   const [isSpeechRecognitionStarted, setSpeechRecognitionStarted] =
     useState(false);
   const [language, setLanguage] = useState<"en-US" | "ne-NP">("en-US");
+  const [suggestions, setSuggestions] = useState([]);
+  const [placeAutocomplete, setPlaceAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+  const places = useMapsLibrary("places");
+  // const inputBoxRef = useRef<HTMLInputElement>(null);
+
+  // useEffect(() => {
+  //   // console.log(places);
+  //   if (!places || !inputBoxRef.current) return;
+
+  //   const options = {
+  //     fields: ["name", "formatted_address"],
+  //     componentRestrictions: { country: "ca" },
+  //   };
+
+  //   setPlaceAutocomplete(new places.Autocomplete(inputBoxRef.current, options));
+  //   // console.log(placeAutocomplete?.getPlace());
+  // }, [places]);
+
+  // useEffect(() => {
+  //   if (!placeAutocomplete) return;
+
+  //   placeAutocomplete.getPlacePredic
+  //   // placeAutocomplete.addListener("");
+  //   placeAutocomplete.addListener("place_changed", () => {
+  //     const place = placeAutocomplete.getPlace();
+  //     if (!place) return;
+  //     const address = place.formatted_address;
+  //     console.log(address);
+  //     if (!address) return;
+  //     setMessage(address);
+  //     // submitData(address);
+  //   });
+  // }, [placeAutocomplete]);
+
+  useEffect(() => {
+    if (!message) {
+      setSuggestions([]);
+      return;
+    }
+    (async () => {
+      //@ts-ignore
+      const { AutocompleteService } = await google.maps.importLibrary("places");
+      const service = new AutocompleteService();
+      service.getPlacePredictions(
+        {
+          input: message,
+          componentRestrictions: { country: "ca" },
+        },
+        (predictions: any, status: any) => {
+          // console.log(predictions);
+          if (status !== "OK") return;
+          if (!predictions) return;
+          setSuggestions(predictions);
+        }
+      );
+    })();
+    // const { AutocompleteService } = await google.maps.importLibrary("places");
+  }, [message]);
 
   let wasLastMessageVoice = false;
   const recognition = new (window as any).webkitSpeechRecognition();
@@ -110,7 +171,7 @@ function App() {
     const loadVoices = () => {
       const synth = window.speechSynthesis;
       const voiceList = synth.getVoices();
-      console.log(voiceList);
+      // console.log(voiceList);
 
       // if microsoft mark is available use it
       const microsoftMark = voiceList.find(
@@ -248,6 +309,12 @@ function App() {
     //     });
     //   }, 3000);
     // });
+
+    // const addressAutocomplete = await axios.get(
+    //   `https://maps.googleapis.com/maps/api/js?key=${
+    //     import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY
+    //   }&libraries=places`
+    // );
 
     bottomRef.current?.scrollIntoView();
     setAnswering(false);
@@ -398,7 +465,7 @@ function App() {
           }
         >
           {message.from === "them" ? (
-            <p className="w-full md:text-justify text-left max-w-full markdown-body">
+            <div className="w-full md:text-justify text-left max-w-full markdown-body">
               <ReactMarkdown
                 // linkTarget="_blank"
                 rehypePlugins={[rehypeRaw]}
@@ -406,7 +473,7 @@ function App() {
               >
                 {message.message}
               </ReactMarkdown>
-            </p>
+            </div>
           ) : (
             <p className="w-full md:text-justify text-left max-w-full">
               {message.message}
@@ -525,6 +592,7 @@ function App() {
               }}
             >
               <div className="flex fixed bottom-0 w-full md:relative">
+                {" "}
                 <input
                   autoFocus
                   ref={inputBoxRef}
@@ -536,7 +604,14 @@ function App() {
                     color: "#" + messageFieldTextColor,
                   }}
                   className="h-16 p-4 flex-grow rounded-none "
-                ></input>
+                ></input>{" "}
+                <AddressTooltip
+                  disabled={!!uttering || answering || messages.length > 1}
+                  suggestions={suggestions.map(
+                    (suggestion: any) => suggestion.description
+                  )}
+                  setMessage={setMessage}
+                />
                 <button
                   disabled={!!uttering || answering}
                   onClick={() => {

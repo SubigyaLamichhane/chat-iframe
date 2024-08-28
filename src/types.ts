@@ -49,3 +49,7 @@ export interface Property {
   maint: string;
   dom: number;
 }
+
+interface PlaceAutocompleteProps {
+  onPlaceSelect: (place: google.maps.places.PlaceResult | null) => void;
+}
