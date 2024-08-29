@@ -44,8 +44,8 @@ function App() {
   const messageParent = useRef(null);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
 
-  // const apiURL = "https://intelligenthomevaluation.com";
-  const apiURL = "http://localhost:5000";
+  const apiURL = "https://intelligenthomevaluation.com";
+  // const apiURL = "http://localhost:5000";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
