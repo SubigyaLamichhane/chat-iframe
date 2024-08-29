@@ -21,7 +21,9 @@ const AddressTooltip: React.FC<AddressTooltipProps> = ({
         <div
           key={index}
           className="cursor-pointer p-2 hover:bg-gray-100 border-b last:border-none"
-          onClick={() => setMessage(address)}
+          onClick={() => {
+            setMessage(address);
+          }}
         >
           {address}
         </div>

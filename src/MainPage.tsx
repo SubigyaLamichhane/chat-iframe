@@ -12,6 +12,7 @@ import MicroPhoneListeningIcon from "./assets/microphone-listening.png";
 import StartRecordingSound from "./assets/start-recording.mp3";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import AddressTooltip from "./components/AddressTooltip";
+import { getPostalCode } from "./utils";
 
 const messages: { message: string; from: "us" | "them" }[] = [
   {
@@ -105,7 +106,7 @@ function App() {
   const [isSpeechRecognitionStarted, setSpeechRecognitionStarted] =
     useState(false);
   const [language, setLanguage] = useState<"en-US" | "ne-NP">("en-US");
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [placeAutocomplete, setPlaceAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null);
   const places = useMapsLibrary("places");
@@ -145,20 +146,82 @@ function App() {
       setSuggestions([]);
       return;
     }
+    if (
+      suggestions &&
+      suggestions.length > 0 &&
+      suggestions.includes(message)
+    ) {
+      setSuggestions([]);
+      return;
+    }
     (async () => {
       //@ts-ignore
-      const { AutocompleteService } = await google.maps.importLibrary("places");
+      const { AutocompleteService, PlacesService } =
+        await google.maps.importLibrary("places");
       const service = new AutocompleteService();
+      // const map = new google.maps.Map(
+      //   document.getElementById("map") as HTMLElement
+      // );
+      // const placesService = new PlacesService(map);
       service.getPlacePredictions(
         {
           input: message,
           componentRestrictions: { country: "ca" },
+          // also get the postal code in the prediction
+          fields: ["address_components", "geometry", "place_id"],
         },
-        (predictions: any, status: any) => {
+        async (predictions: any, status: any) => {
           // console.log(predictions);
           if (status !== "OK") return;
           if (!predictions) return;
-          setSuggestions(predictions);
+          // Get details for each prediction to fetch postal code
+          // const suggestions = predictions.map((prediction: any) => {
+          //   console.log(prediction);
+          //   getPostalCode(prediction.description).then((postalCode) => {
+          //     // console.log(postalCode);
+          //     const secondaryText = prediction.structured_formatting
+          //       ? prediction.structured_formatting.secondary_text || ""
+          //       : "";
+          //     // console.log(secondaryText);
+          //     let cityName = "";
+          //     if (secondaryText.includes(",")) {
+          //       cityName = secondaryText.split(",")[0];
+          //     }
+          //     return `${
+          //       prediction.structured_formatting &&
+          //       prediction.structured_formatting.main_text
+          //     }, ${postalCode}, ${cityName}`;
+          //   });
+          // });
+
+          const suggestionsList: string[] = [];
+          for (let i = 0; i < predictions.length; i++) {
+            const prediction = predictions[i];
+            const postalCode = await getPostalCode(prediction.description);
+            const secondaryText = prediction.structured_formatting
+              ? prediction.structured_formatting.secondary_text || ""
+              : "";
+            let cityName = "";
+            if (secondaryText.includes(",")) {
+              cityName = secondaryText.split(",")[0];
+            }
+            suggestionsList.push(
+              `${
+                prediction.structured_formatting &&
+                prediction.structured_formatting.main_text
+              }, ${postalCode}, ${cityName}`
+            );
+            // console.log(suggestionsList);
+            // setSuggestions((prev) => [
+            //   ...prev,
+            //   `${
+            //     prediction.structured_formatting &&
+            //     prediction.structured_formatting.main_text
+            //   }, ${postalCode}, ${cityName}`,
+            // ]);
+          }
+          // console.log(suggestions);
+          setSuggestions(suggestionsList);
         }
       );
     })();
@@ -611,9 +674,7 @@ function App() {
                 ></input>{" "}
                 <AddressTooltip
                   disabled={!!uttering || answering || messages.length > 1}
-                  suggestions={suggestions.map(
-                    (suggestion: any) => suggestion.description
-                  )}
+                  suggestions={suggestions}
                   setMessage={setMessage}
                 />
                 <button
