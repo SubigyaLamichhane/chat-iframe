@@ -44,7 +44,8 @@ function App() {
   const messageParent = useRef(null);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
 
-  const apiURL = "https://intelligenthomevaluation.com";
+  // const apiURL = "https://intelligenthomevaluation.com";
+  const apiURL = "http://localhost:5000";
   // const apiURL = "https://chat-dev.witlingo.com/api/";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
@@ -296,7 +297,8 @@ function App() {
     // }
 
     const response = await axios.get(
-      apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
+      apiURL +
+        `/query?query=${prevMessage}&thread_id=${thread}&tts=${wasLastMessageVoice}`
     );
 
     // create fake response with timeout of 3 seconds
@@ -346,7 +348,9 @@ function App() {
       utterance.rate = 1;
       utterance.pitch = 1;
       utterance.volume = 1;
-      utterance.text = response.data.message;
+      utterance.text = response.data.tts
+        ? response.data.tts
+        : response.data.message;
       speechSynthesis.speak(utterance);
       wasLastMessageVoice = false;
       // wait for utterance to be spoken
