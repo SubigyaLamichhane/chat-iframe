@@ -16,6 +16,7 @@ import { Property } from "./types";
 import remarkGfm from "remark-gfm";
 import remarkExternalLinks from "remark-external-links";
 import InitialQuestions from "./components/InitialQuestions";
+import PropertyCard from "./components/PropertyCardForQuery";
 
 interface MyLinkProps {
   children: ReactNode;
@@ -64,10 +65,14 @@ function App() {
   ];
   const location = useLocation();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] =
-    useState<
-      { message: string; from: "us" | "them"; properties?: Property[] | null }[]
-    >(defaultMessages);
+  const [messages, setMessages] = useState<
+    {
+      message: string;
+      from: "us" | "them";
+      properties?: Property[] | null;
+      propertyDataFromQuery?: any;
+    }[]
+  >(defaultMessages);
   const [fetched, setFetched] = useState(true);
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -78,7 +83,7 @@ function App() {
   const messageParent = useRef(null);
 
   const apiURL = "https://intelligenthomevaluation.com/database";
-  // const apiURL = "https://chat-dev.witlingo.com/api/";
+  // const apiURL = "http://localhost:5000/database";
 
   // const backgroundColor = queryParams.get("backgroundColor") || "#fff";
 
@@ -190,8 +195,17 @@ function App() {
   }, [messages]);
 
   const getThread = async () => {
-    const response = await axios.get(apiURL + `/get-thread`);
-    return response.data;
+    const query = new URLSearchParams(location.search);
+    console.log(query.get("property"));
+    if (query.get("property")) {
+      const response = await axios.get(
+        apiURL + `/get-thread-with-query?property=${query.get("property")}`
+      );
+      return response.data;
+    } else {
+      const response = await axios.get(apiURL + `/get-thread`);
+      return response.data;
+    }
   };
 
   useEffect(() => {
@@ -199,6 +213,16 @@ function App() {
     const thread = getThread();
     thread.then((data) => {
       setThread(data.thread_id);
+      if (data.property_data) {
+        setMessages([
+          {
+            message:
+              "Would you like to know anything else about this property?",
+            from: "them",
+            propertyDataFromQuery: [data.property_data],
+          },
+        ]);
+      }
     });
   }, []);
 
@@ -225,8 +249,10 @@ function App() {
     //   apiURL + `chat/${botId}/${ID}/`,
     //   bodyFormData
     // );
+
+    const encodedMessage = encodeURIComponent(prevMessage);
     const response = await axios.get(
-      apiURL + `/query?query=${prevMessage}&thread_id=${thread}`
+      apiURL + `/query?query=${encodedMessage}&thread_id=${thread}`
     );
     bottomRef.current?.scrollIntoView();
     setAnswering(false);
@@ -249,10 +275,70 @@ function App() {
   };
 
   const renderMessages = () => {
-    if (messages.length === 0) {
+    console.log(messages);
+    if (messages.length === 0 && !messages[0]?.propertyDataFromQuery) {
       return <InitialQuestions submitData={submitData} />;
     }
+
     return messages.map((message, index) => {
+      if (message.propertyDataFromQuery) {
+        return (
+          <div>
+            <PropertyCard property={message.propertyDataFromQuery[0]} />
+            <ul
+              key={index}
+              ref={messageParent}
+              className={`flex items-center ${
+                message.from === "us" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <li
+                className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+                  message.from === "us"
+                    ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
+                    : "max-w-lg rounded-bl-xl rounded-tr-xl"
+                }`}
+                style={
+                  message.from === "us"
+                    ? {
+                        backgroundColor: "#" + outgoingMessageColor,
+                        color: "#" + outgoingMessageTextColor,
+                      }
+                    : {
+                        backgroundColor: sidebarCustomization.background_color,
+                        color: sidebarCustomization.text_color,
+                      }
+                }
+              >
+                <div className="w-full md:text-justify text-left max-w-full markdown-body">
+                  <ReactMarkdown
+                    // components={
+                    //   {
+                    //     // a: ({ node, ...props }) => {
+                    //     //   return (
+                    //     //     <a
+                    //     //       {...props}
+                    //     //       target="_blank"
+                    //     //       className="text-blue-500"
+                    //     //     >
+                    //     //       {props.children}
+                    //     //     </a>
+                    //     //   );
+                    //     // },
+                    //   }
+                    // }
+                    // rehypePlugins={[rehypeRaw]}
+                    remarkPlugins={[remarkGfm]}
+                    className="markdown-body"
+                  >
+                    {message.message}
+                  </ReactMarkdown>
+                </div>
+              </li>
+            </ul>
+          </div>
+        );
+      }
       if (message.properties) {
         return (
           <div>
@@ -378,6 +464,14 @@ function App() {
     });
   };
   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  if (thread === "") {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   return (
     <div

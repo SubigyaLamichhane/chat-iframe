@@ -88,6 +88,10 @@ const App: React.FC = () => {
         alt="test"
         className="w-6 h-6"
       />
+      <iframe
+        src="http://localhost:5000/?property=1708-50-ordnance-st-toronto-ontario-m5k1a2-canada"
+        className="w-full h-screen"
+      ></iframe>
     </div>
   );
 };

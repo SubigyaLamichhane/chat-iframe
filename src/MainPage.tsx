@@ -363,9 +363,11 @@ function App() {
     //   console.log("waiting for thread");
     // }
 
+    var encodedMessage = encodeURIComponent(prevMessage);
+
     const response = await axios.get(
       apiURL +
-        `/query?query=${prevMessage}&thread_id=${thread}&tts=${wasLastMessageVoice}`
+        `/query?query=${encodedMessage}&thread_id=${thread}&tts=${wasLastMessageVoice}`
     );
 
     // create fake response with timeout of 3 seconds
@@ -557,7 +559,7 @@ function App() {
                       }
                 }
               >
-                <p className="w-full md:text-justify text-left max-w-full markdown-body">
+                <div className="w-full md:text-justify text-left max-w-full markdown-body">
                   <ReactMarkdown
                     // components={
                     //   {
@@ -580,7 +582,7 @@ function App() {
                   >
                     {message.message}
                   </ReactMarkdown>
-                </p>
+                </div>
               </li>
             </ul>
           </div>
@@ -613,7 +615,7 @@ function App() {
             }
           >
             {message.from === "them" ? (
-              <p className="w-full md:text-justify text-left max-w-full markdown-body">
+              <div className="w-full md:text-justify text-left max-w-full markdown-body">
                 <ReactMarkdown
                   // linkTarget="_blank"
                   // linkTargets="_blank"
@@ -641,7 +643,7 @@ function App() {
                 >
                   {message.message}
                 </ReactMarkdown>
-              </p>
+              </div>
             ) : (
               <p className="w-full md:text-justify text-left max-w-full">
                 {message.message}
