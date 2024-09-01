@@ -13,8 +13,11 @@ import StartRecordingSound from "./assets/start-recording.mp3";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import AddressTooltip from "./components/AddressTooltip";
 import { getPostalCode } from "./utils";
+import remarkExternalLinks from "remark-external-links";
+import PropertyGrid from "./components/PropertyGrid";
+import PropertyCard from "./components/PropertyCardForQuery";
 
-const messages: { message: string; from: "us" | "them" }[] = [
+let messages: { message: string; from: "us" | "them"; properties?: any }[] = [
   {
     message: "Please enter the address you would like to analyze.",
     from: "them",
@@ -110,6 +113,7 @@ function App() {
   const [placeAutocomplete, setPlaceAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null);
   const places = useMapsLibrary("places");
+  const [propertyData, setPropertyData] = useState<any>({});
   // const inputBoxRef = useRef<HTMLInputElement>(null);
 
   // useEffect(() => {
@@ -488,8 +492,17 @@ function App() {
   }, [messageCount]);
 
   const getThread = async () => {
-    const response = await axios.get(apiURL + `/get-thread`);
-    return response.data;
+    const query = new URLSearchParams(location.search);
+    console.log(query.get("property"));
+    if (query.get("property")) {
+      const response = await axios.get(
+        apiURL + `/get-thread-with-query?property=${query.get("property")}`
+      );
+      return response.data;
+    } else {
+      const response = await axios.get(apiURL + `/get-thread`);
+      return response.data;
+    }
   };
 
   useEffect(() => {
@@ -497,60 +510,158 @@ function App() {
     const thread = getThread();
     thread.then((data) => {
       setThread(data.thread_id);
+      if (data.property_data) {
+        messages = [
+          {
+            message:
+              "Would you like to know anything else about this property?",
+            from: "them",
+            properties: [data.property_data],
+          },
+        ];
+      }
     });
   }, []);
 
   const renderMessages = () => {
-    // if (messages.length === 0) {
-    //   return <InitialQuestions submitData={submitData} />;
-    // }
-    return messages.map((message, index) => (
-      <ul
-        key={index}
-        ref={messageParent}
-        className={`flex items-center ${
-          message.from === "us" ? "justify-end" : "justify-start"
-        }`}
-      >
-        <p className="hidden">{messageCount}</p>
-        <li
-          className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
-            message.from === "us"
-              ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
-              : "max-w-lg rounded-bl-xl rounded-tr-xl"
-          }`}
-          style={
-            message.from === "us"
-              ? {
-                  backgroundColor: "#" + outgoingMessageColor,
-                  color: "#" + outgoingMessageTextColor,
+    if (messages.length === 0) {
+      return <InitialQuestions submitData={submitData} />;
+    }
+    return messages.map((message, index) => {
+      if (message.properties) {
+        return (
+          <div>
+            <PropertyCard property={message.properties[0]} />
+            <ul
+              key={index}
+              ref={messageParent}
+              className={`flex items-center ${
+                message.from === "us" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <li
+                className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+                  message.from === "us"
+                    ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
+                    : "max-w-lg rounded-bl-xl rounded-tr-xl"
+                }`}
+                style={
+                  message.from === "us"
+                    ? {
+                        backgroundColor: "#" + outgoingMessageColor,
+                        color: "#" + outgoingMessageTextColor,
+                      }
+                    : {
+                        backgroundColor: sidebarCustomization.background_color,
+                        color: sidebarCustomization.text_color,
+                      }
                 }
-              : {
-                  backgroundColor: sidebarCustomization.background_color,
-                  color: sidebarCustomization.text_color,
-                }
-          }
-        >
-          {message.from === "them" ? (
-            <div className="w-full md:text-justify text-left max-w-full markdown-body">
-              <ReactMarkdown
-                // linkTarget="_blank"
-                rehypePlugins={[rehypeRaw]}
-                remarkPlugins={[remarkGfm]}
               >
+                <p className="w-full md:text-justify text-left max-w-full markdown-body">
+                  <ReactMarkdown
+                    // components={
+                    //   {
+                    //     // a: ({ node, ...props }) => {
+                    //     //   return (
+                    //     //     <a
+                    //     //       {...props}
+                    //     //       target="_blank"
+                    //     //       className="text-blue-500"
+                    //     //     >
+                    //     //       {props.children}
+                    //     //     </a>
+                    //     //   );
+                    //     // },
+                    //   }
+                    // }
+                    // rehypePlugins={[rehypeRaw]}
+                    remarkPlugins={[remarkGfm]}
+                    className="markdown-body"
+                  >
+                    {message.message}
+                  </ReactMarkdown>
+                </p>
+              </li>
+            </ul>
+          </div>
+        );
+      }
+      return (
+        <ul
+          key={index}
+          ref={messageParent}
+          className={`flex items-center ${
+            message.from === "us" ? "justify-end" : "justify-start"
+          }`}
+        >
+          <li
+            className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+              message.from === "us"
+                ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
+                : "max-w-lg rounded-bl-xl rounded-tr-xl"
+            }`}
+            style={
+              message.from === "us"
+                ? {
+                    backgroundColor: "#" + outgoingMessageColor,
+                    color: "#" + outgoingMessageTextColor,
+                  }
+                : {
+                    backgroundColor: sidebarCustomization.background_color,
+                    color: sidebarCustomization.text_color,
+                  }
+            }
+          >
+            {message.from === "them" ? (
+              <p className="w-full md:text-justify text-left max-w-full markdown-body">
+                <ReactMarkdown
+                  // linkTarget="_blank"
+                  // linkTargets="_blank"
+                  rehypePlugins={[rehypeRaw]}
+                  remarkPlugins={[
+                    [
+                      // @ts-ignore
+                      remarkExternalLinks,
+                      { target: "_blank", rel: "noopener noreferrer" },
+                    ],
+                  ]}
+                  // components={{
+                  //   a: ({ node, ...props }) => {
+                  //     return (
+                  //       <a
+                  //         {...props}
+                  //         target="_blank"
+                  //         className="text-yellow-500"
+                  //       >
+                  //         {props.children}
+                  //       </a>
+                  //     );
+                  //   },
+                  // }}
+                >
+                  {message.message}
+                </ReactMarkdown>
+              </p>
+            ) : (
+              <p className="w-full md:text-justify text-left max-w-full">
                 {message.message}
-              </ReactMarkdown>
-            </div>
-          ) : (
-            <p className="w-full md:text-justify text-left max-w-full">
-              {message.message}
-            </p>
-          )}
-        </li>
-      </ul>
-    ));
+              </p>
+            )}
+          </li>
+        </ul>
+      );
+    });
   };
   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  // loading icon if thread not present
+  if (thread === "") {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   return (
     <div
