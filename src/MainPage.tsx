@@ -408,6 +408,20 @@ function App() {
     setMessageCount(messageCount + 1);
 
     if (wasLastMessageVoice) {
+      console.log(response.data.tts);
+      if (response.data.tts) {
+        setUttering(true);
+        // play a audio given a url
+        const audio = new Audio(apiURL + response.data.tts);
+        audio.play();
+        wasLastMessageVoice = false;
+        // wait for audio to finish
+        audio.onended = () => {
+          setUttering(false);
+          startRecording();
+        };
+        return;
+      }
       setUttering(true);
       // use Google English (en-US) voice if available if not use Microsoft David if not use default voice
       const utterance = new SpeechSynthesisUtterance();
@@ -417,9 +431,7 @@ function App() {
       utterance.rate = 1;
       utterance.pitch = 1;
       utterance.volume = 1;
-      utterance.text = response.data.tts
-        ? response.data.tts
-        : response.data.message;
+      utterance.text = response.data.message;
       speechSynthesis.speak(utterance);
       wasLastMessageVoice = false;
       // wait for utterance to be spoken
