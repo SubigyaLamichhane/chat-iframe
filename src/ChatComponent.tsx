@@ -417,23 +417,25 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               >
                 <div className="w-full md:text-justify text-left max-w-full markdown-body">
                   <ReactMarkdown
-                    components={{
-                      a: ({ node, ...props }) => {
-                        return (
-                          <a
-                            {...props}
-                            target="_blank"
-                            className="text-yellow-100"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              console.log(props.href);
-                            }}
-                          >
-                            {props.children}
-                          </a>
-                        );
-                      },
-                    }}
+                    components={
+                      {
+                        // a: ({ node, ...props }) => {
+                        //   return (
+                        //     <a
+                        //       {...props}
+                        //       target="_blank"
+                        //       className="text-yellow-100"
+                        //       onClick={(event) => {
+                        //         event.preventDefault();
+                        //         console.log(props.href);
+                        //       }}
+                        //     >
+                        //       {props.children}
+                        //     </a>
+                        //   );
+                        // },
+                      }
+                    }
                     // rehypePlugins={[rehypeRaw]}
                     remarkPlugins={[remarkGfm]}
                     className="markdown-body"
@@ -477,23 +479,25 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               >
                 <p className="w-full md:text-justify text-left max-w-full markdown-body">
                   <ReactMarkdown
-                    components={{
-                      a: ({ node, ...props }) => {
-                        return (
-                          <a
-                            {...props}
-                            target="_blank"
-                            className="text-yellow-100"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              console.log(props.href);
-                            }}
-                          >
-                            {props.children}
-                          </a>
-                        );
-                      },
-                    }}
+                    components={
+                      {
+                        // a: ({ node, ...props }) => {
+                        //   return (
+                        //     <a
+                        //       {...props}
+                        //       target="_blank"
+                        //       className="text-yellow-100"
+                        //       onClick={(event) => {
+                        //         // event.preventDefault();
+                        //         console.log(props.href);
+                        //       }}
+                        //     >
+                        //       {props.children}
+                        //     </a>
+                        //   );
+                        // },
+                      }
+                    }
                     // rehypePlugins={[rehypeRaw]}
                     remarkPlugins={[remarkGfm]}
                     className="markdown-body"
@@ -545,23 +549,25 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                       { target: "_blank", rel: "noopener noreferrer" },
                     ],
                   ]}
-                  components={{
-                    a: ({ node, ...props }) => {
-                      return (
-                        <a
-                          {...props}
-                          target="_blank"
-                          className="text-yellow-100"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            console.log(props.href);
-                          }}
-                        >
-                          {props.children}
-                        </a>
-                      );
-                    },
-                  }}
+                  components={
+                    {
+                      // a: ({ node, ...props }) => {
+                      //   return (
+                      //     <a
+                      //       {...props}
+                      //       target="_blank"
+                      //       className="text-yellow-100"
+                      //       onClick={(event) => {
+                      //         // event.preventDefault();
+                      //         console.log(props.href);
+                      //       }}
+                      //     >
+                      //       {props.children}
+                      //     </a>
+                      //   );
+                      // },
+                    }
+                  }
                 >
                   {message.message}
                 </ReactMarkdown>
