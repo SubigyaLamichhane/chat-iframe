@@ -73,18 +73,27 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
           <p className="mb-2">
             <strong>Availability:</strong> {property.availability}
           </p>
+
+          {property.GnowiseCapRate && (
+            <p className="mb-2">
+              <strong>Cap Rate:</strong> {property.GnowiseCapRate}
+            </p>
+          )}
+
           {/* <p className="mb-2"><strong>Source:</strong> {property.Source}</p> */}
 
-          <button
-            className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-300 mr-4"
-            onClick={() =>
-              window.open(
-                `https://www.google.com/maps/search/?api=1&query=${property.Latitude},${property.Longitude}`
-              )
-            }
-          >
-            View in Google Maps
-          </button>
+          {property.Latitude && property.Longitude && (
+            <button
+              className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-300 mr-4"
+              onClick={() =>
+                window.open(
+                  `https://www.google.com/maps/search/?api=1&query=${property.Latitude},${property.Longitude}`
+                )
+              }
+            >
+              View in Google Maps
+            </button>
+          )}
           <button
             className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-300"
             onClick={onClose}

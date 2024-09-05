@@ -1,6 +1,8 @@
 export interface Property {
   ml_num: string;
   addr: string;
+  GnowiseCapRate: string | null;
+  GnowiseValue: string | null;
   zip: string;
   apt_num: string | null;
   municipality: string;
