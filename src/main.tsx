@@ -8,11 +8,11 @@ const API_KEY = "AIzaSyBYZ1Up9YS1UP8DfSpOXAzecX-kVxWgdyA";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <APIProvider
+    {/* <APIProvider
       apiKey={API_KEY}
       solutionChannel="GMP_devsite_samples_v3_rgmautocomplete"
-    >
-      <App />
-    </APIProvider>
+    > */}
+    <App />
+    {/* </APIProvider> */}
   </React.StrictMode>
 );

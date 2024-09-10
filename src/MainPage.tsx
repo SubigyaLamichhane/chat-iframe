@@ -9,13 +9,13 @@ let messages: {
   propertyDataFromQuery?: any;
 }[] = [
   {
-    message: "Please enter the address you would like to analyze.",
+    message: "Please enter your query below.",
     from: "them",
   },
 ];
 
 const PropertyValuationChatbot = () => {
-  const apiURL = "https://intelligenthomevaluation.com";
+  const apiURL = "http://167.99.246.210:8000";
 
   return (
     <ChatComponent messages={messages} apiURL={apiURL} initialQuestions={[]} />

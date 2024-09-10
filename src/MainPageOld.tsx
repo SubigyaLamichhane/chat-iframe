@@ -101,7 +101,6 @@ function App() {
   });
 
   const botId = queryParams.get("botId") || "2";
-  const [ID, setID] = useState(crypto.randomUUID());
 
   // Voice-related state
   const [transcript, setTranscript] = useState("");

@@ -13,9 +13,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" Component={MainPage} />
-          <Route path="/database-chatbot" Component={DatabaseChatbot} />
-          <Route path="/demo" Component={Demo} />
-          <Route path="/test" Component={TestPage} />
+          {/* <Route path="/database-chatbot" Component={DatabaseChatbot} /> */}
+          {/* <Route path="/demo" Component={Demo} /> */}
+          {/* <Route path="/test" Component={TestPage} /> */}
         </Routes>
       </Router>
     </div>

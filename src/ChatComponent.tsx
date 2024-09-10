@@ -75,7 +75,6 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   };
 
   const botId = queryParams.get("botId") || "2";
-  const [ID, setID] = useState(crypto.randomUUID());
 
   // Voice-related state
   const [transcript, setTranscript] = useState("");
@@ -84,63 +83,72 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
     useState(false);
   const [language, setLanguage] = useState<"en-US" | "ne-NP">("en-US");
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number | null;
+    lng: number | null;
+  } | null>({
+    lat: null,
+    lng: null,
+  });
 
-  useEffect(() => {
-    if (!message) {
-      setSuggestions([]);
-      return;
-    }
-    if (
-      suggestions &&
-      suggestions.length > 0 &&
-      suggestions.includes(message)
-    ) {
-      setSuggestions([]);
-      return;
-    }
-    (async () => {
-      //@ts-ignore
-      const { AutocompleteService, PlacesService } =
-        await google.maps.importLibrary("places");
-      const service = new AutocompleteService();
-      // const map = new google.maps.Map(
-      //   document.getElementById("map") as HTMLElement
-      // );
-      // const placesService = new PlacesService(map);
-      service.getPlacePredictions(
-        {
-          input: message,
-          componentRestrictions: { country: "ca" },
-          // also get the postal code in the prediction
-          fields: ["address_components", "geometry", "place_id"],
-        },
-        async (predictions: any, status: any) => {
-          if (status !== "OK") return;
-          if (!predictions) return;
+  const [error, setError] = useState<string | null>(null);
 
-          const suggestionsList: string[] = [];
-          for (let i = 0; i < predictions.length; i++) {
-            const prediction = predictions[i];
-            const postalCode = await getPostalCode(prediction.description);
-            const secondaryText = prediction.structured_formatting
-              ? prediction.structured_formatting.secondary_text || ""
-              : "";
-            let cityName = "";
-            if (secondaryText.includes(",")) {
-              cityName = secondaryText.split(",")[0];
-            }
-            suggestionsList.push(
-              `${
-                prediction.structured_formatting &&
-                prediction.structured_formatting.main_text
-              }, ${postalCode}, ${cityName}`
-            );
-          }
-          setSuggestions(suggestionsList);
-        }
-      );
-    })();
-  }, [message]);
+  // useEffect(() => {
+  //   if (!message) {
+  //     setSuggestions([]);
+  //     return;
+  //   }
+  //   if (
+  //     suggestions &&
+  //     suggestions.length > 0 &&
+  //     suggestions.includes(message)
+  //   ) {
+  //     setSuggestions([]);
+  //     return;
+  //   }
+  //   (async () => {
+  //     //@ts-ignore
+  //     const { AutocompleteService, PlacesService } =
+  //       await google.maps.importLibrary("places");
+  //     const service = new AutocompleteService();
+  //     // const map = new google.maps.Map(
+  //     //   document.getElementById("map") as HTMLElement
+  //     // );
+  //     // const placesService = new PlacesService(map);
+  //     service.getPlacePredictions(
+  //       {
+  //         input: message,
+  //         componentRestrictions: { country: "ca" },
+  //         // also get the postal code in the prediction
+  //         fields: ["address_components", "geometry", "place_id"],
+  //       },
+  //       async (predictions: any, status: any) => {
+  //         if (status !== "OK") return;
+  //         if (!predictions) return;
+
+  //         const suggestionsList: string[] = [];
+  //         for (let i = 0; i < predictions.length; i++) {
+  //           const prediction = predictions[i];
+  //           const postalCode = await getPostalCode(prediction.description);
+  //           const secondaryText = prediction.structured_formatting
+  //             ? prediction.structured_formatting.secondary_text || ""
+  //             : "";
+  //           let cityName = "";
+  //           if (secondaryText.includes(",")) {
+  //             cityName = secondaryText.split(",")[0];
+  //           }
+  //           suggestionsList.push(
+  //             `${
+  //               prediction.structured_formatting &&
+  //               prediction.structured_formatting.main_text
+  //             }, ${postalCode}, ${cityName}`
+  //           );
+  //         }
+  //         setSuggestions(suggestionsList);
+  //       }
+  //     );
+  //   })();
+  // }, [message]);
 
   let wasLastMessageVoice = false;
   const recognition = new (window as any).webkitSpeechRecognition();
@@ -353,16 +361,63 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
     console.log(query.get("property"));
     if (query.get("property")) {
       const response = await axios.get(
-        apiURL + `/get-thread-with-query?property=${query.get("property")}`
+        apiURL +
+          `/get-thread-with-query?property=${query.get("property")}&${
+            userLocation?.lat && `latitude=${userLocation?.lat}`
+          }&${userLocation?.lng && `longitude=${userLocation?.lng}`}`
       );
       return response.data;
     } else {
-      const response = await axios.get(apiURL + `/get-thread`);
+      const response = await axios.get(
+        apiURL +
+          `/get-thread?${
+            userLocation?.lat && `latitude=${userLocation?.lat}`
+          }&${userLocation?.lng && `longitude=${userLocation?.lng}`}`
+      );
       return response.data;
     }
   };
 
   useEffect(() => {
+    if (!userLocation || !userLocation.lat || !userLocation.lng || !error) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          // if cannot get location
+          if (!position.coords.latitude || !position.coords.longitude) {
+            console.error("Location unavailable.");
+            return;
+          }
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          // Handle error
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              console.error("User denied the request for Geolocation.");
+              setError("User denied the request for Geolocation.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              console.error("Location information is unavailable.");
+              setError("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              console.error("The request to get user location timed out.");
+              setError("The request to get user location timed out.");
+              break;
+          }
+        },
+        {
+          enableHighAccuracy: true, // Use high accuracy location if available
+          timeout: 5000, // Timeout after 5 seconds
+          maximumAge: 0, // Don't use a cached location
+        }
+      );
+      return;
+    }
     // get thread id
     const thread = getThread();
     thread.then((data) => {
@@ -378,7 +433,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
         ];
       }
     });
-  }, []);
+  }, [userLocation]);
 
   const renderMessages = () => {
     // console.log(messages);
@@ -590,11 +645,28 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   };
   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 
+  // if (error) {
+  //   return <div>{error}</div>;
+  // }
   // loading icon if thread not present
   if (thread === "") {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="loader"></div>
+        <div className="animate-spin ">
+          <svg
+            className="w-16 h-16"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+        </div>
       </div>
     );
   }
@@ -724,7 +796,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                   suggestions={suggestions}
                   setMessage={setMessage}
                 />
-                <button
+                {/* <button
                   disabled={!!uttering || answering}
                   onClick={() => {
                     if (!listening) {
@@ -744,7 +816,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                   ) : (
                     <img src={MicroPhoneIcon} alt="microphone-icon" />
                   )}
-                </button>
+                </button> */}
                 <button
                   type="submit"
                   disabled={thread === ""}
