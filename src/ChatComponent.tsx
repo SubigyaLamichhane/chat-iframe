@@ -379,7 +379,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   };
 
   useEffect(() => {
-    if (!userLocation || !userLocation.lat || !userLocation.lng || !error) {
+    if (!userLocation || !userLocation.lat || !userLocation.lng) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log(position);

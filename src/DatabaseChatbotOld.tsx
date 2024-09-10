@@ -124,7 +124,6 @@ function App() {
   });
 
   const botId = queryParams.get("botId") || "2";
-  const [ID, setID] = useState(crypto.randomUUID());
 
   const getData = async () => {
     const response = await axios.get(apiURL + "chat/" + botId + "/");

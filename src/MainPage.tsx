@@ -15,7 +15,7 @@ let messages: {
 ];
 
 const PropertyValuationChatbot = () => {
-  const apiURL = "http://167.99.246.210:8000";
+  const apiURL = "https://ai-scrapper.subigyalamichhane.com.np";
 
   return (
     <ChatComponent messages={messages} apiURL={apiURL} initialQuestions={[]} />
