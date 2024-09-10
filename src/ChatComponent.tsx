@@ -27,6 +27,7 @@ interface IChatComponentProps {
     from: "us" | "them";
     properties?: any;
     propertyDataFromQuery?: any;
+    propertiesRaw?: any;
   }[];
 }
 
@@ -52,6 +53,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   const [thread, setThread] = useState("");
   const [answering, setAnswering] = useState(false);
   const [uttering, setUttering] = useState(false);
+  const [tempPropertyData, setTempPropertyData] = useState<any>(null);
   const sidebarCustomization = {
     background_color: "#131317",
     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s",
@@ -261,7 +263,11 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
       properties: response.data.properties
         ? JSON.parse(response.data.properties)
         : null,
+      propertiesRaw: response.data.propertiesRaw
+        ? JSON.parse(response.data.propertiesRaw)
+        : null,
     });
+
     setMessageCount(messageCount + 1);
 
     console.log(wasLastMessageVoice);
