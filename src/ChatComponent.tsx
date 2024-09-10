@@ -15,7 +15,8 @@ import AddressTooltip from "./components/AddressTooltip";
 import { getPostalCode } from "./utils";
 import remarkExternalLinks from "remark-external-links";
 import PropertyGrid from "./components/PropertyGrid";
-import PropertyCard from "./components/PropertyCardForQuery";
+import PropertyCard from "./components/PropertyCard";
+import PropertyModal from "./components/PropertyModal";
 
 let listen = false;
 
@@ -84,6 +85,15 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
     useState(false);
   const [language, setLanguage] = useState<"en-US" | "ne-NP">("en-US");
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     if (!message) {
@@ -355,6 +365,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
       const response = await axios.get(
         apiURL + `/get-thread-with-query?property=${query.get("property")}`
       );
+      console.log(response.data);
       return response.data;
     } else {
       const response = await axios.get(apiURL + `/get-thread`);
@@ -367,21 +378,20 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
     const thread = getThread();
     thread.then((data) => {
       setThread(data.thread_id);
-      if (data.property_data) {
-        messages = [
-          {
-            message:
-              "Would you like to know anything else about this property?",
-            from: "them",
-            propertyDataFromQuery: [data.property_data],
-          },
-        ];
+
+      if (data.property_data && messages.length === 0) {
+        messages.push({
+          message: "Would you like to know anything else about this property?",
+          from: "them",
+          propertyDataFromQuery: data.property_data,
+        });
       }
+      setMessageCount(messageCount + 1);
     });
   }, []);
 
   const renderMessages = () => {
-    // console.log(messages);
+    console.log(messages);
     if (messages.length === 0 && !messages[0]?.propertyDataFromQuery) {
       return (
         <InitialQuestions
@@ -395,7 +405,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
       if (message.propertyDataFromQuery) {
         return (
           <div>
-            <PropertyCard property={message.propertyDataFromQuery[0]} />
+            <PropertyCard property={message.propertyDataFromQuery} />
             <ul
               key={index}
               ref={messageParent}
@@ -543,7 +553,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
             }
           >
             {message.from === "them" ? (
-              <p className="w-full md:text-justify text-left max-w-full markdown-body">
+              <div className="w-full md:text-justify text-left max-w-full markdown-body">
                 <ReactMarkdown
                   // linkTarget="_blank"
                   // linkTargets="_blank"
@@ -555,29 +565,47 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                       { target: "_blank", rel: "noopener noreferrer" },
                     ],
                   ]}
-                  components={
-                    {
-                      // a: ({ node, ...props }) => {
-                      //   return (
-                      //     <a
-                      //       {...props}
-                      //       target="_blank"
-                      //       className="text-yellow-100"
-                      //       onClick={(event) => {
-                      //         // event.preventDefault();
-                      //         console.log(props.href);
-                      //       }}
-                      //     >
-                      //       {props.children}
-                      //     </a>
-                      //   );
-                      // },
-                    }
-                  }
+                  components={{
+                    a: ({ node, ...props }) => {
+                      return (
+                        <a
+                          {...props}
+                          target="_blank"
+                          className="text-yellow-100"
+                          onClick={(event) => {
+                            // console.log(props.href);
+
+                            if (
+                              props.href &&
+                              props.href.includes("gnohome.com")
+                            ) {
+                              event.preventDefault();
+                              setTempPropertyData(
+                                message.propertiesRaw.find(
+                                  (property: any) =>
+                                    property.ml_num ===
+                                    props.href?.split("=").pop()
+                                )
+                              );
+                              openModal();
+                            }
+                          }}
+                        >
+                          {props.children}
+                        </a>
+                      );
+                    },
+                  }}
                 >
                   {message.message}
                 </ReactMarkdown>
-              </p>
+                {isModalOpen && (
+                  <PropertyModal
+                    property={tempPropertyData}
+                    onClose={closeModal}
+                  />
+                )}
+              </div>
             ) : (
               <p className="w-full md:text-justify text-left max-w-full">
                 {message.message}
@@ -593,8 +621,8 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   // loading icon if thread not present
   if (thread === "") {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="loader"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-12 h-12 border-4 border-black border-t-transparent border-solid rounded-full animate-spin"></div>
       </div>
     );
   }

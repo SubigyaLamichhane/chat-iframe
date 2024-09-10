@@ -6,6 +6,22 @@ interface PropertyCardProps {
   property: Property;
 }
 
+function toInt(value: string | number | null): number | null {
+  if (value === null) {
+    return null;
+  }
+  if (typeof value === "number") {
+    // remove zeros
+    value = value.toString();
+  }
+  const parsed = parseInt(value, 10);
+  // Check if the parsed value is a valid number
+  if (isNaN(parsed)) {
+    return null; // or false, depending on how you want to handle this
+  }
+  return parsed;
+}
+
 const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -24,32 +40,35 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
         alt="Property"
         className="w-full h-48 object-cover rounded-md mb-4"
       />
-      <h2 className="text-lg font-bold">
-        <a
+      <h2
+        className="text-lg font-bold text-blue-400 hover:cursor-pointer"
+        onClick={openModal}
+      >
+        {/* <a
           target="_blank"
           className="text-blue-400"
           href={`https://portal.gnowise.com/${property.ml_num}`}
-        >
-          {property.addr}
-        </a>
+        > */}
+        {property.addr}, {property.municipality}
+        {/* </a> */}
       </h2>
       {property.lp_dol && (
-        <p className="text-gray-400">Price: ${property.lp_dol}</p>
+        <p className="text-gray-400">Price: ${toInt(property.lp_dol)}</p>
       )}
       {property.county && (
         <p className="text-gray-400">County: {property.county}</p>
       )}
-      {property.municipality && (
+      {/* {property.municipality && (
         <p className="text-gray-400">Municipality: {property.municipality}</p>
-      )}
+      )} */}
       {property.PropertyType && (
-        <p className="text-gray-400">Type: {property.PropertyType}</p>
+        <p className="text-gray-400">Property Type: {property.PropertyType}</p>
       )}
-      {property.PropertySubType && (
+      {/* {property.PropertySubType && (
         <p className="text-gray-400">Subtype: {property.PropertySubType}</p>
-      )}
+      )} */}
       {property.style && (
-        <p className="text-gray-400">Style: {property.style}</p>
+        <p className="text-gray-400">Property Style: {property.style}</p>
       )}
       <button
         className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-300"
