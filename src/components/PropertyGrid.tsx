@@ -8,7 +8,7 @@ interface PropertyGridProps {
 
 const PropertyGrid: React.FC<PropertyGridProps> = ({ properties }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 max-w-7xl">
+    <div className="grid grid-cols-1   gap-6 p-4 max-w-7xl">
       {properties.map((property, index) => (
         <PropertyCard key={index} property={property} />
       ))}

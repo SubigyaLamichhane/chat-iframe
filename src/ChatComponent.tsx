@@ -35,176 +35,7 @@ interface IChatComponentProps {
   }[];
 }
 
-const sampleTempData = [
-  {
-    ml_num: "C9241819",
-    addr: "107 Farnham Ave",
-    zip: "M4V 1H6",
-    apt_num: null,
-    municipality: "Toronto",
-    park_spcs: "2",
-    type_own1_out: "Triplex",
-    style: "3-Storey",
-    yr_built: null,
-    a_c: "Central Air",
-    sqft: null,
-    st_num: "107",
-    st: "Farnham",
-    st_sfx: "Ave",
-    st_dir: null,
-    community: "Yonge-St. Clair",
-    municipality_district: "Toronto C02",
-    lp_dol: 2699000,
-    taxes: "11258.65",
-    roomsArea: "1873.74",
-    num_kit: "2",
-    lotsz_code: "Feet",
-    front_ft: 24.920000076293945,
-    depth: 103.16999816894531,
-    is_Condo: false,
-    pool: "None",
-    br_plus: 1,
-    br: 4,
-    bath_tot: 5,
-    bsmt1_out: "Apartment",
-    county: "Ontario",
-    Latitude: 43.686961,
-    Longitude: -79.399705,
-    community_code: "01.C02.0830",
-    lotArea: "2571.0",
-    timestamp_sql: "2024-08-06 16:21:24",
-    locker: null,
-    availability: "60/90 Days/TBA",
-    ad_text:
-      "Located in the heart of Summerhill, this rarely offered 3343 sq ft Triplex boasts a total of 4+1 bedrooms and 5 bathrooms spread over three units. This beautifully maintained property provides an opportunity for income or to convert back to a large single family dwelling. The main floor, 2-bed suite offers a spacious living room with a fireplace, hardwood floors and a large bay window. The kitchen features glass cabinetry, granite counters, and a pass-thru to",
-    Source: "TREB",
-    PropertyType: "Residential",
-    Amenities: "/////",
-    gar_spaces: 0,
-    PropertySubType: "",
-    irreg: null,
-    yr: 2024,
-    zoning: null,
-    maint: null,
-    dom: 1,
-    GnowiseValue: "3033000",
-    RiskofDecline: 7,
-    Growth1YrPerc: 10,
-    Growth2YrPerc: 17,
-  },
-  {
-    ml_num: "E8366970",
-    addr: "3025 Queen St E",
-    zip: "M1N 1A5",
-    apt_num: null,
-    municipality: "Toronto",
-    park_spcs: "10",
-    type_own1_out: "Multiplex",
-    style: "2 1/2 Storey",
-    yr_built: null,
-    a_c: "None",
-    sqft: null,
-    st_num: "3025",
-    st: "Queen",
-    st_sfx: "St",
-    st_dir: "E",
-    community: "Birchcliffe-Cliffside",
-    municipality_district: "Toronto E06",
-    lp_dol: 4849000,
-    taxes: "16550.00",
-    roomsArea: "0.00",
-    num_kit: "6",
-    lotsz_code: "Feet",
-    front_ft: 70,
-    depth: 225,
-    is_Condo: false,
-    pool: "None",
-    br_plus: 4,
-    br: 9,
-    bath_tot: 9,
-    bsmt1_out: "Apartment",
-    county: "Ontario",
-    Latitude: 43.674012,
-    Longitude: -79.280961,
-    community_code: "01.E06.1310",
-    lotArea: "15750.0",
-    timestamp_sql: "2024-06-10 09:57:54",
-    locker: null,
-    availability: "tbd",
-    ad_text:
-      "Very rare, special 7-unit investment property with a rich history! Located in the Beaches neighbourhood, directly overlooking Lake Ontario! The home has long been named, Chateau de Quatre Vents (Castle of the Four Winds) and was originally designed by the renowned architect who is known for Casa Loma and Old City Hall. This castle-themed house has been creatively divided into 7 self-contained units, each with separate hydro. 3 units are rentable and 4 units a",
-    Source: "TREB",
-    PropertyType: "Residential",
-    Amenities: "/////",
-    gar_spaces: 0,
-    PropertySubType: "",
-    irreg: "See attached survey",
-    yr: 2023,
-    zoning: null,
-    maint: null,
-    dom: 20,
-    GnowiseValue: "5154000",
-    RiskofDecline: 39,
-    Growth1YrPerc: 2,
-    Growth2YrPerc: 3,
-  },
-  {
-    ml_num: "E8410512",
-    addr: "434 Victoria Park Ave",
-    zip: "M4E 3T2",
-    apt_num: null,
-    municipality: "Toronto",
-    park_spcs: "1",
-    type_own1_out: "Triplex",
-    style: "3-Storey",
-    yr_built: null,
-    a_c: "Central Air",
-    sqft: null,
-    st_num: "434",
-    st: "Victoria Park",
-    st_sfx: "Ave",
-    st_dir: null,
-    community: "East End-Danforth",
-    municipality_district: "Toronto E02",
-    lp_dol: 1900888,
-    taxes: "4613.00",
-    roomsArea: "1605.40",
-    num_kit: "2",
-    lotsz_code: "Feet",
-    front_ft: 25,
-    depth: 108,
-    is_Condo: false,
-    pool: "None",
-    br_plus: 1,
-    br: 5,
-    bath_tot: 4,
-    bsmt1_out: "Apartment",
-    county: "Ontario",
-    Latitude: 43.682451,
-    Longitude: -79.285017,
-    community_code: "01.E02.1320",
-    lotArea: "2700.0",
-    timestamp_sql: "2024-06-06 10:12:22",
-    locker: null,
-    availability: "Tbd",
-    ad_text:
-      "Welcome to this impeccably crafted legal triplex with a gross rent of over $100k annually, each equipped with their own laundry areas. Long term or short term rental - this is the perfect investment opportunity. Built recently with adherence to updated building codes and permits, ensuring peace of mind for years to come. In the heart of the beaches, Strategically designed for maximum functionality and income potential, each unit has been renovated with superi",
-    Source: "TREB",
-    PropertyType: "Residential",
-    Amenities: "/////",
-    gar_spaces: 2,
-    PropertySubType: "",
-    irreg: null,
-    yr: 2023,
-    zoning: null,
-    maint: null,
-    dom: 6,
-    GnowiseValue: "2080000",
-    RiskofDecline: 42,
-    Growth1YrPerc: 2,
-    Growth2YrPerc: 1,
-  },
-];
+const sampleTempData: any = [];
 
 function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   const location = useLocation();
@@ -714,6 +545,71 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
           </div>
         );
       }
+      if (message.propertiesRaw) {
+        return (
+          <div>
+            <PropertyGrid properties={message.propertiesRaw} />
+            {message.propertiesRaw.length < 1 && (
+              <ul
+                key={index}
+                ref={messageParent}
+                className={`flex items-center ${
+                  message.from === "us" ? "justify-end" : "justify-start"
+                }`}
+              >
+                <li
+                  className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+                    message.from === "us"
+                      ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
+                      : "max-w-lg rounded-bl-xl rounded-tr-xl"
+                  }`}
+                  style={
+                    message.from === "us"
+                      ? {
+                          backgroundColor: "#" + outgoingMessageColor,
+                          color: "#" + outgoingMessageTextColor,
+                        }
+                      : {
+                          backgroundColor:
+                            sidebarCustomization.background_color,
+                          color: sidebarCustomization.text_color,
+                        }
+                  }
+                >
+                  <p className="w-full md:text-justify text-left max-w-full markdown-body">
+                    <ReactMarkdown
+                      components={
+                        {
+                          // a: ({ node, ...props }) => {
+                          //   return (
+                          //     <a
+                          //       {...props}
+                          //       target="_blank"
+                          //       className="text-yellow-100"
+                          //       onClick={(event) => {
+                          //         // event.preventDefault();
+                          //         console.log(props.href);
+                          //       }}
+                          //     >
+                          //       {props.children}
+                          //     </a>
+                          //   );
+                          // },
+                        }
+                      }
+                      // rehypePlugins={[rehypeRaw]}
+                      remarkPlugins={[remarkGfm]}
+                      className="markdown-body"
+                    >
+                      {message.message}
+                    </ReactMarkdown>
+                  </p>
+                </li>
+              </ul>
+            )}
+          </div>
+        );
+      }
       return (
         <ul
           key={index}
@@ -1003,7 +899,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
             </form>
           </div>
         )}
-        {tempPropertyData && (
+        {tempPropertyData && tempPropertyData.length != 0 && (
           // <Suspense fallback={<p>Loading map...</p>}>
           <div className="w-1/2">
             {" "}

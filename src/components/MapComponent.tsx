@@ -2,12 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L, { LatLngBounds } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import PropertyCard from "./PropertyCard"; // Import the PropertyCard component
+import PropertyCardPopup from "./PropertyCardPopup"; // Import the PropertyCard component
 import markerIconPng from "leaflet/dist/images/marker-icon.png"; // Default marker icon
 import { Property } from "../types";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import { Icon, divIcon, point } from "leaflet";
+import PropertyModal from "./PropertyModal";
 
 // Assuming the data format
 
@@ -53,6 +54,16 @@ const MapComponent: React.FC<MapComponentProps> = ({ data }) => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(
     null
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const mapRef = useRef<L.Map | null>(null);
 
   // Function to adjust map bounds to include all markers
@@ -72,47 +83,54 @@ const MapComponent: React.FC<MapComponentProps> = ({ data }) => {
   }
 
   return (
-    <MapContainer
-      center={[data[0].Latitude, data[0].Longitude]} // Default to first property
-      zoom={12}
-      scrollWheelZoom={true}
-      style={{ height: "100vh" }}
-      // whenCreated={(mapInstance: L.Map) => {
-      //   mapRef.current = mapInstance;
-      // }}
-    >
-      <TileLayer
-        attribution="Google Maps"
-        // url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" // regular
-        // url="http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}" // satellite
-        url="http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}" // terrain
-        maxZoom={20}
-        subdomains={["mt0", "mt1", "mt2", "mt3"]}
-      />
-      {/* <MarkerClusterGroup
+    <div>
+      <div className="">
+        <MapContainer
+          center={[data[0].Latitude, data[0].Longitude]} // Default to first property
+          zoom={12}
+          scrollWheelZoom={true}
+          style={{ height: "100vh", zIndex: 1 }}
+          // whenCreated={(mapInstance: L.Map) => {
+          //   mapRef.current = mapInstance;
+          // }}
+        >
+          <TileLayer
+            attribution="Google Maps"
+            // url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" // regular
+            // url="http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}" // satellite
+            url="http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}" // terrain
+            maxZoom={20}
+            subdomains={["mt0", "mt1", "mt2", "mt3"]}
+          />
+          {/* <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createClusterCustomIcon}
       > */}
-      {data.map((property, index) => (
-        <Marker
-          key={index}
-          position={[property.Latitude, property.Longitude]}
-          icon={
-            new L.Icon({
-              iconUrl: markerIconPng,
-              iconSize: [25, 41],
-              iconAnchor: [13, 41],
-            })
-          }
-          eventHandlers={{
-            click: () => handlePinClick(property),
-          }}
-        >
-          {selectedProperty?.Latitude === property.Latitude &&
-            selectedProperty?.Longitude === property.Longitude && (
-              <Popup>
-                <PropertyCard property={property} />
-                {/* <div
+          {data.map((property, index) => {
+            if (!property.Latitude || !property.Longitude) return null; // Skip if no coordinates
+            return (
+              <Marker
+                key={index}
+                position={[property.Latitude, property.Longitude]}
+                icon={
+                  new L.Icon({
+                    iconUrl: markerIconPng,
+                    iconSize: [25, 41],
+                    iconAnchor: [13, 41],
+                  })
+                }
+                eventHandlers={{
+                  click: () => handlePinClick(property),
+                }}
+              >
+                {selectedProperty?.Latitude === property.Latitude &&
+                  selectedProperty?.Longitude === property.Longitude && (
+                    <Popup>
+                      <PropertyCardPopup
+                        property={property}
+                        openModal={openModal}
+                      />
+                      {/* <div
                   onClick={() => {
                     alert("hello");
                   }}
@@ -123,14 +141,20 @@ const MapComponent: React.FC<MapComponentProps> = ({ data }) => {
                   />
                   <h1>{property.addr}</h1>
                 </div> */}
-              </Popup>
-            )}
-        </Marker>
-      ))}
-      {/* </MarkerClusterGroup> */}
-      {/* Adjust the map bounds to fit all markers */}
-      <AdjustMapBounds data={data} />
-    </MapContainer>
+                    </Popup>
+                  )}
+              </Marker>
+            );
+          })}
+          {/* </MarkerClusterGroup> */}
+          {/* Adjust the map bounds to fit all markers */}
+          <AdjustMapBounds data={data} />
+        </MapContainer>
+      </div>
+      {isModalOpen && selectedProperty && (
+        <PropertyModal property={selectedProperty} onClose={closeModal} />
+      )}
+    </div>
   );
 };
 
