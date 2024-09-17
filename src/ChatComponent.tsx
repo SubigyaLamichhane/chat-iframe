@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import autoAnimate from "@formkit/auto-animate";
@@ -17,6 +17,9 @@ import remarkExternalLinks from "remark-external-links";
 import PropertyGrid from "./components/PropertyGrid";
 import PropertyCard from "./components/PropertyCard";
 import PropertyModal from "./components/PropertyModal";
+import Map from "./components/MapComponent";
+
+// const Map = React.lazy(() => import("./components/MapComponent"));
 
 let listen = false;
 
@@ -31,6 +34,177 @@ interface IChatComponentProps {
     propertiesRaw?: any;
   }[];
 }
+
+const sampleTempData = [
+  {
+    ml_num: "C9241819",
+    addr: "107 Farnham Ave",
+    zip: "M4V 1H6",
+    apt_num: null,
+    municipality: "Toronto",
+    park_spcs: "2",
+    type_own1_out: "Triplex",
+    style: "3-Storey",
+    yr_built: null,
+    a_c: "Central Air",
+    sqft: null,
+    st_num: "107",
+    st: "Farnham",
+    st_sfx: "Ave",
+    st_dir: null,
+    community: "Yonge-St. Clair",
+    municipality_district: "Toronto C02",
+    lp_dol: 2699000,
+    taxes: "11258.65",
+    roomsArea: "1873.74",
+    num_kit: "2",
+    lotsz_code: "Feet",
+    front_ft: 24.920000076293945,
+    depth: 103.16999816894531,
+    is_Condo: false,
+    pool: "None",
+    br_plus: 1,
+    br: 4,
+    bath_tot: 5,
+    bsmt1_out: "Apartment",
+    county: "Ontario",
+    Latitude: 43.686961,
+    Longitude: -79.399705,
+    community_code: "01.C02.0830",
+    lotArea: "2571.0",
+    timestamp_sql: "2024-08-06 16:21:24",
+    locker: null,
+    availability: "60/90 Days/TBA",
+    ad_text:
+      "Located in the heart of Summerhill, this rarely offered 3343 sq ft Triplex boasts a total of 4+1 bedrooms and 5 bathrooms spread over three units. This beautifully maintained property provides an opportunity for income or to convert back to a large single family dwelling. The main floor, 2-bed suite offers a spacious living room with a fireplace, hardwood floors and a large bay window. The kitchen features glass cabinetry, granite counters, and a pass-thru to",
+    Source: "TREB",
+    PropertyType: "Residential",
+    Amenities: "/////",
+    gar_spaces: 0,
+    PropertySubType: "",
+    irreg: null,
+    yr: 2024,
+    zoning: null,
+    maint: null,
+    dom: 1,
+    GnowiseValue: "3033000",
+    RiskofDecline: 7,
+    Growth1YrPerc: 10,
+    Growth2YrPerc: 17,
+  },
+  {
+    ml_num: "E8366970",
+    addr: "3025 Queen St E",
+    zip: "M1N 1A5",
+    apt_num: null,
+    municipality: "Toronto",
+    park_spcs: "10",
+    type_own1_out: "Multiplex",
+    style: "2 1/2 Storey",
+    yr_built: null,
+    a_c: "None",
+    sqft: null,
+    st_num: "3025",
+    st: "Queen",
+    st_sfx: "St",
+    st_dir: "E",
+    community: "Birchcliffe-Cliffside",
+    municipality_district: "Toronto E06",
+    lp_dol: 4849000,
+    taxes: "16550.00",
+    roomsArea: "0.00",
+    num_kit: "6",
+    lotsz_code: "Feet",
+    front_ft: 70,
+    depth: 225,
+    is_Condo: false,
+    pool: "None",
+    br_plus: 4,
+    br: 9,
+    bath_tot: 9,
+    bsmt1_out: "Apartment",
+    county: "Ontario",
+    Latitude: 43.674012,
+    Longitude: -79.280961,
+    community_code: "01.E06.1310",
+    lotArea: "15750.0",
+    timestamp_sql: "2024-06-10 09:57:54",
+    locker: null,
+    availability: "tbd",
+    ad_text:
+      "Very rare, special 7-unit investment property with a rich history! Located in the Beaches neighbourhood, directly overlooking Lake Ontario! The home has long been named, Chateau de Quatre Vents (Castle of the Four Winds) and was originally designed by the renowned architect who is known for Casa Loma and Old City Hall. This castle-themed house has been creatively divided into 7 self-contained units, each with separate hydro. 3 units are rentable and 4 units a",
+    Source: "TREB",
+    PropertyType: "Residential",
+    Amenities: "/////",
+    gar_spaces: 0,
+    PropertySubType: "",
+    irreg: "See attached survey",
+    yr: 2023,
+    zoning: null,
+    maint: null,
+    dom: 20,
+    GnowiseValue: "5154000",
+    RiskofDecline: 39,
+    Growth1YrPerc: 2,
+    Growth2YrPerc: 3,
+  },
+  {
+    ml_num: "E8410512",
+    addr: "434 Victoria Park Ave",
+    zip: "M4E 3T2",
+    apt_num: null,
+    municipality: "Toronto",
+    park_spcs: "1",
+    type_own1_out: "Triplex",
+    style: "3-Storey",
+    yr_built: null,
+    a_c: "Central Air",
+    sqft: null,
+    st_num: "434",
+    st: "Victoria Park",
+    st_sfx: "Ave",
+    st_dir: null,
+    community: "East End-Danforth",
+    municipality_district: "Toronto E02",
+    lp_dol: 1900888,
+    taxes: "4613.00",
+    roomsArea: "1605.40",
+    num_kit: "2",
+    lotsz_code: "Feet",
+    front_ft: 25,
+    depth: 108,
+    is_Condo: false,
+    pool: "None",
+    br_plus: 1,
+    br: 5,
+    bath_tot: 4,
+    bsmt1_out: "Apartment",
+    county: "Ontario",
+    Latitude: 43.682451,
+    Longitude: -79.285017,
+    community_code: "01.E02.1320",
+    lotArea: "2700.0",
+    timestamp_sql: "2024-06-06 10:12:22",
+    locker: null,
+    availability: "Tbd",
+    ad_text:
+      "Welcome to this impeccably crafted legal triplex with a gross rent of over $100k annually, each equipped with their own laundry areas. Long term or short term rental - this is the perfect investment opportunity. Built recently with adherence to updated building codes and permits, ensuring peace of mind for years to come. In the heart of the beaches, Strategically designed for maximum functionality and income potential, each unit has been renovated with superi",
+    Source: "TREB",
+    PropertyType: "Residential",
+    Amenities: "/////",
+    gar_spaces: 2,
+    PropertySubType: "",
+    irreg: null,
+    yr: 2023,
+    zoning: null,
+    maint: null,
+    dom: 6,
+    GnowiseValue: "2080000",
+    RiskofDecline: 42,
+    Growth1YrPerc: 2,
+    Growth2YrPerc: 1,
+  },
+];
 
 function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   const location = useLocation();
@@ -54,7 +228,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   const [thread, setThread] = useState("");
   const [answering, setAnswering] = useState(false);
   const [uttering, setUttering] = useState(false);
-  const [tempPropertyData, setTempPropertyData] = useState<any>(null);
+  const [tempPropertyData, setTempPropertyData] = useState<any>(sampleTempData);
   const sidebarCustomization = {
     background_color: "#131317",
     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s",
@@ -86,6 +260,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   const [language, setLanguage] = useState<"en-US" | "ne-NP">("en-US");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [tempPropertyData, setTempPropertyData] = useState<any>(null);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -266,7 +441,6 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
 
     bottomRef.current?.scrollIntoView();
     setAnswering(false);
-    console.log(response.data);
     messages.push({
       message: response.data.message,
       from: "them",
@@ -277,8 +451,22 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
         ? JSON.parse(response.data.propertiesRaw)
         : null,
     });
+    console.log(
+      response.data.properties
+        ? JSON.parse(response.data.properties)
+        : response.data.propertiesRaw
+        ? JSON.parse(response.data.propertiesRaw)
+        : null
+    );
 
     setMessageCount(messageCount + 1);
+    setTempPropertyData(
+      response.data.properties
+        ? JSON.parse(response.data.properties)
+        : response.data.propertiesRaw
+        ? JSON.parse(response.data.propertiesRaw)
+        : null
+    );
 
     console.log(wasLastMessageVoice);
     if (wasLastMessageVoice) {
@@ -641,9 +829,9 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
         }
         `}
       </style>
-      <div className="flex" ref={parent}>
+      <div className="md:flex" ref={parent}>
         {fetched && (
-          <div className="flex-grow flex flex-col md:h-screen justify-end items-end">
+          <div className="flex-grow flex flex-col md:h-screen justify-end items-end ">
             {/* {fetched && (
               <div
                 className="md:hidden w-full h-20 flex justify-center items-center"
@@ -814,6 +1002,15 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               </div>
             </form>
           </div>
+        )}
+        {tempPropertyData && (
+          // <Suspense fallback={<p>Loading map...</p>}>
+          <div className="w-1/2">
+            {" "}
+            <Map data={tempPropertyData} />
+          </div>
+
+          // </Suspense>
         )}
       </div>
       {/* <iframe src="https://intelligenthomevaluation.com" className="w-full h-screen"></iframe>  */}

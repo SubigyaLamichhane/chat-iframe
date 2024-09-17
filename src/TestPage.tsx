@@ -1,99 +1,96 @@
-import React, { useState } from "react";
-import PropertyDetailsModal from "./components/PropertyDetails";
+// import "./styles.css";
+import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
 
-const propertyData = {
-  "Property Code": "E6723026",
-  "Days on Market": "0 days",
-  Price: "C$899,000",
-  Address: "1571 Greenmount St ,",
-  Location: "Pickering ,Ontario",
-  Beds: "3 beds",
-  Baths: "3 bath",
-  "Lot Size": "22.31 x 153.51 ft",
-  Type: {
-    value: "House",
-    icon_url:
-      "http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/group181@3x.png",
-  },
-  Style: {
-    value: "2-Storey",
-    icon_url:
-      "http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/style@3x.png",
-  },
-  Irregulary: {
-    value: "-",
-    icon_url:
-      "http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/07.png",
-  },
-  Basement: {
-    value: "Finished",
-    icon_url:
-      "http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/basement@3x.png",
-  },
-  Age: {
-    value: "-yrs",
-    icon_url:
-      "http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/age@3x.png",
-  },
-  "Total Parking Spaces": {
-    value: "3 gr",
-    icon_url:
-      "http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/parking@3x.png",
-  },
-  Taxes: {
-    value: "$4770.08 /2023",
-    icon_url:
-      "http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/tax@3x.png",
-  },
-  LandSize: {
-    value: "153.51 x 22.31 FT",
-    icon_url:
-      "http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/07.png",
-  },
-  Features: [
-    "Air Central",
-    "Beach",
-    "Fenced Yard",
-    "Hospital",
-    "Marina",
-    "Public Transit",
-  ],
-  Images: [
-    "https://images.gnohome.com/api/ActiveListingImages/view/E6723026/2/?width=800&height=700",
-    "https://images.gnohome.com/api/ActiveListingImages/view/E6723026/3/?width=800&height=700",
-    "https://images.gnohome.com/api/ActiveListingImages/view/E6723026/4/?width=800&height=700",
-    "https://images.gnohome.com/api/ActiveListingImages/view/E6723026/5/?width=800&height=700",
-  ],
+import { Icon, divIcon, point } from "leaflet";
+
+// create custom icon
+const customIcon = new Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/447/447031.png",
+  // iconUrl: require("./icons/placeholder.png"),
+  iconSize: [38, 38], // size of the icon
+});
+
+// custom cluster icon
+const createClusterCustomIcon = function (cluster: any) {
+  return new divIcon({
+    html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
+    className: "custom-marker-cluster",
+    iconSize: point(33, 33, true),
+  });
 };
 
-const App: React.FC = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
+// markers
+const markers = [
+  {
+    geocode: [48.86, 2.3522],
+    popUp: "Hello, I am pop up 1",
+  },
+  {
+    geocode: [48.85, 2.3522],
+    popUp: "Hello, I am pop up 2",
+  },
+  {
+    geocode: [48.855, 2.34],
+    popUp: "Hello, I am pop up 3",
+  },
+];
 
+export default function App() {
   return (
-    <div className="App">
-      <button
-        onClick={() => setModalOpen(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded-md"
+    <MapContainer
+      center={[48.8566, 2.3522]}
+      zoom={13}
+      style={{ height: "100vh" }}
+    >
+      {/* OPEN STREEN MAPS TILES */}
+      {/* <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      /> */}
+      {/* WATERCOLOR CUSTOM TILES */}
+      {/* <TileLayer
+        attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
+      /> */}
+      {/* GOOGLE MAPS TILES */}
+      <TileLayer
+        attribution="Google Maps"
+        // url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" // regular
+        // url="http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}" // satellite
+        url="http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}" // terrain
+        maxZoom={20}
+        subdomains={["mt0", "mt1", "mt2", "mt3"]}
+      />
+
+      <MarkerClusterGroup
+        chunkedLoading
+        iconCreateFunction={createClusterCustomIcon}
       >
-        View Property Details
-      </button>
+        {/* Mapping through the markers */}
+        {markers.map((marker) => (
+          <Marker
+            position={marker.geocode}
+            icon={customIcon}
+            key={marker.geocode[0]}
+          >
+            <Popup>{marker.popUp}</Popup>
+          </Marker>
+        ))}
 
-      <PropertyDetailsModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        data={propertyData}
-      />
-      <img
-        src="http://localhost:5000/proxy-image/wp-content/themes/houzez33/uiv2/images/all-icons/basement@3x.png"
-        alt="test"
-        className="w-6 h-6"
-      />
-      <iframe
-        src="http://localhost:5000/?property=1708-50-ordnance-st-toronto-ontario-m5k1a2-canada"
-        className="w-full h-screen"
-      ></iframe>
-    </div>
+        {/* Hard coded markers */}
+        {/* <Marker position={[51.505, -0.09]} icon={customIcon}>
+          <Popup>This is popup 1</Popup>
+        </Marker>
+        <Marker position={[51.504, -0.1]} icon={customIcon}>
+          <Popup>This is popup 2</Popup>
+        </Marker>
+        <Marker position={[51.5, -0.09]} icon={customIcon}>
+          <Popup>This is popup 3</Popup>
+        </Marker>
+       */}
+      </MarkerClusterGroup>
+    </MapContainer>
   );
-};
-
-export default App;
+}

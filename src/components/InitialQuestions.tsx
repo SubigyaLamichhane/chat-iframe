@@ -17,7 +17,7 @@ const InitialQuestions = ({
           <button
             key={index}
             onClick={() => submitData(question)}
-            className="w-4/5 md:w-1/2 lg:w-1/3 py-4 px-6 text-white bg-black border-2 border-white rounded-md hover:bg-white hover:text-black transition duration-300"
+            className="max-w-[400px] py-4 px-6 text-white bg-black border-2 border-white rounded-md hover:bg-white hover:text-black transition duration-300"
           >
             {question}
           </button>
