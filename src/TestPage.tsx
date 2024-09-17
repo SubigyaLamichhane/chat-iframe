@@ -14,6 +14,7 @@ const customIcon = new Icon({
 
 // custom cluster icon
 const createClusterCustomIcon = function (cluster: any) {
+  //@ts-ignore
   return new divIcon({
     html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
     className: "custom-marker-cluster",
@@ -71,6 +72,7 @@ export default function App() {
         {/* Mapping through the markers */}
         {markers.map((marker) => (
           <Marker
+            //@ts-ignore
             position={marker.geocode}
             icon={customIcon}
             key={marker.geocode[0]}
