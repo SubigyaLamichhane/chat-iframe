@@ -35,7 +35,235 @@ interface IChatComponentProps {
   }[];
 }
 
-const sampleTempData: any = [];
+const sampleTempData: any = [
+  {
+    ml_num: "C9241819",
+    addr: "107 Farnham Ave",
+    zip: "M4V 1H6",
+    apt_num: null,
+    municipality: "Toronto",
+    park_spcs: "2",
+    type_own1_out: "Triplex",
+    style: "3-Storey",
+    yr_built: null,
+    a_c: "Central Air",
+    sqft: null,
+    st_num: "107",
+    st: "Farnham",
+    st_sfx: "Ave",
+    st_dir: null,
+    community: "Yonge-St. Clair",
+    municipality_district: "Toronto C02",
+    lp_dol: 2699000,
+    taxes: "11258.65",
+    roomsArea: "1873.74",
+    num_kit: "2",
+    lotsz_code: "Feet",
+    front_ft: 24.920000076293945,
+    depth: 103.16999816894531,
+    is_Condo: false,
+    pool: "None",
+    br_plus: 1,
+    br: 4,
+    bath_tot: 5,
+    bsmt1_out: "Apartment",
+    county: "Ontario",
+    Latitude: 43.686961,
+    Longitude: -79.399705,
+    community_code: "01.C02.0830",
+    lotArea: "2571.0",
+    timestamp_sql: "2024-08-06 16:21:24",
+    locker: null,
+    availability: "60/90 Days/TBA",
+    ad_text:
+      "Located in the heart of Summerhill, this rarely offered 3343 sq ft Triplex boasts a total of 4+1 bedrooms and 5 bathrooms spread over three units. This beautifully maintained property provides an opportunity for income or to convert back to a large single family dwelling. The main floor, 2-bed suite offers a spacious living room with a fireplace, hardwood floors and a large bay window. The kitchen features glass cabinetry, granite counters, and a pass-thru to",
+    Source: "TREB",
+    PropertyType: "Residential",
+    Amenities: "/////",
+    gar_spaces: 0,
+    PropertySubType: "",
+    irreg: null,
+    yr: 2024,
+    zoning: null,
+    maint: null,
+    dom: 1,
+    MLS: "C9241819",
+    SellingPrice: "2699000",
+    GnowiseValue: "3033000",
+    RiskofDecline: 7,
+    Value1Yr: "3344792",
+    Value2yr: "3562865",
+    PriceDifferencePerc: 12,
+    Growth1YrPerc: 10,
+    Growth2YrPerc: 17,
+    Neighborhood: null,
+    PriceHigh: "3336000",
+    PriceLow: "2730000",
+    LastSoldDate: null,
+    LastSoldPrice: null,
+    TopFeaturesResult: null,
+    ReportData: null,
+    Forecast:
+      '[{"Date":"2022-08-31T00:00:00","ForecastValue":2766000.0},{"Date":"2022-09-30T00:00:00","ForecastValue":2790000.0},{"Date":"2022-10-31T00:00:00","ForecastValue":2797000.0},{"Date":"2022-11-30T00:00:00","ForecastValue":2812000.0},{"Date":"2022-12-31T00:00:00","ForecastValue":2854000.0},{"Date":"2023-01-31T00:00:00","ForecastValue":2910000.0},{"Date":"2023-02-28T00:00:00","ForecastValue":2954000.0},{"Date":"2023-03-31T00:00:00","ForecastValue":2965000.0},{"Date":"2023-04-30T00:00:00","ForecastValue":2980000.0},{"Date":"2023-05-31T00:00:00","ForecastValue":2994000.0},{"Date":"2023-06-30T00:00:00","ForecastValue":3009000.0},{"Date":"2023-07-31T00:00:00","ForecastValue":3020000.0},{"Date":"2023-08-31T00:00:00","ForecastValue":3051000.0},{"Date":"2023-09-30T00:00:00","ForecastValue":3085000.0},{"Date":"2023-10-31T00:00:00","ForecastValue":3116000.0},{"Date":"2023-11-30T00:00:00","ForecastValue":3136000.0},{"Date":"2023-12-31T00:00:00","ForecastValue":3166000.0},{"Date":"2024-01-31T00:00:00","ForecastValue":3175000.0},{"Date":"2024-02-29T00:00:00","ForecastValue":3151000.0},{"Date":"2024-05-31T00:00:00","ForecastValue":3120000.0},{"Date":"2024-06-30T00:00:00","ForecastValue":3096000.0},{"Date":"2024-07-31T00:00:00","ForecastValue":3068000.0},{"Date":"2024-08-31T00:00:00","ForecastValue":3033000.0},{"Date":"2024-09-30T00:00:00","ForecastValue":2989000.0},{"Date":"2024-10-31T00:00:00","ForecastValue":2967000.0},{"Date":"2024-11-30T00:00:00","ForecastValue":2939000.0},{"Date":"2024-12-31T00:00:00","ForecastValue":2913000.0},{"Date":"2025-01-31T00:00:00","ForecastValue":2884000.0},{"Date":"2025-02-28T00:00:00","ForecastValue":2836000.0},{"Date":"2025-03-31T00:00:00","ForecastValue":2792000.0},{"Date":"2025-04-30T00:00:00","ForecastValue":2755000.0},{"Date":"2025-05-31T00:00:00","ForecastValue":2735000.0},{"Date":"2025-06-30T00:00:00","ForecastValue":2700000.0},{"Date":"2025-07-31T00:00:00","ForecastValue":2663000.0},{"Date":"2025-08-31T00:00:00","ForecastValue":2633000.0},{"Date":"2025-09-30T00:00:00","ForecastValue":2617000.0},{"Date":"2025-10-31T00:00:00","ForecastValue":2587000.0},{"Date":"2025-11-30T00:00:00","ForecastValue":2554000.0},{"Date":"2025-12-31T00:00:00","ForecastValue":2512000.0},{"Date":"2026-01-31T00:00:00","ForecastValue":2477000.0},{"Date":"2026-02-28T00:00:00","ForecastValue":2433000.0},{"Date":"2026-03-31T00:00:00","ForecastValue":2401000.0},{"Date":"2026-04-30T00:00:00","ForecastValue":2381000.0},null,null,null,null,null,null]',
+    SoldRecords: null,
+    UpdatedDate: "2024-08-27 04:03:17.474342+00:00",
+    CreatedDate: "2024-08-08 03:02:38.574015+00:00",
+    GnowiseCapRate: 0.0324747774480712,
+    GnowiseLease: 11400,
+    ValuationSource: "A",
+  },
+  {
+    ml_num: "E8366970",
+    addr: "3025 Queen St E",
+    zip: "M1N 1A5",
+    apt_num: null,
+    municipality: "Toronto",
+    park_spcs: "10",
+    type_own1_out: "Multiplex",
+    style: "2 1/2 Storey",
+    yr_built: null,
+    a_c: "None",
+    sqft: null,
+    st_num: "3025",
+    st: "Queen",
+    st_sfx: "St",
+    st_dir: "E",
+    community: "Birchcliffe-Cliffside",
+    municipality_district: "Toronto E06",
+    lp_dol: 4849000,
+    taxes: "16550.00",
+    roomsArea: "0.00",
+    num_kit: "6",
+    lotsz_code: "Feet",
+    front_ft: 70,
+    depth: 225,
+    is_Condo: false,
+    pool: "None",
+    br_plus: 4,
+    br: 9,
+    bath_tot: 9,
+    bsmt1_out: "Apartment",
+    county: "Ontario",
+    Latitude: 43.674012,
+    Longitude: -79.280961,
+    community_code: "01.E06.1310",
+    lotArea: "15750.0",
+    timestamp_sql: "2024-06-10 09:57:54",
+    locker: null,
+    availability: "tbd",
+    ad_text:
+      "Very rare, special 7-unit investment property with a rich history! Located in the Beaches neighbourhood, directly overlooking Lake Ontario! The home has long been named, Chateau de Quatre Vents (Castle of the Four Winds) and was originally designed by the renowned architect who is known for Casa Loma and Old City Hall. This castle-themed house has been creatively divided into 7 self-contained units, each with separate hydro. 3 units are rentable and 4 units a",
+    Source: "TREB",
+    PropertyType: "Residential",
+    Amenities: "/////",
+    gar_spaces: 0,
+    PropertySubType: "",
+    irreg: "See attached survey",
+    yr: 2023,
+    zoning: null,
+    maint: null,
+    dom: 20,
+    MLS: "E8366970",
+    SellingPrice: "4849000",
+    GnowiseValue: "5154000",
+    RiskofDecline: 39,
+    Value1Yr: "5274088",
+    Value2yr: "5315320",
+    PriceDifferencePerc: 6,
+    Growth1YrPerc: 2,
+    Growth2YrPerc: 3,
+    Neighborhood: null,
+    PriceHigh: "5669000",
+    PriceLow: "4639000",
+    LastSoldDate: null,
+    LastSoldPrice: null,
+    TopFeaturesResult: null,
+    ReportData: null,
+    Forecast:
+      '[{"Date":"2022-08-31T00:00:00","ForecastValue":5677000.0},{"Date":"2022-09-30T00:00:00","ForecastValue":5704000.0},{"Date":"2022-10-31T00:00:00","ForecastValue":5720000.0},{"Date":"2022-11-30T00:00:00","ForecastValue":5725000.0},{"Date":"2022-12-31T00:00:00","ForecastValue":5720000.0},{"Date":"2023-01-31T00:00:00","ForecastValue":5704000.0},{"Date":"2023-02-28T00:00:00","ForecastValue":5693000.0},{"Date":"2023-03-31T00:00:00","ForecastValue":5688000.0},{"Date":"2023-04-30T00:00:00","ForecastValue":5693000.0},{"Date":"2023-05-31T00:00:00","ForecastValue":5688000.0},{"Date":"2023-06-30T00:00:00","ForecastValue":5699000.0},{"Date":"2023-07-31T00:00:00","ForecastValue":5704000.0},{"Date":"2023-08-31T00:00:00","ForecastValue":5709000.0},{"Date":"2023-09-30T00:00:00","ForecastValue":5709000.0},{"Date":"2023-10-31T00:00:00","ForecastValue":5704000.0},{"Date":"2023-11-30T00:00:00","ForecastValue":5688000.0},{"Date":"2023-12-31T00:00:00","ForecastValue":5645000.0},{"Date":"2024-01-31T00:00:00","ForecastValue":5587000.0},{"Date":"2024-02-29T00:00:00","ForecastValue":5539000.0},{"Date":"2024-05-31T00:00:00","ForecastValue":5442000.0},{"Date":"2024-06-30T00:00:00","ForecastValue":5346000.0},{"Date":"2024-07-31T00:00:00","ForecastValue":5245000.0},{"Date":"2024-08-31T00:00:00","ForecastValue":5154000.0},{"Date":"2024-09-30T00:00:00","ForecastValue":5058000.0},{"Date":"2024-10-31T00:00:00","ForecastValue":4956000.0},{"Date":"2024-11-30T00:00:00","ForecastValue":4850000.0},{"Date":"2024-12-31T00:00:00","ForecastValue":4759000.0},{"Date":"2025-01-31T00:00:00","ForecastValue":4689000.0},{"Date":"2025-02-28T00:00:00","ForecastValue":4620000.0},{"Date":"2025-03-31T00:00:00","ForecastValue":4556000.0},{"Date":"2025-04-30T00:00:00","ForecastValue":4481000.0},{"Date":"2025-05-31T00:00:00","ForecastValue":4390000.0},{"Date":"2025-06-30T00:00:00","ForecastValue":4289000.0},{"Date":"2025-07-31T00:00:00","ForecastValue":4187000.0},{"Date":"2025-08-31T00:00:00","ForecastValue":4075000.0},{"Date":"2025-09-30T00:00:00","ForecastValue":3974000.0},{"Date":"2025-10-31T00:00:00","ForecastValue":3878000.0},{"Date":"2025-11-30T00:00:00","ForecastValue":3787000.0},{"Date":"2025-12-31T00:00:00","ForecastValue":3685000.0},{"Date":"2026-01-31T00:00:00","ForecastValue":3584000.0},{"Date":"2026-02-28T00:00:00","ForecastValue":3493000.0},{"Date":"2026-03-31T00:00:00","ForecastValue":3408000.0},{"Date":"2026-04-30T00:00:00","ForecastValue":3306000.0},null,null,null,null,null,null]',
+    SoldRecords: null,
+    UpdatedDate: "2024-08-27 05:00:03.905608+00:00",
+    CreatedDate: "2024-07-10 03:03:26.323231+00:00",
+    GnowiseCapRate: 0.00469383003492433,
+    GnowiseLease: 2800,
+    ValuationSource: "A",
+  },
+  {
+    ml_num: "C9265899",
+    addr: "55 Ann O'reilly Rd",
+    zip: "M2T 0E1",
+    apt_num: "3908",
+    municipality: "Toronto",
+    park_spcs: "1",
+    type_own1_out: "Condo Apt",
+    style: "Apartment",
+    yr_built: null,
+    a_c: "Central Air",
+    sqft: "700-799",
+    st_num: "55",
+    st: "Ann O'reilly",
+    st_sfx: "Rd",
+    st_dir: null,
+    community: "Henry Farm",
+    municipality_district: "Toronto C15",
+    lp_dol: 688000,
+    taxes: "2688.00",
+    roomsArea: "692.89",
+    num_kit: "1",
+    lotsz_code: null,
+    front_ft: null,
+    depth: null,
+    is_Condo: true,
+    pool: null,
+    br_plus: null,
+    br: 2,
+    bath_tot: 2,
+    bsmt1_out: "None",
+    county: "Ontario",
+    Latitude: 43.774059,
+    Longitude: -79.330038,
+    community_code: "01.C15.0650",
+    lotArea: null,
+    timestamp_sql: "2024-08-22 13:46:02",
+    locker: "None",
+    availability: "Flexible",
+    ad_text:
+      "Amazing Trio At Atria by Tridel, a modern condominium nestled in the heart of North York. Gorgeous Panoramic city view of Toronto on the 39th  floor.  Southwest exposure, bright sun filled  corner unit with 2 bedrooms, 2 bathrooms, freshly painted. Modern custom designed kitchen features: S/S appl, backsplash, quartz countertop, engineered single plank laminate flooring and thoughtfully planned entertaining spaces. Most convenient and rarely offered huge hand",
+    Source: "TREB",
+    PropertyType: "Residential",
+    Amenities: "/////",
+    gar_spaces: null,
+    PropertySubType: "",
+    irreg: null,
+    yr: 2024,
+    zoning: null,
+    maint: "487.0000",
+    dom: 4,
+    MLS: "C9265899",
+    SellingPrice: "688000",
+    GnowiseValue: "943000",
+    RiskofDecline: null,
+    Value1Yr: null,
+    Value2yr: null,
+    PriceDifferencePerc: 37,
+    Growth1YrPerc: 0,
+    Growth2YrPerc: 0,
+    Neighborhood: null,
+    PriceHigh: "1037000",
+    PriceLow: "849000",
+    LastSoldDate: null,
+    LastSoldPrice: null,
+    TopFeaturesResult: null,
+    ReportData: null,
+    Forecast: null,
+    SoldRecords: null,
+    UpdatedDate: "2024-08-27 04:34:22.317112+00:00",
+    CreatedDate: "2024-08-27 04:34:22.317112+00:00",
+    GnowiseCapRate: 0.0238218451749735,
+    GnowiseLease: 2600,
+    ValuationSource: "A",
+  },
+];
 
 function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   const location = useLocation();
@@ -713,10 +941,12 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
 
   return (
     <div
-      style={{
-        backgroundColor: "#" + backgroundColor,
-      }}
-      className="md:h-screen "
+      style={
+        {
+          // backgroundColor: "#" + backgroundColor,
+        }
+      }
+      className="md:h-screen bg-gray-100"
     >
       <style>
         {`
@@ -809,7 +1039,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
             ))}
           </div> */}
 
-            <form
+            {/* <form
               className="w-full"
               onSubmit={async (e) => {
                 e.preventDefault();
@@ -895,6 +1125,97 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                     </g>
                   </svg>
                 </button>
+              </div>
+            </form> */}
+            <form
+              className="w-full"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (message === "") return;
+                submitData(message);
+              }}
+            >
+              <div className="flex fixed bottom-0 w-full md:relative bg-gray-100 p-4">
+                <div className="flex items-center w-full bg-white rounded-full shadow-md p-2">
+                  {/* Address Input */}
+                  <input
+                    autoFocus
+                    ref={inputBoxRef}
+                    value={transcript ? transcript : message}
+                    placeholder="Type your message..."
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="flex-grow h-12 px-4 bg-transparent border-none outline-none text-gray-800 placeholder:text-gray-600"
+                  />
+                  {/* Address Tooltip */}
+                  <AddressTooltip
+                    disabled={!!uttering || answering || messages.length > 1}
+                    suggestions={suggestions}
+                    setMessage={setMessage}
+                  />
+                  {/* Recording Button */}
+                  <button
+                    disabled={!!uttering || answering}
+                    onClick={() => {
+                      if (!listening) {
+                        startRecording();
+                      } else {
+                        stopRecording();
+                      }
+                    }}
+                    className="flex items-center justify-center h-10 w-10 ml-2 bg-blue-500 rounded-full text-white hover:bg-blue-600 transition duration-300"
+                    type="button"
+                  >
+                    {listening ? (
+                      <img
+                        src={MicroPhoneListeningIcon}
+                        alt="microphone-listening-icon"
+                        className="h-5 w-5"
+                      />
+                    ) : (
+                      <img
+                        src={MicroPhoneIcon}
+                        alt="microphone-icon"
+                        className="h-5 w-5"
+                      />
+                    )}
+                  </button>
+                  {/* Send Button */}
+                  <button
+                    type="submit"
+                    disabled={thread === ""}
+                    style={{
+                      backgroundColor: `#${messageFieldColor}`,
+                      color: `#${messageFieldTextColor}`,
+                    }}
+                    className="flex items-center justify-center h-10 w-10 ml-2 bg-blue-500 rounded-full text-white hover:bg-blue-600 transition duration-300"
+                  >
+                    <svg
+                      fill={`#${backgroundColor}`}
+                      height="20px"
+                      width="20px"
+                      version="1.1"
+                      id="Layer_1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                      viewBox="0 0 512.662 512.662"
+                      xmlSpace="preserve"
+                    >
+                      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                      <g
+                        id="SVGRepo_tracerCarrier"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></g>
+                      <g id="SVGRepo_iconCarrier">
+                        <g>
+                          <g>
+                            <path d="M505.021,5.868c-0.064-0.043-0.085-0.107-0.128-0.149c-0.128-0.107-0.256-0.128-0.384-0.235 c-1.131-0.981-2.475-1.621-3.797-2.325c-0.427-0.213-0.747-0.576-1.195-0.768c-0.064-0.021-0.107-0.021-0.149-0.043 c-0.469-0.192-0.853-0.533-1.323-0.704c-1.771-0.661-3.648-0.875-5.547-1.045c-0.576-0.043-1.131-0.299-1.707-0.299 c-2.475-0.021-4.971,0.384-7.403,1.259L14.055,172.225c-7.445,2.709-12.779,9.323-13.867,17.173 c-1.045,7.851,2.304,15.637,8.768,20.245l141.888,101.355l20.032,140.309c1.237,8.533,7.488,15.488,15.851,17.643 c1.749,0.448,3.541,0.661,5.291,0.661c6.592,0,12.971-3.072,17.045-8.533l50.347-67.093l132.032,113.237 c3.947,3.371,8.875,5.141,13.909,5.141c2.389,0,4.779-0.405,7.125-1.216c7.168-2.56,12.48-8.768,13.845-16.277l85.995-468.928 C513.725,18.262,510.738,10.71,505.021,5.868z M240.125,348.396l-1.536,2.219l-32.747,43.669l-12.395-86.827l185.109-160.448 L240.125,348.396z"></path>
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </form>
           </div>

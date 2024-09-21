@@ -1,4 +1,8 @@
 import React from "react";
+import Property1 from "../assets/property1.svg";
+import Property2 from "../assets/property2.svg";
+import Property3 from "../assets/property3.svg";
+import Property4 from "../assets/property4.svg";
 
 interface InitialQuestionsProps {
   submitData: (data: string) => void;
@@ -11,68 +15,37 @@ const InitialQuestions = ({
 }: InitialQuestionsProps) => {
   return (
     <div className="flex items-center justify-center ">
-      <div className="absolute inset-0"></div>
-      <div className="relative z-10 flex flex-col items-center w-full h-full justify-center space-y-4">
+      <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6 space-y-4">
+        <h2 className="text-xl font-semibold text-gray-800">
+          A few questions to help you get started...
+        </h2>
         {initialQuestions.map((question, index) => (
           <button
             key={index}
             onClick={() => submitData(question)}
-            className="max-w-[400px] py-4 px-6 text-white bg-black border-2 border-white rounded-md hover:bg-white hover:text-black transition duration-300"
+            className="w-full py-3 px-4 text-left text-gray-800 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 transition duration-300 flex items-center space-x-3"
           >
-            {question}
+            {/* <span className="material-icons text-blue-500">search</span> */}
+            {/* Select icons property1 to 4 based on the index mod */}
+            {index % 4 === 0 && (
+              <img src={Property1} alt="property1" className="w-8 h-8" />
+            )}
+            {index % 4 === 1 && (
+              <img src={Property2} alt="property2" className="w-8 h-8" />
+            )}
+            {index % 4 === 2 && (
+              <img src={Property3} alt="property3" className="w-8 h-8" />
+            )}
+            {index % 4 === 3 && (
+              <img src={Property4} alt="property4" className="w-8 h-8" />
+            )}
+
+            <span>{question}</span>
           </button>
         ))}
       </div>
     </div>
   );
-
-  // return (
-  //   <div className="flex items-center justify-center ">
-  //     <div className="absolute inset-0"></div>
-  //     <div className="relative z-10 flex flex-col items-center w-full h-full justify-center space-y-4">
-  //       <button
-  //         onClick={() =>
-  //           submitData(
-  //             "Show me the top investment properties in Toronto today."
-  //           )
-  //         }
-  //         className="w-4/5 md:w-1/2 lg:w-1/3 py-4 px-6 text-white bg-black border-2 border-white rounded-md hover:bg-white hover:text-black transition duration-300"
-  //       >
-  //         Show me the top investment properties in Toronto today.
-  //       </button>
-  //       <button
-  //         onClick={() =>
-  //           submitData("Show me the top investment properties in Canada today.")
-  //         }
-  //         className="w-4/5 md:w-1/2 lg:w-1/3 py-4 px-6 text-white bg-black border-2 border-white rounded-md hover:bg-white hover:text-black transition duration-300"
-  //       >
-  //         Show me the top investment properties in Canada today.
-  //       </button>
-  //       <button
-  //         onClick={() =>
-  //           submitData(
-  //             "With a $2,000,000 budget, show me the best investment options and combinations available today."
-  //           )
-  //         }
-  //         className="w-4/5 md:w-1/2 lg:w-1/3 py-4 px-6 text-white bg-black border-2 border-white rounded-md hover:bg-white hover:text-black transition duration-300"
-  //       >
-  //         With a $2,000,000 budget, show me the best investment options and
-  //         combinations available today.
-  //       </button>
-  //       <button
-  //         onClick={() =>
-  //           submitData(
-  //             "Show me Ontario properties with a risk of decline under 20%, a 1-year growth rate over 10%, and a cap rate above 5% available today."
-  //           )
-  //         }
-  //         className="w-4/5 md:w-1/2 lg:w-1/3 py-4 px-6 text-white bg-black border-2 border-white rounded-md hover:bg-white hover:text-black transition duration-300"
-  //       >
-  //         Show me Ontario properties with a risk of decline under 20%, a 1-year
-  //         growth rate over 10%, and a cap rate above 5% available today.
-  //       </button>
-  //     </div>
-  //   </div>
-  // );
 };
 
 export default InitialQuestions;

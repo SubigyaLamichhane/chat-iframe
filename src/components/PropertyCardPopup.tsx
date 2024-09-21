@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import PropertyModal from "./PropertyModal";
+import React from "react";
 import { Property } from "../types"; // Import the Property type
 
 interface PropertyCardProps {
@@ -16,57 +15,58 @@ function toInt(value: string | number | null): number | null {
     value = value.toString();
   }
   const parsed = parseInt(value, 10);
-  // Check if the parsed value is a valid number
   if (isNaN(parsed)) {
-    return null; // or false, depending on how you want to handle this
+    return null;
   }
   return parsed;
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property, openModal }) => {
   return (
-    <div className="p-4 bg-gray-900 text-white shadow rounded-md max-w-sm">
-      <img
-        src={`https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=${property.ml_num}`}
-        alt="Property"
-        className="w-full h-48 object-cover rounded-md mb-4"
-      />
-      <h2
-        className="text-lg font-bold text-blue-400 hover:cursor-pointer"
-        onClick={openModal}
-      >
-        {/* <a
-          target="_blank"
-          className="text-blue-400"
-          href={`https://portal.gnowise.com/${property.ml_num}`}
-        > */}
-        {property.addr}, {property.municipality}
-        {/* </a> */}
-      </h2>
-      {property.lp_dol && (
-        <p className="text-gray-400">Price: ${toInt(property.lp_dol)}</p>
-      )}
-      {property.county && (
-        <p className="text-gray-400">County: {property.county}</p>
-      )}
-      {/* {property.municipality && (
-        <p className="text-gray-400">Municipality: {property.municipality}</p>
-      )} */}
-      {property.PropertyType && (
-        <p className="text-gray-400">Property Type: {property.PropertyType}</p>
-      )}
-      {/* {property.PropertySubType && (
-        <p className="text-gray-400">Subtype: {property.PropertySubType}</p>
-      )} */}
-      {property.style && (
-        <p className="text-gray-400">Property Style: {property.style}</p>
-      )}
-      <button
-        className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-300"
-        onClick={openModal}
-      >
-        View Details
-      </button>
+    <div className="bg-white rounded-xl shadow-lg max-w-sm overflow-hidden">
+      {/* Image with rounded corners */}
+      <div className="relative">
+        <img
+          src={`https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=${property.ml_num}`}
+          alt="Property"
+          className="w-full h-48 object-cover"
+        />
+        {/* Active badge */}
+        <span className="absolute top-2 left-2 bg-white text-green-600 font-semibold text-sm px-3 py-1 rounded-full shadow-md">
+          Active
+        </span>
+      </div>
+
+      <div className="p-4">
+        {/* Address */}
+        <h2 className="text-lg font-semibold text-gray-800" onClick={openModal}>
+          {property.addr}, {property.municipality}
+        </h2>
+        <p className="text-sm text-gray-500">
+          {property.county}, {property.zip}
+        </p>
+
+        {/* Details */}
+        <div className="flex justify-between items-center text-gray-600 text-sm my-2">
+          <span>Bed / Bath / ft²</span>
+          <span>
+            {property.br} / {property.bath_tot} / {property.sqft}
+          </span>
+        </div>
+
+        {/* List Price */}
+        <p className="text-lg font-bold text-gray-900">
+          List Price: ${toInt(property.lp_dol)?.toLocaleString()}
+        </p>
+
+        {/* Button */}
+        <button
+          className="mt-4 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+          onClick={openModal}
+        >
+          Get Property Report
+        </button>
+      </div>
     </div>
   );
 };
