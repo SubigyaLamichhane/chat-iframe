@@ -55,5 +55,8 @@ export default {
       pointer: "pointer",
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("tailwind-scrollbar")({ nocompatible: true }), // Add this plugin
+  ],
 };

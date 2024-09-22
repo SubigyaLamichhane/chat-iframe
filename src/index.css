@@ -1192,6 +1192,38 @@ input::placeholder {
   margin-top: 0 !important;
 }
 
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Scrollbar track */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #ffffff; /* Set track to white */
+}
+
+/* Scrollbar thumb */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3b82f6; /* Tailwind's blue-500 */
+  border-radius: 10px;
+  border: 2px solid #ffffff; /* Border matches track color to blend */
+}
+
+/* Hide scrollbar arrows */
+.custom-scrollbar::-webkit-scrollbar-button {
+  display: none; /* Removes the arrows from the scrollbar */
+  width: 0px;
+  height: 0px;
+}
+
+::-moz-scrollbar-button:decrement,
+::-moz-scrollbar-button:increment,
+::-webkit-scrollbar-button:decrement,
+::-webkit-scrollbar-button:increment {
+  width: 0px;
+  height: 0px;
+}
+
 .cluster-icon {
   background-color: #333;
   height: 2em;
