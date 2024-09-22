@@ -847,29 +847,26 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
           }`}
         >
           <li
-            className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+            className={`fadeIn text-md py-2 px-4 mb-2 max-w-1/2 ${
               message.from === "us"
-                ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
-                : "max-w-lg rounded-bl-xl rounded-tr-xl"
+                ? "rounded-3xl shadow-md border border-gray-200"
+                : "rounded-3xl shadow-md"
             }`}
             style={
               message.from === "us"
                 ? {
-                    backgroundColor: "#" + outgoingMessageColor,
-                    color: "#" + outgoingMessageTextColor,
+                    backgroundColor: "#ffffff", // White background for outgoing messages
+                    color: "#000000", // Black text for outgoing messages
                   }
                 : {
-                    backgroundColor: sidebarCustomization.background_color,
-                    color: sidebarCustomization.text_color,
+                    backgroundColor: "#3b82f6", // Blue background for incoming messages
+                    color: "#ffffff", // White text for incoming messages
                   }
             }
           >
             {message.from === "them" ? (
               <div className="w-full md:text-justify text-left max-w-full markdown-body">
                 <ReactMarkdown
-                  // linkTarget="_blank"
-                  // linkTargets="_blank"
-                  // rehypePlugins={[rehypeRaw]}
                   remarkPlugins={[
                     [
                       // @ts-ignore
@@ -885,8 +882,6 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                           target="_blank"
                           className="text-yellow-100"
                           onClick={(event) => {
-                            // console.log(props.href);
-
                             if (
                               props.href &&
                               props.href.includes("gnohome.com")
@@ -1000,7 +995,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                           }}
                         ></div>
                       </div>
-                      <div className="container  relative">
+                      <div className="container relative">
                         <div
                           className="bouncing-ball2  "
                           style={{
@@ -1008,7 +1003,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                           }}
                         ></div>
                       </div>
-                      <div className="container  relative">
+                      <div className="container relative">
                         <div
                           className="bouncing-ball "
                           style={{

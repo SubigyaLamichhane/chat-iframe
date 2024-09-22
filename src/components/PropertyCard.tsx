@@ -11,13 +11,11 @@ function toInt(value: string | number | null): number | null {
     return null;
   }
   if (typeof value === "number") {
-    // remove zeros
     value = value.toString();
   }
   const parsed = parseInt(value, 10);
-  // Check if the parsed value is a valid number
   if (isNaN(parsed)) {
-    return null; // or false, depending on how you want to handle this
+    return null;
   }
   return parsed;
 }
@@ -34,49 +32,55 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   };
 
   return (
-    <div className="p-4 bg-gray-900 text-white shadow rounded-md max-w-sm">
+    <div className="bg-white rounded-xl shadow-lg max-w-sm overflow-hidden">
+      {/* Property Image */}
       <img
         src={`https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=${property.ml_num}`}
         alt="Property"
-        className="w-full h-48 object-cover rounded-md mb-4"
+        className="w-full h-48 object-cover"
       />
-      <h2
-        className="text-lg font-bold text-blue-400 hover:cursor-pointer"
-        onClick={openModal}
-      >
-        {/* <a
-          target="_blank"
-          className="text-blue-400"
-          href={`https://portal.gnowise.com/${property.ml_num}`}
-        > */}
-        {property.addr}, {property.municipality}
-        {/* </a> */}
-      </h2>
-      {property.lp_dol && (
-        <p className="text-gray-400">Price: ${toInt(property.lp_dol)}</p>
-      )}
-      {property.county && (
-        <p className="text-gray-400">County: {property.county}</p>
-      )}
-      {/* {property.municipality && (
-        <p className="text-gray-400">Municipality: {property.municipality}</p>
-      )} */}
-      {property.PropertyType && (
-        <p className="text-gray-400">Property Type: {property.PropertyType}</p>
-      )}
-      {/* {property.PropertySubType && (
-        <p className="text-gray-400">Subtype: {property.PropertySubType}</p>
-      )} */}
-      {property.style && (
-        <p className="text-gray-400">Property Style: {property.style}</p>
-      )}
-      <button
-        className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-300"
-        onClick={openModal}
-      >
-        View Details
-      </button>
 
+      {/* Property Details */}
+      <div className="p-4">
+        <h2
+          className="text-xl font-semibold text-gray-800 hover:text-blue-600 cursor-pointer"
+          onClick={openModal}
+        >
+          {property.addr}, {property.municipality}
+        </h2>
+        <p className="text-sm text-gray-500 mb-2">
+          {property.county && <span>County: {property.county}</span>}
+        </p>
+
+        {/* Property Type and Style */}
+        {property.PropertyType && (
+          <p className="text-gray-600">
+            <strong>Property Type:</strong> {property.PropertyType}
+          </p>
+        )}
+        {property.style && (
+          <p className="text-gray-600">
+            <strong>Property Style:</strong> {property.style}
+          </p>
+        )}
+
+        {/* Property Price */}
+        {property.lp_dol && (
+          <p className="text-gray-900 font-bold">
+            <strong>Price:</strong> ${toInt(property.lp_dol)?.toLocaleString()}
+          </p>
+        )}
+
+        {/* View Details Button */}
+        <button
+          className="mt-4 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+          onClick={openModal}
+        >
+          View Details
+        </button>
+      </div>
+
+      {/* Property Modal */}
       {isModalOpen && (
         <PropertyModal property={property} onClose={closeModal} />
       )}

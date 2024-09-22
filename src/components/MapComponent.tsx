@@ -20,11 +20,24 @@ const AdjustMapBounds = ({ data }: { data: Property[] }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (data.length > 0) {
+    // Filter out properties with valid latitude and longitude
+    const validCoordinates = data.filter(
+      (property) =>
+        property.Latitude !== null &&
+        property.Latitude !== undefined &&
+        property.Longitude !== null &&
+        property.Longitude !== undefined
+    );
+
+    // Proceed only if there are valid coordinates
+    if (validCoordinates.length > 0) {
       const bounds = new LatLngBounds(
-        data.map(
+        validCoordinates.map(
           (property) =>
-            [property.Latitude, property.Longitude] as [number, number]
+            [property.Latitude as number, property.Longitude as number] as [
+              number,
+              number
+            ]
         )
       );
       map.fitBounds(bounds); // Adjust the map to show all markers
