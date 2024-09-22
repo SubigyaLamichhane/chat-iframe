@@ -777,7 +777,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
         return (
           <div>
             <PropertyGrid properties={message.propertiesRaw} />
-            {message.propertiesRaw.length < 1 && (
+            {
               <ul
                 key={index}
                 ref={messageParent}
@@ -834,7 +834,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                   </p>
                 </li>
               </ul>
-            )}
+            }
           </div>
         );
       }
