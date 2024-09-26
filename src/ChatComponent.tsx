@@ -713,7 +713,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
           // backgroundColor: "#" + backgroundColor,
         }
       }
-      className="md:h-screen bg-gray-100"
+      className="md:h-screen "
     >
       <style>
         {`
@@ -742,7 +742,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               </div>
             )} */}
             {/* <div className=" bg-black min-h-full"></div> */}
-            <div className="fixed bottom-16 md:relative md:bottom-0 flex-grow flex flex-col w-full justify-end overflow-auto">
+            <div className="fixed bottom-16 md:relative md:bottom-0 flex-grow flex flex-col w-full justify-end overflow-auto custom-scrollbar">
               <div
                 // id="message-box"
                 ref={messageDivRef}
@@ -750,9 +750,9 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               >
                 {renderMessages()}
                 <div ref={bottomRef} className="h-6"></div>{" "}
-                {listening && <p>Listening...</p>}
+                {listening && <p className="mb-4">Listening...</p>}
                 {answering && (
-                  <div className="w-full p-2 fade-in">
+                  <div className="w-full p-2 fade-in mb-4">
                     <div
                       className="flex justify-start w-fit p-2 rounded-full"
                       style={{
@@ -902,8 +902,8 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                 submitData(message);
               }}
             >
-              <div className="flex fixed bottom-0 w-full md:relative bg-gray-100 p-4">
-                <div className="flex items-center w-full bg-white rounded-full shadow-md p-2">
+              <div className="flex fixed bottom-0 w-full md:relative  p-4">
+                <div className="flex items-center w-full bg-white rounded-full shadow-md p-2 border">
                   {/* Address Input */}
                   <input
                     autoFocus
