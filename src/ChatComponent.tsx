@@ -742,11 +742,11 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               </div>
             )} */}
             {/* <div className=" bg-black min-h-full"></div> */}
-            <div className="fixed bottom-16 md:relative md:bottom-0 flex-grow flex flex-col w-full justify-end overflow-auto custom-scrollbar">
+            <div className="fixed bottom-16 md:relative md:bottom-0 flex-grow flex flex-col w-full justify-end overflow-auto">
               <div
                 // id="message-box"
                 ref={messageDivRef}
-                className="w-full p-4 pb-0 max-h-[calc(100vh-9rem)] md:max-h-screen overflow-y-auto overflow-x-hidden"
+                className="w-full p-4 pb-0 max-h-[calc(100vh-9rem)] md:max-h-screen overflow-y-auto overflow-x-hidden custom-scrollbar"
               >
                 {renderMessages()}
                 <div ref={bottomRef} className="h-6"></div>{" "}
@@ -754,10 +754,10 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                 {answering && (
                   <div className="w-full p-2 fade-in mb-4">
                     <div
-                      className="flex justify-start w-fit p-2 rounded-full"
-                      style={{
-                        backgroundColor: "#" + messageFieldColor,
-                      }}
+                      className="flex justify-start w-fit p-2 rounded-full bg-blue-500"
+                      // style={{
+                      //   backgroundColor: "#" + messageFieldColor,
+                      // }}
                     >
                       <div className="container relative">
                         <div
@@ -989,7 +989,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
         )}
         {tempPropertyData && tempPropertyData.length != 0 && (
           // <Suspense fallback={<p>Loading map...</p>}>
-          <div className="w-1/2">
+          <div className="w-2/3">
             {" "}
             <Map data={tempPropertyData} />
           </div>

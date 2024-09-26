@@ -9,7 +9,7 @@ interface PropertyModalProps {
 const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
       onClick={onClose}
     >
       <div
@@ -27,7 +27,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
           </div>
 
           {/* Content Section */}
-          <div className="p-6 md:w-3/5 overflow-y-auto max-h-[500px]  custom-scrollbar">
+          <div className="p-6 md:w-3/5 overflow-y-auto max-h-[500px] custom-scrollbar">
             <h2 className="text-2xl font-bold mb-4">
               <a
                 href={`https://portal.gnowise.com/${property.ml_num}`}
