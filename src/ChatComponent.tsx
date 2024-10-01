@@ -424,8 +424,8 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
       if (message.propertyDataFromQuery) {
         return (
           <div>
-            <PropertyCard property={message.propertyDataFromQuery} />
-            {/* <ul
+            {/* <PropertyCard property={message.propertyDataFromQuery} /> */}
+            <ul
               key={index}
               ref={messageParent}
               className={`flex items-center ${
@@ -433,53 +433,79 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               }`}
             >
               <li
-                className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+                className={`fadeIn text-md py-2 px-4 mb-2 max-w-1/2 ${
                   message.from === "us"
-                    ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
-                    : "max-w-lg rounded-bl-xl rounded-tr-xl"
+                    ? "rounded-3xl shadow-md border border-gray-200"
+                    : "rounded-3xl shadow-md"
                 }`}
                 style={
                   message.from === "us"
                     ? {
-                        backgroundColor: "#" + outgoingMessageColor,
-                        color: "#" + outgoingMessageTextColor,
+                        backgroundColor: "#ffffff", // White background for outgoing messages
+                        color: "#000000", // Black text for outgoing messages
                       }
                     : {
-                        backgroundColor: sidebarCustomization.background_color,
-                        color: sidebarCustomization.text_color,
+                        backgroundColor: "#3b82f6", // Blue background for incoming messages
+                        color: "#ffffff", // White text for incoming messages
                       }
                 }
               >
-                <div className="w-full md:text-justify text-left max-w-full markdown-body">
-                  <ReactMarkdown
-                    components={
-                      {
-                        // a: ({ node, ...props }) => {
-                        //   return (
-                        //     <a
-                        //       {...props}
-                        //       target="_blank"
-                        //       className="text-yellow-100"
-                        //       onClick={(event) => {
-                        //         event.preventDefault();
-                        //         console.log(props.href);
-                        //       }}
-                        //     >
-                        //       {props.children}
-                        //     </a>
-                        //   );
-                        // },
-                      }
-                    }
-                    // rehypePlugins={[rehypeRaw]}
-                    remarkPlugins={[remarkGfm]}
-                    className="markdown-body"
-                  >
+                {message.from === "them" ? (
+                  <div className="w-full md:text-justify text-left max-w-full markdown-body">
+                    <ReactMarkdown
+                      remarkPlugins={[
+                        [
+                          // @ts-ignore
+                          remarkExternalLinks,
+                          { target: "_blank", rel: "noopener noreferrer" },
+                        ],
+                      ]}
+                      components={{
+                        a: ({ node, ...props }) => {
+                          return (
+                            <a
+                              {...props}
+                              target="_blank"
+                              className="text-yellow-100"
+                              onClick={(event) => {
+                                if (
+                                  props.href &&
+                                  props.href.includes("gnohome.com")
+                                ) {
+                                  event.preventDefault();
+                                  setTempPropertyData(
+                                    message.propertiesRaw.find(
+                                      (property: any) =>
+                                        property.ml_num ===
+                                        props.href?.split("=").pop()
+                                    )
+                                  );
+                                  openModal();
+                                }
+                              }}
+                            >
+                              {props.children}
+                            </a>
+                          );
+                        },
+                      }}
+                    >
+                      {message.message}
+                    </ReactMarkdown>
+                    {isModalOpen && (
+                      <PropertyModal
+                        property={tempPropertyData}
+                        onClose={closeModal}
+                      />
+                    )}
+                  </div>
+                ) : (
+                  <p className="w-full md:text-justify text-left max-w-full">
                     {message.message}
-                  </ReactMarkdown>
-                </div>
+                  </p>
+                )}
               </li>
-            </ul> */}
+            </ul>
           </div>
         );
       }
@@ -495,51 +521,77 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               }`}
             >
               <li
-                className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+                className={`fadeIn text-md py-2 px-4 mb-2 max-w-1/2 ${
                   message.from === "us"
-                    ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
-                    : "max-w-lg rounded-bl-xl rounded-tr-xl"
+                    ? "rounded-3xl shadow-md border border-gray-200"
+                    : "rounded-3xl shadow-md"
                 }`}
                 style={
                   message.from === "us"
                     ? {
-                        backgroundColor: "#" + outgoingMessageColor,
-                        color: "#" + outgoingMessageTextColor,
+                        backgroundColor: "#ffffff", // White background for outgoing messages
+                        color: "#000000", // Black text for outgoing messages
                       }
                     : {
-                        backgroundColor: sidebarCustomization.background_color,
-                        color: sidebarCustomization.text_color,
+                        backgroundColor: "#3b82f6", // Blue background for incoming messages
+                        color: "#ffffff", // White text for incoming messages
                       }
                 }
               >
-                <p className="w-full md:text-justify text-left max-w-full markdown-body">
-                  <ReactMarkdown
-                    components={
-                      {
-                        // a: ({ node, ...props }) => {
-                        //   return (
-                        //     <a
-                        //       {...props}
-                        //       target="_blank"
-                        //       className="text-yellow-100"
-                        //       onClick={(event) => {
-                        //         // event.preventDefault();
-                        //         console.log(props.href);
-                        //       }}
-                        //     >
-                        //       {props.children}
-                        //     </a>
-                        //   );
-                        // },
-                      }
-                    }
-                    // rehypePlugins={[rehypeRaw]}
-                    remarkPlugins={[remarkGfm]}
-                    className="markdown-body"
-                  >
+                {message.from === "them" ? (
+                  <div className="w-full md:text-justify text-left max-w-full markdown-body">
+                    <ReactMarkdown
+                      remarkPlugins={[
+                        [
+                          // @ts-ignore
+                          remarkExternalLinks,
+                          { target: "_blank", rel: "noopener noreferrer" },
+                        ],
+                      ]}
+                      components={{
+                        a: ({ node, ...props }) => {
+                          return (
+                            <a
+                              {...props}
+                              target="_blank"
+                              className="text-yellow-100"
+                              onClick={(event) => {
+                                if (
+                                  props.href &&
+                                  props.href.includes("gnohome.com")
+                                ) {
+                                  event.preventDefault();
+                                  setTempPropertyData(
+                                    message.propertiesRaw.find(
+                                      (property: any) =>
+                                        property.ml_num ===
+                                        props.href?.split("=").pop()
+                                    )
+                                  );
+                                  openModal();
+                                }
+                              }}
+                            >
+                              {props.children}
+                            </a>
+                          );
+                        },
+                      }}
+                    >
+                      {message.message}
+                    </ReactMarkdown>
+                    {isModalOpen && (
+                      <PropertyModal
+                        property={tempPropertyData}
+                        onClose={closeModal}
+                      />
+                    )}
+                  </div>
+                ) : (
+                  <p className="w-full md:text-justify text-left max-w-full">
                     {message.message}
-                  </ReactMarkdown>
-                </p>
+                  </p>
+                )}
               </li>
             </ul>
           </div>
@@ -558,52 +610,77 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                 }`}
               >
                 <li
-                  className={`fadeIn text-md  py-2 px-4 mb-2 max-w-1/2 ${
+                  className={`fadeIn text-md py-2 px-4 mb-2 max-w-1/2 ${
                     message.from === "us"
-                      ? "rounded-br-xl rounded-tl-xl border border-[#131317]"
-                      : "max-w-lg rounded-bl-xl rounded-tr-xl"
+                      ? "rounded-3xl shadow-md border border-gray-200"
+                      : "rounded-3xl shadow-md"
                   }`}
                   style={
                     message.from === "us"
                       ? {
-                          backgroundColor: "#" + outgoingMessageColor,
-                          color: "#" + outgoingMessageTextColor,
+                          backgroundColor: "#ffffff", // White background for outgoing messages
+                          color: "#000000", // Black text for outgoing messages
                         }
                       : {
-                          backgroundColor:
-                            sidebarCustomization.background_color,
-                          color: sidebarCustomization.text_color,
+                          backgroundColor: "#3b82f6", // Blue background for incoming messages
+                          color: "#ffffff", // White text for incoming messages
                         }
                   }
                 >
-                  <p className="w-full md:text-justify text-left max-w-full markdown-body">
-                    <ReactMarkdown
-                      components={
-                        {
-                          // a: ({ node, ...props }) => {
-                          //   return (
-                          //     <a
-                          //       {...props}
-                          //       target="_blank"
-                          //       className="text-yellow-100"
-                          //       onClick={(event) => {
-                          //         // event.preventDefault();
-                          //         console.log(props.href);
-                          //       }}
-                          //     >
-                          //       {props.children}
-                          //     </a>
-                          //   );
-                          // },
-                        }
-                      }
-                      // rehypePlugins={[rehypeRaw]}
-                      remarkPlugins={[remarkGfm]}
-                      className="markdown-body"
-                    >
+                  {message.from === "them" ? (
+                    <div className="w-full md:text-justify text-left max-w-full markdown-body">
+                      <ReactMarkdown
+                        remarkPlugins={[
+                          [
+                            // @ts-ignore
+                            remarkExternalLinks,
+                            { target: "_blank", rel: "noopener noreferrer" },
+                          ],
+                        ]}
+                        components={{
+                          a: ({ node, ...props }) => {
+                            return (
+                              <a
+                                {...props}
+                                target="_blank"
+                                className="text-yellow-100"
+                                onClick={(event) => {
+                                  if (
+                                    props.href &&
+                                    props.href.includes("gnohome.com")
+                                  ) {
+                                    event.preventDefault();
+                                    setTempPropertyData(
+                                      message.propertiesRaw.find(
+                                        (property: any) =>
+                                          property.ml_num ===
+                                          props.href?.split("=").pop()
+                                      )
+                                    );
+                                    openModal();
+                                  }
+                                }}
+                              >
+                                {props.children}
+                              </a>
+                            );
+                          },
+                        }}
+                      >
+                        {message.message}
+                      </ReactMarkdown>
+                      {isModalOpen && (
+                        <PropertyModal
+                          property={tempPropertyData}
+                          onClose={closeModal}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <p className="w-full md:text-justify text-left max-w-full">
                       {message.message}
-                    </ReactMarkdown>
-                  </p>
+                    </p>
+                  )}
                 </li>
               </ul>
             }
