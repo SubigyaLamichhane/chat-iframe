@@ -3,6 +3,7 @@ import Modal from "react-modal"; // You can use any modal library or a custom im
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ForecastGraph from "./ForecastGraph";
 
 interface PropertyDetailsProps {
   isOpen: boolean;
@@ -168,6 +169,7 @@ const PropertyDetailsModal: React.FC<PropertyDetailsProps> = ({
                       ))}
                   </div>
                 </div>
+                {/* <ForecastGraph /> */}
               </div>
             </div>
           </div>

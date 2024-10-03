@@ -1,5 +1,6 @@
 import React from "react";
 import { ForecastEntry, Property } from "../types"; // Import the Property type
+import ForecastGraph from "./ForecastGraph";
 
 interface PropertyModalProps {
   property: Property;
@@ -213,7 +214,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
                     </p>
                   )}
                 </div>
-                {property.Forecast && (
+                {/* {property.Forecast && (
                   <div className="mt-4">
                     <strong>Forecast:</strong>
                     <table className="table-auto border-collapse border border-gray-300 w-full text-sm">
@@ -263,7 +264,8 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
                       </tbody>
                     </table>
                   </div>
-                )}
+                )} */}
+                <ForecastGraph property={property} />
               </>
             )}
 
