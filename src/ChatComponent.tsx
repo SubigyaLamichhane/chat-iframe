@@ -91,7 +91,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   const [language, setLanguage] = useState<"en-US" | "ne-NP">("en-US");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [tempPropertyData, setTempPropertyData] = useState<any>(null);
+  const [tempProperty, setTempProperty] = useState<any>(null);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -250,7 +250,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
     setSpeechRecognitionStarted(false);
     recognition.stop();
   };
-  console.log(messages);
+  // console.log(messages);
   const submitData = async (message: string) => {
     setAnswering(true);
     setMessage("");
@@ -283,6 +283,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
         : null,
     });
     console.log(
+      "properties for map ",
       response.data.properties
         ? JSON.parse(response.data.properties)
         : response.data.propertiesRaw
@@ -299,9 +300,9 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
         : null
     );
 
-    console.log(wasLastMessageVoice);
+    // console.log(wasLastMessageVoice);
     if (wasLastMessageVoice) {
-      console.log(response.data.tts);
+      // console.log(response.data.tts);
       if (response.data.tts) {
         setUttering(true);
         // play a audio given a url
@@ -372,6 +373,8 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
     return response.data;
   };
 
+  // console.log(te)
+
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -379,12 +382,12 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
 
   const getThread = async () => {
     const query = new URLSearchParams(location.search);
-    console.log(query.get("property"));
+    // console.log(query.get("property"));
     if (query.get("property")) {
       const response = await axios.get(
         apiURL + `/get-thread-with-query?property=${query.get("property")}`
       );
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } else {
       const response = await axios.get(apiURL + `/get-thread`);
@@ -410,7 +413,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   }, []);
 
   const renderMessages = () => {
-    console.log(messages);
+    // console.log(messages);
     if (messages.length === 0 && !messages[0]?.propertyDataFromQuery) {
       return (
         <InitialQuestions
@@ -428,12 +431,12 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
             <ul
               key={index}
               ref={messageParent}
-              className={`flex items-center ${
+              className={`flex items-center max-w-2xl ${
                 message.from === "us" ? "justify-end" : "justify-start"
               }`}
             >
               <li
-                className={`fadeIn text-md py-2 px-4 mb-2 max-w-1/2 ${
+                className={`fadeIn text-md py-2 px-4 mb-2 max-w-2xl ${
                   message.from === "us"
                     ? "rounded-3xl shadow-md border border-gray-200"
                     : "rounded-3xl shadow-md"
@@ -466,20 +469,20 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                             <a
                               {...props}
                               target="_blank"
-                              className="text-yellow-100"
+                              className="!text-blue-500"
                               onClick={(event) => {
                                 if (
                                   props.href &&
                                   props.href.includes("gnohome.com")
                                 ) {
                                   event.preventDefault();
-                                  setTempPropertyData(
-                                    message.propertiesRaw.find(
-                                      (property: any) =>
-                                        property.ml_num ===
-                                        props.href?.split("=").pop()
-                                    )
-                                  );
+                                  // setTempPropertyData(
+                                  //   message.propertiesRaw.find(
+                                  //     (property: any) =>
+                                  //       property.ml_num ===
+                                  //       props.href?.split("=").pop()
+                                  //   )
+                                  // );
                                   openModal();
                                 }
                               }}
@@ -521,13 +524,13 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
               }`}
             >
               <li
-                className={`fadeIn text-md py-2 px-4 mb-2 max-w-1/2 ${
-                  message.from === "us"
+                className={`fadeIn text-md py-2 px-4 mb-2 max-w-2xl ${
+                  message.from === "them"
                     ? "rounded-3xl shadow-md border border-gray-200"
                     : "rounded-3xl shadow-md"
                 }`}
                 style={
-                  message.from === "us"
+                  message.from === "them"
                     ? {
                         backgroundColor: "#ffffff", // White background for outgoing messages
                         color: "#000000", // Black text for outgoing messages
@@ -554,20 +557,20 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                             <a
                               {...props}
                               target="_blank"
-                              className="text-yellow-100"
+                              className="!text-blue-500"
                               onClick={(event) => {
                                 if (
                                   props.href &&
                                   props.href.includes("gnohome.com")
                                 ) {
                                   event.preventDefault();
-                                  setTempPropertyData(
-                                    message.propertiesRaw.find(
-                                      (property: any) =>
-                                        property.ml_num ===
-                                        props.href?.split("=").pop()
-                                    )
-                                  );
+                                  // setTempPropertyData(
+                                  //   message.propertiesRaw.find(
+                                  //     (property: any) =>
+                                  //       property.ml_num ===
+                                  //       props.href?.split("=").pop()
+                                  //   )
+                                  // );
                                   openModal();
                                 }
                               }}
@@ -610,13 +613,13 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                 }`}
               >
                 <li
-                  className={`fadeIn text-md py-2 px-4 mb-2 max-w-1/2 ${
-                    message.from === "us"
+                  className={`fadeIn text-md py-2 px-4 mb-2 max-w-2xl ${
+                    message.from === "them"
                       ? "rounded-3xl shadow-md border border-gray-200"
                       : "rounded-3xl shadow-md"
                   }`}
                   style={
-                    message.from === "us"
+                    message.from === "them"
                       ? {
                           backgroundColor: "#ffffff", // White background for outgoing messages
                           color: "#000000", // Black text for outgoing messages
@@ -643,14 +646,14 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                               <a
                                 {...props}
                                 target="_blank"
-                                className="text-yellow-100"
+                                className="!text-blue-500"
                                 onClick={(event) => {
                                   if (
                                     props.href &&
                                     props.href.includes("gnohome.com")
                                   ) {
                                     event.preventDefault();
-                                    setTempPropertyData(
+                                    setTempProperty(
                                       message.propertiesRaw.find(
                                         (property: any) =>
                                           property.ml_num ===
@@ -671,7 +674,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                       </ReactMarkdown>
                       {isModalOpen && (
                         <PropertyModal
-                          property={tempPropertyData}
+                          property={tempProperty}
                           onClose={closeModal}
                         />
                       )}
@@ -696,13 +699,13 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
           }`}
         >
           <li
-            className={`fadeIn text-md py-2 px-4 mb-2 max-w-1/2 ${
-              message.from === "us"
+            className={`fadeIn text-md py-2 px-4 mb-2 max-w-2xl ${
+              message.from === "them"
                 ? "rounded-3xl shadow-md border border-gray-200"
                 : "rounded-3xl shadow-md"
             }`}
             style={
-              message.from === "us"
+              message.from === "them"
                 ? {
                     backgroundColor: "#ffffff", // White background for outgoing messages
                     color: "#000000", // Black text for outgoing messages
