@@ -7,7 +7,9 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
+
 import { ForecastEntry, Property } from "../types";
 
 // Custom formatter for Y-axis (e.g., 1000 -> 1k, 1000000 -> 1M)
@@ -24,6 +26,7 @@ const ForecastGraph = ({ property }: { property: Property }) => {
       if (!forecast) return false;
       const forecastDate = new Date(forecast.Date);
       return forecastDate >= new Date(); // Only future dates
+      // return forecastDate;
     })
     .map((forecast: ForecastEntry) => ({
       date: new Date(forecast.Date).toLocaleDateString(),
@@ -43,52 +46,84 @@ const ForecastGraph = ({ property }: { property: Property }) => {
   const secondValue = forecastData[1]?.forecastValue || firstValue;
   const yAxisMin = firstValue - (secondValue - firstValue);
   const yAxisMax = firstValue + (secondValue - firstValue) * 2; // Reduce the Y-axis range
+  const today = new Date().toLocaleDateString();
+
+  // Log to check if today's date matches your data
+  console.log("Today's Date: ", today);
+  console.log("Forecast Data: ", forecastData);
 
   return (
     <div className="mt-4">
-      <strong>Forecast:</strong>
-      <ResponsiveContainer width="100%" height={200}>
-        {/* Adjust the height here */}
-        <AreaChart
-          data={forecastData}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="colorForecast" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <XAxis
-            dataKey="date"
-            tick={{ fontSize: 10 }} // Make the date font size smaller
-          />
-          <YAxis
-            tickFormatter={formatYAxis}
-            tick={{ fontSize: 12 }} // Make the value font size smaller
-            domain={[yAxisMin, yAxisMax]} // Reduce the Y-axis height by restricting the range
-          />
-          <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip
-            formatter={(value) => [
-              `$${value.toLocaleString()}`,
-              "Forecast Value",
-            ]} // Customize label
-            labelFormatter={(label) => `Date: ${label}`}
-          />
-          {/* <Tooltip
+      <strong className="mb-2">Forecast:</strong>
+      <div className="mt-1">
+        <ResponsiveContainer width="100%" height={200}>
+          {/* Adjust the height here */}
+          <AreaChart
+            data={forecastData}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorForecast" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#2563eb" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis
+              dataKey="date"
+              type="category"
+              tick={{ fontSize: 10 }} // Make the date font size smaller
+            />
+            <YAxis
+              tickFormatter={formatYAxis}
+              tick={{ fontSize: 12 }} // Make the value font size smaller
+              domain={[yAxisMin, yAxisMax]} // Reduce the Y-axis height by restricting the range
+            />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip
+              formatter={(value) => [
+                `$${value.toLocaleString()}`,
+                "Forecast Value",
+              ]} // Customize label
+              labelFormatter={(label) => `Date: ${label}`}
+            />
+            {/* <Tooltip
             formatter={(value) => `$${value.toLocaleString()}`}
             labelFormatter={(label) => `Forecast Value: ${label}`}
           /> */}
-          <Area
-            type="monotone"
-            dataKey="forecastValue"
-            stroke="#8884d8"
-            fillOpacity={1}
-            fill="url(#colorForecast)"
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+            {/* Today as a reference line */}
+            {/* <ReferenceLine
+              // x={today}
+              segment={
+                [
+                  {
+                    x: today,
+                    y: yAxisMin,
+                  },
+                  {
+                    x: today,
+                    y: yAxisMax,
+                  },
+                ]
+              }
+              stroke="red"
+              label={{
+                value: "Today",
+                position: "top",
+                fontSize: 12,
+                fill: "red",
+              }}
+              strokeDasharray="3 3"
+            /> */}
+            <Area
+              type="monotone"
+              dataKey="forecastValue"
+              stroke="#8884d8"
+              fillOpacity={1}
+              fill="url(#colorForecast)"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };

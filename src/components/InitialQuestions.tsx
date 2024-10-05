@@ -15,7 +15,7 @@ const InitialQuestions = ({
 }: InitialQuestionsProps) => {
   return (
     <div className="flex items-center justify-center ">
-      <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6 space-y-4">
+      <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6 space-y-4 border">
         <h2 className="text-xl font-semibold text-gray-800">
           A few questions to help you get started...
         </h2>

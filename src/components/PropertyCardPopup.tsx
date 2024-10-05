@@ -38,33 +38,46 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, openModal }) => {
       </div>
 
       <div className="p-4">
-        {/* Address */}
-        <h2 className="text-lg font-semibold text-gray-800" onClick={openModal}>
-          {property.addr}, {property.municipality}
-        </h2>
-        <p className="text-sm text-gray-500">
-          {property.county}, {property.zip}
-        </p>
+        {property.lp_dol && (
+          <p className="text-lg font-bold text-gray-900">
+            C${toInt(property.lp_dol)?.toLocaleString()}
+          </p>
+        )}
 
-        {/* Details */}
-        <div className="flex justify-between items-center text-gray-600 text-sm my-2">
-          <span>Bed / Bath / ft²</span>
-          <span>
-            {property.br} / {property.bath_tot} / {property.sqft}
-          </span>
-        </div>
+        {property.br && property.bath_tot && (
+          <p className="text-sm text-gray-500">
+            {property.br} bds | {property.bath_tot} ba -{" "}
+            {property.is_Condo ? "Condo" : "Apartment"} for sale
+          </p>
+        )}
 
-        {/* List Price */}
-        <p className="text-lg font-bold text-gray-900">
-          List Price: ${toInt(property.lp_dol)?.toLocaleString()}
-        </p>
-
-        {/* Button */}
-        <button
-          className="mt-4 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+        <p
+          className="text-base font-semibold text-gray-800 hover:text-blue-600 cursor-pointer mt-2"
           onClick={openModal}
         >
-          Get Property Report
+          {property.addr}, {property.municipality}, {property.zip}
+        </p>
+
+        {/* Conditionally render additional data */}
+        {/* {property.yr_built && (
+          <p className="text-sm text-gray-500">
+            Year Built: {property.yr_built}
+          </p>
+        )} */}
+        <p className="text-sm text-gray-500">
+          {property.ml_num && <span>MLS@ {property.ml_num}</span>}
+        </p>
+
+        {/* {property.GnowiseValue && (
+          <p className="text-sm text-gray-500">
+            Gnowise Value: {property.GnowiseValue}
+          </p>
+        )} */}
+        <button
+          className="mt-2  w-full py-2 px-2 bg-blue-600 text-center text-white border-gray-300 rounded-lg hover:bg-blue-500 transition duration-300"
+          onClick={openModal}
+        >
+          Property Intelligence
         </button>
       </div>
     </div>

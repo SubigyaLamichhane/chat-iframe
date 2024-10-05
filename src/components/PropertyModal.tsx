@@ -1,6 +1,7 @@
 import React from "react";
 import { ForecastEntry, Property } from "../types"; // Import the Property type
 import ForecastGraph from "./ForecastGraph";
+import DetailsTab from "./DetailsTab";
 
 interface PropertyModalProps {
   property: Property;
@@ -15,7 +16,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white text-gray-900 rounded-xl overflow-hidden w-11/12 max-w-4xl shadow-lg"
+        className="bg-gray-50 text-gray-900 rounded-xl overflow-hidden w-11/12 max-w-4xl shadow-lg"
         onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking inside
       >
         <div className="flex flex-col md:flex-row">
@@ -63,87 +64,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
               </button>
             </div>
             {tab === "Details" ? (
-              <>
-                <p className="mb-2">
-                  <strong>Price:</strong> $
-                  {property.lp_dol
-                    ? parseFloat(property.lp_dol).toLocaleString()
-                    : "N/A"}
-                </p>
-                <p className="mb-2">
-                  <strong>County:</strong> {property.county}
-                </p>
-                <p className="mb-2">
-                  <strong>Municipality:</strong> {property.municipality}
-                </p>
-                <p className="mb-2">
-                  <strong>Zip Code:</strong> {property.zip}
-                </p>
-                <p className="mb-2">
-                  <strong>Year Built:</strong>{" "}
-                  {property.yr_built ? property.yr_built : "N/A"}
-                </p>
-                <p className="mb-2">
-                  <strong>Style:</strong> {property.style}
-                </p>
-                <p className="mb-2">
-                  <strong>Bedrooms:</strong> {property.br}
-                </p>
-                <p className="mb-2">
-                  <strong>Bathrooms:</strong> {property.bath_tot}
-                </p>
-                <p className="mb-2">
-                  <strong>Community:</strong> {property.community}
-                </p>
-                <p className="mb-2">
-                  <strong>Amenities:</strong>
-                  {property.Amenities && property.Amenities !== "/////"
-                    ? property.Amenities
-                    : "N/A"}
-                </p>
-                <p className="mb-4">
-                  <strong>Description:</strong> {property.ad_text}
-                </p>
-                <p className="mb-2">
-                  <strong>Parking Spaces:</strong> {property.park_spcs}
-                </p>
-                <p className="mb-2">
-                  <strong>Locker:</strong>{" "}
-                  {property.locker ? property.locker : "None"}
-                </p>
-                <p className="mb-2">
-                  <strong>Availability:</strong>{" "}
-                  {property.availability ? property.availability : "N/A"}
-                </p>
-                <p className="mb-2">
-                  <strong>Lot Size:</strong> {property.lotArea}{" "}
-                  {property.lotsz_code ? property.lotsz_code : ""}
-                </p>
-                <p className="mb-2">
-                  <strong>Taxes:</strong> $
-                  {property.taxes
-                    ? parseFloat(property.taxes).toLocaleString()
-                    : "N/A"}
-                </p>
-                {property.front_ft && (
-                  <p className="mb-2">
-                    <strong>Frontage:</strong>{" "}
-                    {!isNaN(parseFloat(property.front_ft))
-                      ? parseFloat(property.front_ft).toFixed(2)
-                      : "N/A"}{" "}
-                    ft
-                  </p>
-                )}
-                {property.depth && (
-                  <p className="mb-2">
-                    <strong>Depth:</strong>{" "}
-                    {!isNaN(parseFloat(property.depth))
-                      ? parseFloat(property.depth).toFixed(2)
-                      : "N/A"}{" "}
-                    ft
-                  </p>
-                )}
-              </>
+              <DetailsTab property={property} />
             ) : (
               <>
                 {property.GnowiseValue && (
@@ -162,7 +83,34 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
                       : property.SellingPrice}
                   </p>
                 )}{" "}
-                <div className="grid grid-cols-2 gap-4 border rounded-sm p-2 text-sm">
+                <div className="grid grid-cols-2 gap-4 border rounded-sm p-2 text-sm mt-1 mb-4">
+                  <p>
+                    <strong>Sqft:</strong> {property.roomsArea}
+                  </p>
+                  <p>
+                    <strong>Sqft Lot:</strong> {property.sqft}
+                  </p>
+                </div>
+                {/* Climate Risks Section */}
+                <strong className="">Climate Risks: </strong>
+                <div className="border rounded-sm p-2 text-sm mt-1 mb-4 bg-gray-50">
+                  <div className="grid grid-cols-2 gap-4">
+                    <p>
+                      <strong>Flood Score:</strong> [FloodScore]
+                    </p>
+                    <p>
+                      <strong>Fire Score:</strong> [FireScore]
+                    </p>
+                    <p>
+                      <strong>Heat Score:</strong> [HeatScore]
+                    </p>
+                    <p>
+                      <strong>Wind Score:</strong> [WindScore]
+                    </p>
+                  </div>
+                </div>
+                <strong className="mb-2">Insights:</strong>
+                <div className="grid grid-cols-2 gap-4 border rounded-sm p-2 text-sm mt-1">
                   {property.GnowiseCapRate && (
                     <p className="">
                       <strong>Cap Rate: </strong>
