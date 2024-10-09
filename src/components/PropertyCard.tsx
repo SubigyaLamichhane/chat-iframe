@@ -59,8 +59,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
 
         {property.br && property.bath_tot && (
           <p className="text-sm text-gray-500">
-            {property.br} bds | {property.bath_tot} ba -{" "}
-            {property.is_Condo ? "Condo" : "Apartment"} for sale
+            {property.br} bds | {property.bath_tot} ba - {property.style} for
+            sale
           </p>
         )}
 

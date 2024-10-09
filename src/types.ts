@@ -70,6 +70,10 @@ export interface Property {
   SoldRecords: string | null; // Previous sales records
   UpdatedDate: string | null; // Date when valuation was last updated
   ValuationSource: string | null; // Source of valuation data
+  FloodScore: number | null; // Flood score as a number
+  FireScore: number | null; // Fire score as a number
+  HeatScore: number | null; // Heat score as a number
+  WindScore: number | null; // Wind score as a number
 }
 
 export interface ForecastEntry {

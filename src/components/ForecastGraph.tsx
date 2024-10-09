@@ -8,6 +8,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
+  Line,
+  LineChart,
 } from "recharts";
 
 import { ForecastEntry, Property } from "../types";
@@ -25,11 +27,11 @@ const ForecastGraph = ({ property }: { property: Property }) => {
     .filter((forecast: ForecastEntry) => {
       if (!forecast) return false;
       const forecastDate = new Date(forecast.Date);
-      return forecastDate >= new Date(); // Only future dates
-      // return forecastDate;
+      // return forecastDate >= new Date(); // Only future dates
+      return forecastDate;
     })
     .map((forecast: ForecastEntry) => ({
-      date: new Date(forecast.Date).toLocaleDateString(),
+      date: new Date(forecast.Date).getTime(),
       forecastValue: parseFloat(forecast.ForecastValue as string),
     }));
 
@@ -46,82 +48,88 @@ const ForecastGraph = ({ property }: { property: Property }) => {
   const secondValue = forecastData[1]?.forecastValue || firstValue;
   const yAxisMin = firstValue - (secondValue - firstValue);
   const yAxisMax = firstValue + (secondValue - firstValue) * 2; // Reduce the Y-axis range
-  const today = new Date().toLocaleDateString();
+  const today = new Date().toISOString().split("T")[0]; // Format as YYYY-MM-DD, if your data uses this format
+
+  // add today's forecast
+  // forecastData.push({
+  //   date: today.,
+  //   forecastValue: "",
+  // });
+
+  // sort the forecast data by date (lowest first)
+  // forecastData.sort((a: any, b: any) => {
+  //   return new Date(a.date).getTime() - new Date(b.date).getTime();
+  // });
 
   // Log to check if today's date matches your data
   console.log("Today's Date: ", today);
   console.log("Forecast Data: ", forecastData);
 
   return (
-    <div className="mt-4">
-      <strong className="mb-2">Forecast:</strong>
-      <div className="mt-1">
+    <div className="mt-8">
+      <strong className="mb-8">Forecast:</strong>
+      <div className="mt-4 scale-110">
         <ResponsiveContainer width="100%" height={200}>
-          {/* Adjust the height here */}
-          <AreaChart
+          <LineChart
             data={forecastData}
-            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            margin={{ top: 15, right: 23, left: 0, bottom: 0 }}
           >
-            <defs>
-              <linearGradient id="colorForecast" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#2563eb" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
-              </linearGradient>
-            </defs>
             <XAxis
               dataKey="date"
-              type="category"
+              type="number" // Specify it as a number since it's now a timestamp
+              domain={["dataMin", "dataMax"]}
+              tickFormatter={(timestamp) => {
+                const date = new Date(timestamp);
+                return date.toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                });
+              }}
               tick={{ fontSize: 10 }} // Make the date font size smaller
             />
             <YAxis
               tickFormatter={formatYAxis}
               tick={{ fontSize: 12 }} // Make the value font size smaller
-              domain={[yAxisMin, yAxisMax]} // Reduce the Y-axis height by restricting the range
+              domain={[yAxisMin, yAxisMax * 1.08]} // Increase the upper limit by 10%
             />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip
-              formatter={(value) => [
-                `$${value.toLocaleString()}`,
-                "Forecast Value",
-              ]} // Customize label
-              labelFormatter={(label) => `Date: ${label}`}
-            />
-            {/* <Tooltip
-            formatter={(value) => `$${value.toLocaleString()}`}
-            labelFormatter={(label) => `Forecast Value: ${label}`}
-          /> */}
-            {/* Today as a reference line */}
-            {/* <ReferenceLine
-              // x={today}
-              segment={
-                [
-                  {
-                    x: today,
-                    y: yAxisMin,
-                  },
-                  {
-                    x: today,
-                    y: yAxisMax,
-                  },
-                ]
+              formatter={(value, name, props) => {
+                // Compare the current label (date) with today's date
+                if (props.payload.date === today) {
+                  return null; // Hide tooltip if it's today
+                }
+                return [`$${value.toLocaleString()}`, "Forecast"];
+              }}
+              labelFormatter={(label) =>
+                `Date: ${new Date(label).toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                })}`
               }
-              stroke="red"
+            />
+
+            {/* Today as a reference line */}
+            <ReferenceLine
+              x={new Date(today).getTime()} // Pass the correct `today` value
+              // label="Today"
+              stroke="blue"
+              strokeDasharray="3 3"
               label={{
                 value: "Today",
                 position: "top",
                 fontSize: 12,
-                fill: "red",
+                fill: "blue",
               }}
-              strokeDasharray="3 3"
-            /> */}
-            <Area
+            />
+
+            <Line
               type="monotone"
               dataKey="forecastValue"
               stroke="#8884d8"
-              fillOpacity={1}
-              fill="url(#colorForecast)"
+              dot={false} // Disable dots on the line
             />
-          </AreaChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>

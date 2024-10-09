@@ -68,7 +68,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
             ) : (
               <>
                 {property.GnowiseValue && (
-                  <p className="mb-4">
+                  <p className="mb-4 text-lg">
                     <strong>Gnowise Value: </strong>
                     {!isNaN(parseFloat(property.GnowiseValue))
                       ? `$${parseFloat(property.GnowiseValue).toLocaleString()}`
@@ -76,46 +76,51 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
                   </p>
                 )}{" "}
                 {property.SellingPrice && (
-                  <p className="mb-4">
+                  <p className="mb-4 text-lg">
                     <strong>Selling Price: </strong>
                     {!isNaN(parseFloat(property.SellingPrice))
                       ? `$${parseFloat(property.SellingPrice).toLocaleString()}`
                       : property.SellingPrice}
                   </p>
                 )}{" "}
-                <div className="grid grid-cols-2 gap-4 border rounded-sm p-2 text-sm mt-1 mb-4">
-                  <p>
-                    <strong>Sqft:</strong> {property.roomsArea}
-                  </p>
-                  <p>
-                    <strong>Sqft Lot:</strong> {property.sqft}
-                  </p>
-                </div>
+                {!property.is_Condo && (
+                  <div className="grid grid-cols-2 gap-4 border rounded-sm p-2 text-sm mt-1 mb-4 bg-white">
+                    <p>
+                      <strong>Sqft:</strong> {property.roomsArea}
+                    </p>
+                    <p>
+                      <strong>Sqft Lot:</strong> {property.sqft}
+                    </p>
+                  </div>
+                )}
                 {/* Climate Risks Section */}
-                <strong className="">Climate Risks: </strong>
-                <div className="border rounded-sm p-2 text-sm mt-1 mb-4 bg-gray-50">
+                <p className="mb-2 font-bold text-lg">Climate Risks: </p>
+                <div className="border rounded-sm p-2 text-sm mt-1 mb-4 bg-white ">
                   <div className="grid grid-cols-2 gap-4">
                     <p>
-                      <strong>Flood Score:</strong> [FloodScore]
+                      <strong>Flood Score:</strong> {property.FloodScore}
                     </p>
                     <p>
-                      <strong>Fire Score:</strong> [FireScore]
+                      <strong>Fire Score:</strong> {property.FireScore}
                     </p>
                     <p>
-                      <strong>Heat Score:</strong> [HeatScore]
+                      <strong>Heat Score:</strong> {property.HeatScore}
                     </p>
                     <p>
-                      <strong>Wind Score:</strong> [WindScore]
+                      <strong>Wind Score:</strong> {property.WindScore}
                     </p>
                   </div>
                 </div>
-                <strong className="mb-2">Insights:</strong>
-                <div className="grid grid-cols-2 gap-4 border rounded-sm p-2 text-sm mt-1">
+                <p className="mb-2 font-bold text-lg">Insights:</p>
+                <div className="grid grid-cols-2 gap-4 border rounded-sm p-2 text-sm mt-1 bg-white">
                   {property.GnowiseCapRate && (
                     <p className="">
                       <strong>Cap Rate: </strong>
                       {!isNaN(parseFloat(property.GnowiseCapRate))
-                        ? `${parseFloat(property.GnowiseCapRate).toFixed(4)}%`
+                        ? `${parseFloat(
+                            //@ts-ignore
+                            parseFloat(property.GnowiseCapRate) * 100
+                          ).toFixed(4)}%`
                         : property.GnowiseCapRate}
                     </p>
                   )}
@@ -131,7 +136,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
                         : property.PriceDifferencePerc}
                     </p>
                   )}
-                  {property.Growth1YrPerc && (
+                  {property.Growth1YrPerc ? (
                     <p className="">
                       <strong>1-Year Growth: </strong>
                       {!isNaN(parseFloat(property.Growth1YrPerc as string))
@@ -140,17 +145,20 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
                           ).toFixed(2)}%`
                         : property.Growth1YrPerc}
                     </p>
-                  )}
-                  {property.Growth2YrPerc && (
-                    <p className="">
-                      <strong>2-Year Growth: </strong>
-                      {!isNaN(parseFloat(property.Growth2YrPerc as string))
-                        ? `${parseFloat(
-                            property.Growth2YrPerc as string
-                          ).toFixed(2)}%`
-                        : property.Growth2YrPerc}
-                    </p>
-                  )}
+                  ) : null}
+                  {property.Growth2YrPerc ? (
+                    <>
+                      <p className="">
+                        <strong>2-Year Growth: </strong>
+                        {!isNaN(parseFloat(property.Growth2YrPerc as string))
+                          ? `${parseFloat(
+                              property.Growth2YrPerc as string
+                            ).toFixed(2)}%`
+                          : property.Growth2YrPerc}
+                      </p>
+                    </>
+                  ) : null}
+
                   {property.RiskofDecline && (
                     <p className="">
                       <strong>Risk of Decline: </strong>
