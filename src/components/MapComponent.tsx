@@ -20,6 +20,9 @@ const AdjustMapBounds = ({ data }: { data: Property[] }) => {
   const map = useMap();
 
   useEffect(() => {
+    if (!map) return;
+    if (!data) return;
+    if (data.length === 0) return;
     // Filter out properties with valid latitude and longitude
     const validCoordinates = data.filter(
       (property) =>

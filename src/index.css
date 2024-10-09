@@ -84,6 +84,27 @@ input::placeholder {
 
 /*dark*/
 
+/* Custom styles for slideshow indicators (dots) */
+.react-slideshow-container .indicators {
+  position: absolute;
+  bottom: 20px; /* Adjust this value to move the dots higher or lower within the image */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.react-slideshow-container .indicators .each-slideshow-indicator {
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white dots */
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  margin: 0 5px;
+}
+
+.react-slideshow-container .indicators .active {
+  background-color: rgba(0, 0, 0, 0.9); /* Darker dot for the active slide */
+}
+
 .markdown-body {
   color-scheme: dark;
   -ms-text-size-adjust: 100%;

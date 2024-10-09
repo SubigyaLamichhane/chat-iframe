@@ -45,7 +45,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
       </div>
       {/* Property Image */}
       <img
-        src={`https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=${property.ml_num}`}
+        src={`https://intelligenthomevaluation.com/Lookup/GetPropertyImage?mlsno=${property.ml_num}`}
         alt="Property"
         className="w-full h-48 object-cover"
       />

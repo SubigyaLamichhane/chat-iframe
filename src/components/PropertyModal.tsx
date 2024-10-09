@@ -2,14 +2,43 @@ import React from "react";
 import { ForecastEntry, Property } from "../types"; // Import the Property type
 import ForecastGraph from "./ForecastGraph";
 import DetailsTab from "./DetailsTab";
+// import Slider from "react-slick";
+import { Slide } from "react-slideshow-image";
 
 interface PropertyModalProps {
   property: Property;
   onClose: () => void;
 }
 
+const spanStyle = {
+  padding: "10px",
+  background: "rgba(0, 0, 0, 0.5)",
+  color: "#ffffff",
+  borderRadius: "4px",
+};
+
+const divStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  height: "100%", // Full height of the modal
+};
+
 const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
   const [tab, setTab] = React.useState("Details");
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    beforeChange: (current: any, next: any) => setCurrentSlide(next),
+  };
+  console.log(property);
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
@@ -22,11 +51,20 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
         <div className="flex flex-col md:flex-row">
           {/* Image Section */}
           <div className="md:w-2/5 w-full">
-            <img
-              src={`https://portal.gnowise.com/Lookup/GetPropertyImage?mlsno=${property.ml_num}`}
-              alt="Property"
-              className="w-full h-64 md:h-full object-cover rounded-t-xl md:rounded-t-none md:rounded-l-xl"
-            />
+            <Slide indicators={true} arrows={false}>
+              {property.images.map((image, index) => (
+                <div key={index}>
+                  <div
+                    style={{
+                      backgroundImage: `url(https://intelligenthomevaluation.com/Lookup/GetPropertyImages?filename=${image})`,
+                    }}
+                    className="h-[500px] bg-cover bg-center relative"
+                  >
+                    {/* You can add a caption here if needed */}
+                  </div>
+                </div>
+              ))}
+            </Slide>
           </div>
 
           {/* Content Section */}

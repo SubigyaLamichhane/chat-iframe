@@ -74,6 +74,7 @@ export interface Property {
   FireScore: number | null; // Fire score as a number
   HeatScore: number | null; // Heat score as a number
   WindScore: number | null; // Wind score as a number
+  images: string[]; // Array of image URLs
 }
 
 export interface ForecastEntry {
