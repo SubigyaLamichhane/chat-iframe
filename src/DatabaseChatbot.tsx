@@ -6,7 +6,7 @@ const initialQuestions = [
   "Show me the top investment properties in Toronto today.",
   "Show me the top investment properties in Canada today.",
   "With a $2,000,000 budget, show me the best investment options and combinations available today.",
-  "Show me Ontario properties with a risk of decline under 20%, a 1-year growth rate over 10%, and a cap rate above 5% available today.",
+  "Show me Ontario properties with a risk of decline under 20%, a 1-year growth rate over 10%, and a cap rate above 4% available today.",
   "With a $5M budget, what detached house combinations minimize risk of decline while maximizing one-year ROI, two-year ROI, and cap rate? Provide two scenarios with total costs and projected one-year and two-year ROI for each scenario.",
 ];
 
