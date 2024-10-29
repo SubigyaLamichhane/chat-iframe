@@ -266,6 +266,7 @@ const PropertyValuationChatbot = () => {
       messages={messages}
       apiURL={apiURL}
       initialQuestions={initialQuestions}
+      addressRecommendationDisabled
     />
   );
 };

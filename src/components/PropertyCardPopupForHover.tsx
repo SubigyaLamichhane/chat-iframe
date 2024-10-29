@@ -23,7 +23,7 @@ function toInt(value: string | number | null): number | null {
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property, openModal }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg max-w-sm overflow-hidden h-[400px]">
+    <div className="bg-white rounded-xl shadow-lg max-w-sm overflow-hidden h-[360px]">
       {/* Image with rounded corners */}
       <div className="relative">
         <img
@@ -73,12 +73,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, openModal }) => {
             Gnowise Value: {property.GnowiseValue}
           </p>
         )} */}
-        <button
+        {/* <button
           className=" w-full py-2 px-2 bg-blue-600 text-center text-white border-gray-300 rounded-lg hover:bg-blue-500 transition duration-300 mt-2"
           onClick={openModal}
         >
           Property Intelligence
-        </button>
+        </button> */}
       </div>
     </div>
   );

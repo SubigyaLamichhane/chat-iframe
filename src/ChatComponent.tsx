@@ -26,6 +26,7 @@ let listen = false;
 interface IChatComponentProps {
   apiURL: string;
   initialQuestions: string[];
+  addressRecommendationDisabled: boolean | undefined;
   messages: {
     message: string;
     from: "us" | "them";
@@ -267,7 +268,12 @@ interface IChatComponentProps {
 
 const sampleTempData: any = [];
 
-function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
+function App({
+  apiURL,
+  initialQuestions,
+  messages,
+  addressRecommendationDisabled,
+}: IChatComponentProps) {
   const location = useLocation();
   const [message, setMessage] = useState("");
   const [messageCount, setMessageCount] = useState(0);
@@ -290,6 +296,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
   const [answering, setAnswering] = useState(false);
   const [uttering, setUttering] = useState(false);
   const [tempPropertyData, setTempPropertyData] = useState<any>(sampleTempData);
+  const [hoveredProperty, setHoveredProperty] = useState<any>(null);
   const sidebarCustomization = {
     background_color: "#131317",
     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s",
@@ -345,6 +352,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
       return;
     }
     (async () => {
+      if (addressRecommendationDisabled) return;
       //@ts-ignore
       const { AutocompleteService, PlacesService } =
         await google.maps.importLibrary("places");
@@ -724,6 +732,14 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                                   openModal();
                                 }
                               }}
+                              onMouseEnter={() => {
+                                setHoveredProperty(
+                                  message.propertyDataFromQuery
+                                );
+                              }}
+                              onMouseLeave={() => {
+                                setHoveredProperty(null);
+                              }}
                             >
                               {props.children}
                             </a>
@@ -753,7 +769,10 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
       if (message.properties) {
         return (
           <div>
-            <PropertyGrid properties={message.properties} />
+            <PropertyGrid
+              setHoveredProperty={setHoveredProperty}
+              properties={message.properties}
+            />
             <ul
               key={index}
               ref={messageParent}
@@ -811,6 +830,14 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                                   // );
                                   openModal();
                                 }
+                              }}
+                              onMouseEnter={() => {
+                                setHoveredProperty(
+                                  message.propertyDataFromQuery
+                                );
+                              }}
+                              onMouseLeave={() => {
+                                setHoveredProperty(null);
                               }}
                             >
                               {props.children}
@@ -899,6 +926,28 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
                                       )
                                     );
                                     openModal();
+                                  }
+                                }}
+                                onMouseEnter={() => {
+                                  if (
+                                    props.href &&
+                                    props.href.includes("gnohome.com")
+                                  ) {
+                                    setHoveredProperty(
+                                      message.propertiesRaw.find(
+                                        (property: any) =>
+                                          property.ml_num ===
+                                          props.href?.split("=").pop()
+                                      )
+                                    );
+                                  }
+                                }}
+                                onMouseLeave={() => {
+                                  if (
+                                    props.href &&
+                                    props.href.includes("gnohome.com")
+                                  ) {
+                                    setHoveredProperty(null);
                                   }
                                 }}
                               >
@@ -1013,7 +1062,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
       );
     });
   };
-  bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  // bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 
   // loading icon if thread not present
   if (thread === "") {
@@ -1309,7 +1358,7 @@ function App({ apiURL, initialQuestions, messages }: IChatComponentProps) {
           // <Suspense fallback={<p>Loading map...</p>}>
           <div className="w-2/3">
             {" "}
-            <Map data={tempPropertyData} />
+            <Map data={tempPropertyData} hoveredProperty={hoveredProperty} />
           </div>
 
           // </Suspense>

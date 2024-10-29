@@ -3,9 +3,11 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L, { LatLngBounds } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import PropertyCardPopup from "./PropertyCardPopup"; // Import the PropertyCard component
+import PropertyCardPopupForHover from "./PropertyCardPopupForHover";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"; // Default marker icon
 import { Property } from "../types";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import ReactDOMServer from "react-dom/server";
 
 import { Icon, divIcon, point } from "leaflet";
 import PropertyModal from "./PropertyModal";
@@ -14,10 +16,51 @@ import PropertyModal from "./PropertyModal";
 
 interface MapComponentProps {
   data: Property[];
+  hoveredProperty: Property | null;
 }
 
-const AdjustMapBounds = ({ data }: { data: Property[] }) => {
+const AdjustMapBounds = ({
+  data,
+  hoveredProperty,
+}: {
+  data: Property[];
+  hoveredProperty: Property | null;
+}) => {
   const map = useMap();
+
+  useEffect(() => {
+    if (
+      hoveredProperty &&
+      hoveredProperty.Latitude &&
+      hoveredProperty.Longitude
+    ) {
+      console.log("hoveredProperty", hoveredProperty);
+
+      // create popup with property details using Leaflet
+      if (map) {
+        const propertyCardHtml = ReactDOMServer.renderToString(
+          <PropertyCardPopupForHover
+            property={hoveredProperty}
+            openModal={() => {
+              // Define what should happen when modal opens here
+              console.log("Modal opened for property:", hoveredProperty);
+            }}
+          />
+        );
+
+        const popup = L.popup()
+          .setLatLng([hoveredProperty.Latitude, hoveredProperty.Longitude])
+          .setContent(propertyCardHtml) // Set PropertyCard HTML as content
+          .openOn(map as L.Map);
+      } else {
+        console.warn("Map reference is not available.");
+      }
+    }
+
+    if (!hoveredProperty && map) {
+      map.closePopup();
+    }
+  }, [hoveredProperty, map]);
 
   useEffect(() => {
     if (!map) return;
@@ -66,7 +109,10 @@ const createClusterCustomIcon = function (cluster: any) {
   });
 };
 
-const MapComponent: React.FC<MapComponentProps> = ({ data }) => {
+const MapComponent: React.FC<MapComponentProps> = ({
+  data,
+  hoveredProperty,
+}) => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(
     null
   );
@@ -87,6 +133,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ data }) => {
 
   // Function to handle pin click (centers the map on the clicked marker)
   const handlePinClick = (property: Property) => {
+    console.log("property", property);
     setSelectedProperty(property);
     if (mapRef.current) {
       mapRef.current.setView([property.Latitude, property.Longitude], 14);
@@ -98,11 +145,20 @@ const MapComponent: React.FC<MapComponentProps> = ({ data }) => {
     return <div>No properties to display</div>;
   }
 
+  // filter data for Latitude and Longitude
+  const filteredData = data.filter(
+    (property) =>
+      property.Latitude !== null &&
+      property.Latitude !== undefined &&
+      property.Longitude !== null &&
+      property.Longitude !== undefined
+  );
+
   return (
     <div>
       <div className="">
         <MapContainer
-          center={[data[0].Latitude, data[0].Longitude]} // Default to first property
+          center={[filteredData[0].Latitude, filteredData[0].Longitude]} // Default to first property
           zoom={12}
           scrollWheelZoom={true}
           style={{ height: "100vh", zIndex: 1 }}
@@ -164,7 +220,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ data }) => {
           })}
           {/* </MarkerClusterGroup> */}
           {/* Adjust the map bounds to fit all markers */}
-          <AdjustMapBounds data={data} />
+          <AdjustMapBounds data={data} hoveredProperty={hoveredProperty} />
         </MapContainer>
       </div>
       {isModalOpen && selectedProperty && (

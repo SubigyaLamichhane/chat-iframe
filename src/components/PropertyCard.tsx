@@ -5,6 +5,7 @@ import { AiOutlineHeart } from "react-icons/ai"; // You can use react-icons for 
 
 interface PropertyCardProps {
   property: Property;
+  setHoveredProperty: (property: Property | null) => void;
 }
 
 function toInt(value: string | number | null): number | null {
@@ -21,7 +22,10 @@ function toInt(value: string | number | null): number | null {
   return parsed;
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
+const PropertyCard: React.FC<PropertyCardProps> = ({
+  property,
+  setHoveredProperty,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -89,6 +93,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
         <button
           className="mt-2  w-full py-2 px-2 bg-blue-600 text-center text-white border-gray-300 rounded-lg hover:bg-blue-500 transition duration-300"
           onClick={openModal}
+          onMouseEnter={() => {
+            setHoveredProperty(property);
+          }}
+          onMouseLeave={() => {
+            setHoveredProperty(null);
+          }}
         >
           Property Intelligence
         </button>
