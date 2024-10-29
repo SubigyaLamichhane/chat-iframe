@@ -68,7 +68,6 @@ function App() {
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputBoxRef = useRef<HTMLInputElement>(null);
-  // console.log(location.search);
   const queryParams = new URLSearchParams(location.search);
   const parent = useRef(null);
   const messageParent = useRef(null);
@@ -159,7 +158,6 @@ function App() {
   // useEffect(() => {
   //   const data = getData();
   //   data.then((data) => {
-  //     // console.log(data);
   //     if (data.settings) {
   //       setMessageFieldColor(data.settings.messageFieldColor);
   //       setIncommingMessageColor(data.settings.incommingMessageColor);

@@ -38,7 +38,6 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
     slidesToScroll: 1,
     beforeChange: (current: any, next: any) => setCurrentSlide(next),
   };
-  console.log(property);
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"

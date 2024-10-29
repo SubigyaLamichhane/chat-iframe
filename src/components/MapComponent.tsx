@@ -34,8 +34,6 @@ const AdjustMapBounds = ({
       hoveredProperty.Latitude &&
       hoveredProperty.Longitude
     ) {
-      console.log("hoveredProperty", hoveredProperty);
-
       // create popup with property details using Leaflet
       if (map) {
         const propertyCardHtml = ReactDOMServer.renderToString(
@@ -43,7 +41,6 @@ const AdjustMapBounds = ({
             property={hoveredProperty}
             openModal={() => {
               // Define what should happen when modal opens here
-              console.log("Modal opened for property:", hoveredProperty);
             }}
           />
         );
@@ -133,7 +130,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
   // Function to handle pin click (centers the map on the clicked marker)
   const handlePinClick = (property: Property) => {
-    console.log("property", property);
     setSelectedProperty(property);
     if (mapRef.current) {
       mapRef.current.setView([property.Latitude, property.Longitude], 14);

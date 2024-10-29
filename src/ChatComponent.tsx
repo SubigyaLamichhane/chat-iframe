@@ -281,7 +281,6 @@ function App({
   const messageDivRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputBoxRef = useRef<HTMLInputElement>(null);
-  // console.log(location.search);
   const queryParams = new URLSearchParams(location.search);
   const parent = useRef(null);
   const messageParent = useRef(null);
@@ -488,7 +487,6 @@ function App({
     setSpeechRecognitionStarted(false);
     recognition.stop();
   };
-  // console.log(messages);
   const submitData = async (message: string) => {
     setAnswering(true);
     setMessage("");
@@ -528,14 +526,6 @@ function App({
         from: "them",
       });
     }
-    console.log(
-      "properties for map ",
-      response.data.properties
-        ? JSON.parse(response.data.properties)
-        : response.data.propertiesRaw
-        ? JSON.parse(response.data.propertiesRaw)
-        : null
-    );
 
     setMessageCount(messageCount + 1);
     setTempPropertyData(
@@ -546,9 +536,7 @@ function App({
         : null
     );
 
-    // console.log(wasLastMessageVoice);
     if (wasLastMessageVoice) {
-      // console.log(response.data.tts);
       if (response.data.tts) {
         setUttering(true);
         // play a audio given a url
@@ -619,8 +607,6 @@ function App({
     return response.data;
   };
 
-  // console.log(te)
-
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -628,12 +614,10 @@ function App({
 
   const getThread = async () => {
     const query = new URLSearchParams(location.search);
-    // console.log(query.get("property"));
     if (query.get("property")) {
       const response = await axios.get(
         apiURL + `/get-thread-with-query?property=${query.get("property")}`
       );
-      // console.log(response.data);
       return response.data;
     } else {
       const response = await axios.get(apiURL + `/get-thread`);
@@ -659,7 +643,6 @@ function App({
   }, []);
 
   const renderMessages = () => {
-    // console.log(messages);
     if (messages.length === 0 && !messages[0]?.propertyDataFromQuery) {
       return (
         <InitialQuestions

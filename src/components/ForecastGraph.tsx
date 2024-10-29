@@ -37,11 +37,6 @@ const ForecastGraph = ({ property }: { property: Property }) => {
 
   // get the first 5 forecast data
   //   const forecastData = forecastDataNotSliced.slice(0, 7);
-  //   console.log(
-  //     forecastDataNotSliced,
-  //     forecastData,
-  //     forecastDataNotSliced.length
-  //   );
 
   // Calculate the Y-axis starting point
   const firstValue = forecastData[0]?.forecastValue || 0;
@@ -62,8 +57,6 @@ const ForecastGraph = ({ property }: { property: Property }) => {
   // });
 
   // Log to check if today's date matches your data
-  console.log("Today's Date: ", today);
-  console.log("Forecast Data: ", forecastData);
 
   return (
     <div className="mt-8">
