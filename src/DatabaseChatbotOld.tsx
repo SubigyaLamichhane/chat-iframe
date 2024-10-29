@@ -71,6 +71,7 @@ function App() {
   const queryParams = new URLSearchParams(location.search);
   const parent = useRef(null);
   const messageParent = useRef(null);
+  const [hoveredProperty, setHoveredProperty] = useState<Property | null>(null);
 
   const apiURL = "https://intelligenthomevaluation.com/database";
   // const apiURL = "http://localhost:5000/database";
@@ -336,7 +337,10 @@ function App() {
       if (message.properties) {
         return (
           <div>
-            <PropertyGrid properties={message.properties} />
+            <PropertyGrid
+              properties={message.properties}
+              setHoveredProperty={setHoveredProperty}
+            />
             <ul
               key={index}
               ref={messageParent}

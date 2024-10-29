@@ -26,7 +26,7 @@ let listen = false;
 interface IChatComponentProps {
   apiURL: string;
   initialQuestions: string[];
-  addressRecommendationDisabled: boolean | undefined;
+  addressRecommendationDisabled?: boolean | undefined;
   messages: {
     message: string;
     from: "us" | "them";
