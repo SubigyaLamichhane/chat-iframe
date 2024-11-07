@@ -22,6 +22,7 @@ function toInt(value: string | number | null): number | null {
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property, openModal }) => {
+  console.log(property);
   return (
     <div className="bg-white rounded-xl shadow-lg max-w-sm overflow-hidden h-[400px]">
       {/* Image with rounded corners */}
@@ -32,15 +33,21 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, openModal }) => {
           className="w-full h-52 object-cover"
         />
         {/* Active badge */}
-        <span className="absolute top-2 left-2 bg-white text-green-600 font-semibold text-sm px-3 py-1 rounded-full shadow-md">
-          Active
-        </span>
+        {property.availability ? (
+          <span className="absolute top-2 left-2 bg-white text-green-600 font-semibold text-sm px-3 py-1 rounded-full shadow-md">
+            Active
+          </span>
+        ) : (
+          <span className="absolute top-2 left-2 bg-gray-200 text-gray-700 font-semibold text-sm px-3 py-1 rounded-full shadow-md">
+            Off Market
+          </span>
+        )}
       </div>
 
       <div className="p-4">
         {property.lp_dol && (
           <p className="text-lg font-bold text-gray-900 !m-0">
-            C${toInt(property.lp_dol)?.toLocaleString()}
+            Gnowise Value: C${toInt(property.lp_dol)?.toLocaleString()}
           </p>
         )}
 

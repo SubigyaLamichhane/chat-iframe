@@ -76,6 +76,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               > */}
+              {property.apt_num && property.apt_num + "-"}
               {property.addr}
               {/* </a> */}
             </h2>
