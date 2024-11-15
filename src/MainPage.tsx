@@ -7,6 +7,10 @@ let messages: {
   from: "us" | "them";
   properties?: any;
   propertyDataFromQuery?: any;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
 }[] = [
   {
     message: "Please enter the address you would like to analyze.",

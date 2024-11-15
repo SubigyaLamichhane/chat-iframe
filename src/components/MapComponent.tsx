@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import PropertyCardPopup from "./PropertyCardPopup"; // Import the PropertyCard component
 import PropertyCardPopupForHover from "./PropertyCardPopupForHover";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"; // Default marker icon
+import redMarkerIconPng from "../assets/red-marker.png";
 import { Property } from "../types";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import ReactDOMServer from "react-dom/server";
@@ -17,15 +18,17 @@ import PropertyModal from "./PropertyModal";
 interface MapComponentProps {
   data: Property[];
   hoveredProperty: Property | null;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 const AdjustMapBounds = ({
   data,
   hoveredProperty,
-}: {
-  data: Property[];
-  hoveredProperty: Property | null;
-}) => {
+  coordinates,
+}: MapComponentProps) => {
   const map = useMap();
 
   useEffect(() => {
@@ -87,6 +90,13 @@ const AdjustMapBounds = ({
     }
   }, [data, map]);
 
+  useEffect(() => {
+    if (!map) return;
+    if (!coordinates) return;
+
+    map.setView([coordinates.latitude, coordinates.longitude], 14);
+  }, [data, map]);
+
   return null;
 };
 
@@ -109,11 +119,14 @@ const createClusterCustomIcon = function (cluster: any) {
 const MapComponent: React.FC<MapComponentProps> = ({
   data,
   hoveredProperty,
+  coordinates,
 }) => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  console.log(coordinates);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -137,24 +150,30 @@ const MapComponent: React.FC<MapComponentProps> = ({
   };
 
   // If there's no data, we don't render the map
-  if (data.length === 0) {
-    return <div>No properties to display</div>;
-  }
+  // if (data.length === 0) {
+  //   return <div>No properties to display</div>;
+  // }
 
   // filter data for Latitude and Longitude
-  const filteredData = data.filter(
-    (property) =>
-      property.Latitude !== null &&
-      property.Latitude !== undefined &&
-      property.Longitude !== null &&
-      property.Longitude !== undefined
-  );
+  const filteredData = data
+    ? data.filter(
+        (property) =>
+          property.Latitude !== null &&
+          property.Latitude !== undefined &&
+          property.Longitude !== null &&
+          property.Longitude !== undefined
+      )
+    : [];
 
   return (
     <div>
       <div className="">
         <MapContainer
-          center={[filteredData[0].Latitude, filteredData[0].Longitude]} // Default to first property
+          center={
+            coordinates
+              ? [coordinates.latitude, coordinates.longitude]
+              : [filteredData[0].Latitude, filteredData[0].Longitude]
+          } // Default to first property
           zoom={12}
           scrollWheelZoom={true}
           style={{ height: "100vh", zIndex: 1 }}
@@ -214,9 +233,31 @@ const MapComponent: React.FC<MapComponentProps> = ({
               </Marker>
             );
           })}
+          {coordinates && (
+            <Marker
+              position={[coordinates.latitude, coordinates.longitude]}
+              icon={
+                new L.Icon({
+                  iconUrl: redMarkerIconPng,
+                  iconSize: [41, 41],
+                  iconAnchor: [21, 21],
+                })
+              }
+            >
+              <Popup>
+                <div>
+                  <h1>Selected Location</h1>
+                </div>
+              </Popup>
+            </Marker>
+          )}
           {/* </MarkerClusterGroup> */}
           {/* Adjust the map bounds to fit all markers */}
-          <AdjustMapBounds data={data} hoveredProperty={hoveredProperty} />
+          <AdjustMapBounds
+            data={data}
+            hoveredProperty={hoveredProperty}
+            coordinates={coordinates}
+          />
         </MapContainer>
       </div>
       {isModalOpen && selectedProperty && (

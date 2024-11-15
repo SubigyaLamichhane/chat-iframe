@@ -16,6 +16,10 @@ let messages: {
   properties?: any;
   propertyDataFromQuery?: any;
   propertiesRaw?: any;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  } | null;
 }[] = [
   // {
   //   message: "Show me properties in Toronto today.",
@@ -258,8 +262,8 @@ let messages: {
 ];
 
 const PropertyValuationChatbot = () => {
-  const apiURL = "https://intelligenthomevaluation.com/database";
-  // const apiURL = "http://localhost:5000/database";
+  // const apiURL = "https://intelligenthomevaluation.com/database";
+  const apiURL = "http://localhost:5000/database";
 
   return (
     <ChatComponent
