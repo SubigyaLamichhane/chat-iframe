@@ -6,12 +6,15 @@ import PropertyCardPopup from "./PropertyCardPopup"; // Import the PropertyCard 
 import PropertyCardPopupForHover from "./PropertyCardPopupForHover";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"; // Default marker icon
 import redMarkerIconPng from "../assets/red-marker.png";
-import { Property } from "../types";
+import { Property, Comparable, ValuationReport } from "../types";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import ReactDOMServer from "react-dom/server";
 
 import { Icon, divIcon, point } from "leaflet";
 import PropertyModal from "./PropertyModal";
+import ComparableCardPopup from "./ComparableCardPopup";
+import ValuationReportPopup from "./ReportPopup";
+import ValuationReportModal from "./ValuationReportModal";
 
 // Assuming the data format
 
@@ -22,6 +25,8 @@ interface MapComponentProps {
     latitude: number;
     longitude: number;
   };
+  comparables?: Comparable[];
+  valuationReport?: ValuationReport;
 }
 
 const AdjustMapBounds = ({
@@ -120,13 +125,14 @@ const MapComponent: React.FC<MapComponentProps> = ({
   data,
   hoveredProperty,
   coordinates,
+  comparables,
+  valuationReport,
 }) => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  console.log(coordinates);
+  const [valuationReportModal, setValuationReportModal] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -136,13 +142,21 @@ const MapComponent: React.FC<MapComponentProps> = ({
     setIsModalOpen(false);
   };
 
+  const openValuationReportModal = () => {
+    setValuationReportModal(true);
+  };
+
+  const closeValuationReportModal = () => {
+    setValuationReportModal(false);
+  };
+
   const mapRef = useRef<L.Map | null>(null);
 
   // Function to adjust map bounds to include all markers
   // const adjustMapBounds = ({ data }: { data: Property[] }) => {
 
   // Function to handle pin click (centers the map on the clicked marker)
-  const handlePinClick = (property: Property) => {
+  const handlePinClick = (property: any) => {
     setSelectedProperty(property);
     if (mapRef.current) {
       mapRef.current.setView([property.Latitude, property.Longitude], 14);
@@ -157,6 +171,16 @@ const MapComponent: React.FC<MapComponentProps> = ({
   // filter data for Latitude and Longitude
   const filteredData = data
     ? data.filter(
+        (property) =>
+          property.Latitude !== null &&
+          property.Latitude !== undefined &&
+          property.Longitude !== null &&
+          property.Longitude !== undefined
+      )
+    : [];
+
+  const filteredComparables = comparables
+    ? comparables.filter(
         (property) =>
           property.Latitude !== null &&
           property.Latitude !== undefined &&
@@ -245,10 +269,38 @@ const MapComponent: React.FC<MapComponentProps> = ({
               }
             >
               <Popup>
-                <div>
-                  <h1>Selected Location</h1>
-                </div>
+                {valuationReport && (
+                  <ValuationReportPopup
+                    valuationReport={valuationReport}
+                    openModal={openValuationReportModal}
+                  />
+                )}
               </Popup>
+              {filteredComparables.map((property, index) => {
+                return (
+                  <Marker
+                    key={index}
+                    position={[property.Latitude, property.Longitude]}
+                    icon={
+                      new L.Icon({
+                        iconUrl: markerIconPng,
+                        iconSize: [25, 41],
+                        iconAnchor: [13, 41],
+                      })
+                    }
+                    eventHandlers={{
+                      click: () => handlePinClick(property),
+                    }}
+                  >
+                    <Popup>
+                      <ComparableCardPopup
+                        property={property}
+                        openModal={openModal}
+                      />
+                    </Popup>
+                  </Marker>
+                );
+              })}
             </Marker>
           )}
           {/* </MarkerClusterGroup> */}
@@ -262,6 +314,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
       </div>
       {isModalOpen && selectedProperty && (
         <PropertyModal property={selectedProperty} onClose={closeModal} />
+      )}
+      {valuationReportModal && valuationReport && coordinates && (
+        <ValuationReportModal
+          valuationReport={valuationReport}
+          onClose={closeValuationReportModal}
+          coordinates={coordinates}
+        />
       )}
     </div>
   );

@@ -85,3 +85,77 @@ export interface ForecastEntry {
 interface PlaceAutocompleteProps {
   onPlaceSelect: (place: google.maps.places.PlaceResult | null) => void;
 }
+
+// {"C9055851":{"Address":"5 braemar ave","AptUnit":"NA","Bedrooms":"3","Den":"0","Longitude":"-79.40754","Latitude":"43.6997","PostalCode":"M5P 2L1","SoldDate":"2024-07-25","SoldPrice":"3580000.0","ListPrice":null,"Sqft":null,"Style":"2-Storey","Type1":"Detached","Washrooms":"4"},"C9242916":{"Address":"69 duplex ave","AptUnit":"NA","Bedrooms":"3","Den":"0","Longitude":"-79.39856","Latitude":"43.7","PostalCode":"M5P 2A5","SoldDate":"2024-08-07","SoldPrice":"1695000.0","ListPrice":null,"Sqft":null,"Style":"2-Storey","Type1":"Detached","Washrooms":"2"},"C9261496":{"Address":"9 maxwell ave","AptUnit":"NA","Bedrooms":"3","Den":"0","Longitude":"-79.40085","Latitude":"43.70452","PostalCode":"M5P 2B4","SoldDate":"2024-10-19","SoldPrice":"1900000.0","ListPrice":null,"Sqft":null,"Style":"2-Storey","Type1":"Detached","Washrooms":"3"},"C9302175":{"Address":"161 chaplin cres","AptUnit":"NA","Bedrooms":"3","Den":"0","Longitude":"-79.40741","Latitude":"43.69898","PostalCode":"M5P 1B1","SoldDate":"2024-09-05","SoldPrice":"1899000.0","ListPrice":null,"Sqft":null,"Style":"2-Storey","Type1":"Detached","Washrooms":"2"},"C9302897":{"Address":"20 elderwood dr","AptUnit":"NA","Bedrooms":"3","Den":"2","Longitude":"-79.41806","Latitude":"43.69648","PostalCode":"M5P 1W5","SoldDate":"2024-10-31","SoldPrice":"6100000.0","ListPrice":null,"Sqft":null,"Style":"2-Storey","Type1":"Detached","Washrooms":"4"},"C9373127":{"Address":"71 lascelles blvd","AptUnit":"NA","Bedrooms":"3","Den":"0","Longitude":"-79.40162","Latitude":"43.70122","PostalCode":"M5P 2E3","SoldDate":"2024-10-23","SoldPrice":"2455000.0","ListPrice":null,"Sqft":null,"Style":"2-Storey","Type1":"Detached","Washrooms":"4"},"C9374003":{"Address":"59 eastbourne ave","AptUnit":"NA","Bedrooms":"3","Den":"0","Longitude":"-79.40293","Latitude":"43.7012","PostalCode":"M5P 2G1","SoldDate":"2024-10-15","SoldPrice":"2272000.0","ListPrice":null,"Sqft":null,"Style":"2-Storey","Type1":"Detached","Washrooms":"2"},"C9419803":{"Address":"161 chaplin cres","AptUnit":"NA","Bedrooms":"3","Den":"0","Longitude":"-79.40741","Latitude":"43.69898","PostalCode":"M5P 1B1","SoldDate":"2024-10-31","SoldPrice":"1725000.0","ListPrice":null,"Sqft":null,"Style":"2-Storey","Type1":"Detached","Washrooms":"2"}
+
+export interface Comparable {
+  ml_num: string;
+  Address: string;
+  AptUnit: string;
+  Bedrooms: string;
+  Den: string;
+  Longitude: number;
+  Latitude: number;
+  PostalCode: string;
+  SoldDate: string;
+  SoldPrice: string;
+  ListPrice: string;
+  Sqft: string;
+  Style: string;
+  Type1: string;
+  Washrooms: string;
+}
+
+export interface ValuationReport {
+  appr_attributes: {
+    property_type: string;
+    "rooms area": number;
+    "lot area": number;
+  };
+  gnowise_value: number;
+  risk_of_decline: number;
+  value_high: number;
+  value_low: number;
+  gnowise_lease: number;
+  lease_low: number;
+  lease_high: number;
+  property_attributes: {
+    AC: string;
+    Address: string;
+    Age: string;
+    AptUnit: string;
+    Basement1: string;
+    Bedrooms: number;
+    Den: number;
+    FSA: string;
+    Kitchens: number;
+    LotArea: number;
+    ParkingSpaces: number;
+    Municipality: string;
+    Pool: string;
+    PostalCode: string;
+    Province: string;
+    RoomsArea: number;
+    Sqft: string;
+    Style: string;
+    Type1: string;
+    Washrooms: number;
+  };
+  dom_high: number;
+  dom_low: number;
+  gnowise_cap_rate: number;
+  hpi: {
+    M5P_All_median_price: number;
+    M5P_Apartment_median_price: number;
+    M5P_Detached_median_price: number;
+    M5P_Other_median_price: number;
+    M5P_Row_median_price: number;
+    M5P_Semi_median_price: number;
+  };
+  liquidity_score: number;
+  one_year_growth_rate: number;
+  price_in_one_year: number;
+  price_in_two_years: number;
+  two_year_growth_rate: number;
+  valuation_source: string;
+}

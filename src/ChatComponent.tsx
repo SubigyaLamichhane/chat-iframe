@@ -18,10 +18,209 @@ import PropertyGrid from "./components/PropertyGrid";
 import PropertyCard from "./components/PropertyCard";
 import PropertyModal from "./components/PropertyModal";
 import Map from "./components/MapComponent";
+import { Comparable } from "./types";
 
 // const Map = React.lazy(() => import("./components/MapComponent"));
 
 let listen = false;
+
+const comparablesDataPre: any = {
+  C9055851: {
+    Address: "5 braemar ave",
+    AptUnit: "NA",
+    Bedrooms: "3",
+    Den: "0",
+    Longitude: "-79.40754",
+    Latitude: "43.6997",
+    PostalCode: "M5P 2L1",
+    SoldDate: "2024-07-25",
+    SoldPrice: "3580000.0",
+    ListPrice: null,
+    Sqft: null,
+    Style: "2-Storey",
+    Type1: "Detached",
+    Washrooms: "4",
+  },
+  C9242916: {
+    Address: "69 duplex ave",
+    AptUnit: "NA",
+    Bedrooms: "3",
+    Den: "0",
+    Longitude: "-79.39856",
+    Latitude: "43.7",
+    PostalCode: "M5P 2A5",
+    SoldDate: "2024-08-07",
+    SoldPrice: "1695000.0",
+    ListPrice: null,
+    Sqft: null,
+    Style: "2-Storey",
+    Type1: "Detached",
+    Washrooms: "2",
+  },
+  C9261496: {
+    Address: "9 maxwell ave",
+    AptUnit: "NA",
+    Bedrooms: "3",
+    Den: "0",
+    Longitude: "-79.40085",
+    Latitude: "43.70452",
+    PostalCode: "M5P 2B4",
+    SoldDate: "2024-10-19",
+    SoldPrice: "1900000.0",
+    ListPrice: null,
+    Sqft: null,
+    Style: "2-Storey",
+    Type1: "Detached",
+    Washrooms: "3",
+  },
+  C9302175: {
+    Address: "161 chaplin cres",
+    AptUnit: "NA",
+    Bedrooms: "3",
+    Den: "0",
+    Longitude: "-79.40741",
+    Latitude: "43.69898",
+    PostalCode: "M5P 1B1",
+    SoldDate: "2024-09-05",
+    SoldPrice: "1899000.0",
+    ListPrice: null,
+    Sqft: null,
+    Style: "2-Storey",
+    Type1: "Detached",
+    Washrooms: "2",
+  },
+  C9302897: {
+    Address: "20 elderwood dr",
+    AptUnit: "NA",
+    Bedrooms: "3",
+    Den: "2",
+    Longitude: "-79.41806",
+    Latitude: "43.69648",
+    PostalCode: "M5P 1W5",
+    SoldDate: "2024-10-31",
+    SoldPrice: "6100000.0",
+    ListPrice: null,
+    Sqft: null,
+    Style: "2-Storey",
+    Type1: "Detached",
+    Washrooms: "4",
+  },
+  C9373127: {
+    Address: "71 lascelles blvd",
+    AptUnit: "NA",
+    Bedrooms: "3",
+    Den: "0",
+    Longitude: "-79.40162",
+    Latitude: "43.70122",
+    PostalCode: "M5P 2E3",
+    SoldDate: "2024-10-23",
+    SoldPrice: "2455000.0",
+    ListPrice: null,
+    Sqft: null,
+    Style: "2-Storey",
+    Type1: "Detached",
+    Washrooms: "4",
+  },
+  C9374003: {
+    Address: "59 eastbourne ave",
+    AptUnit: "NA",
+    Bedrooms: "3",
+    Den: "0",
+    Longitude: "-79.40293",
+    Latitude: "43.7012",
+    PostalCode: "M5P 2G1",
+    SoldDate: "2024-10-15",
+    SoldPrice: "2272000.0",
+    ListPrice: null,
+    Sqft: null,
+    Style: "2-Storey",
+    Type1: "Detached",
+    Washrooms: "2",
+  },
+  C9419803: {
+    Address: "161 chaplin cres",
+    AptUnit: "NA",
+    Bedrooms: "3",
+    Den: "0",
+    Longitude: "-79.40741",
+    Latitude: "43.69898",
+    PostalCode: "M5P 1B1",
+    SoldDate: "2024-10-31",
+    SoldPrice: "1725000.0",
+    ListPrice: null,
+    Sqft: null,
+    Style: "2-Storey",
+    Type1: "Detached",
+    Washrooms: "2",
+  },
+};
+
+const reportData = {
+  appr_attributes: {
+    property_type: "Detached",
+    "rooms area": 1622,
+    "lot area": 0,
+  },
+  gnowise_value: 2765000,
+  risk_of_decline: 40,
+  value_high: 3042000,
+  value_low: 2488000,
+  gnowise_lease: 7600,
+  lease_low: 7000,
+  lease_high: 8000,
+  property_attributes: {
+    AC: "Central Air",
+    Address: "301 Chaplin Crescent",
+    Age: "100+",
+    AptUnit: "",
+    Basement1: "Fin W/O",
+    Bedrooms: 3,
+    Den: 2,
+    FSA: "m5p",
+    Kitchens: 1,
+    LotArea: 3090,
+    ParkingSpaces: 1,
+    Municipality: "Toronto",
+    Pool: "Other",
+    PostalCode: "m5p1b1",
+    Province: "ON",
+    RoomsArea: 1622,
+    Sqft: "Other",
+    Style: "2 1/2 Storey",
+    Type1: "Detached",
+    Washrooms: 3,
+  },
+  dom_high: 56,
+  dom_low: 24,
+  gnowise_cap_rate: 0.023748282097649186,
+  hpi: {
+    M5P_All_median_price: 76825,
+    M5P_Apartment_median_price: 1049600,
+    M5P_Detached_median_price: 5258481,
+    M5P_Other_median_price: 1945770,
+    M5P_Row_median_price: 2082669,
+    M5P_Semi_median_price: 2082669,
+  },
+  liquidity_score: 0.71,
+  one_year_growth_rate: 0.96,
+  price_in_one_year: 2791544,
+  price_in_two_years: 2820023,
+  two_year_growth_rate: 1.99,
+  valuation_source: "A",
+};
+
+let comparablesData: Comparable[] = [];
+
+const convertComparablesToArray = (data: any) => {
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const element = data[key];
+      comparablesData.push({ ml_num: key, ...element });
+    }
+  }
+};
+
+convertComparablesToArray(comparablesDataPre);
 
 interface IChatComponentProps {
   apiURL: string;
@@ -70,7 +269,12 @@ function App({
   const [uttering, setUttering] = useState(false);
   const [tempPropertyData, setTempPropertyData] = useState<any>(sampleTempData);
   const [hoveredProperty, setHoveredProperty] = useState<any>(null);
-  const [coordinates, setCoordinates] = useState<any>(null);
+  const [coordinates, setCoordinates] = useState<any>({
+    latitude: 43.7019967,
+    longitude: -79.4161304,
+  });
+  const [comparables, setComparables] = useState<Comparable[]>(comparablesData);
+  const [valuationReport, setValuationReport] = useState<any>(reportData);
   const sidebarCustomization = {
     background_color: "#131317",
     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s",
@@ -1132,6 +1336,8 @@ function App({
               data={tempPropertyData}
               hoveredProperty={hoveredProperty}
               coordinates={coordinates}
+              comparables={comparables}
+              valuationReport={valuationReport}
             />
           </div>
 
