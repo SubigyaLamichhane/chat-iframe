@@ -262,8 +262,8 @@ let messages: {
 ];
 
 const PropertyValuationChatbot = () => {
-  // const apiURL = "https://intelligenthomevaluation.com/database";
-  const apiURL = "http://localhost:5000/database";
+  const apiURL = "https://intelligenthomevaluation.com/database";
+  // const apiURL = "http://localhost:5000/database";
 
   return (
     <ChatComponent

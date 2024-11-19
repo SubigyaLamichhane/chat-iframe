@@ -217,31 +217,32 @@ const MapComponent: React.FC<MapComponentProps> = ({
         chunkedLoading
         iconCreateFunction={createClusterCustomIcon}
       > */}
-          {data.map((property, index) => {
-            if (!property.Latitude || !property.Longitude) return null; // Skip if no coordinates
-            return (
-              <Marker
-                key={index}
-                position={[property.Latitude, property.Longitude]}
-                icon={
-                  new L.Icon({
-                    iconUrl: markerIconPng,
-                    iconSize: [25, 41],
-                    iconAnchor: [13, 41],
-                  })
-                }
-                eventHandlers={{
-                  click: () => handlePinClick(property),
-                }}
-              >
-                {selectedProperty?.Latitude === property.Latitude &&
-                  selectedProperty?.Longitude === property.Longitude && (
-                    <Popup>
-                      <PropertyCardPopup
-                        property={property}
-                        openModal={openModal}
-                      />
-                      {/* <div
+          {data &&
+            data.map((property, index) => {
+              if (!property.Latitude || !property.Longitude) return null; // Skip if no coordinates
+              return (
+                <Marker
+                  key={index}
+                  position={[property.Latitude, property.Longitude]}
+                  icon={
+                    new L.Icon({
+                      iconUrl: markerIconPng,
+                      iconSize: [25, 41],
+                      iconAnchor: [13, 41],
+                    })
+                  }
+                  eventHandlers={{
+                    click: () => handlePinClick(property),
+                  }}
+                >
+                  {selectedProperty?.Latitude === property.Latitude &&
+                    selectedProperty?.Longitude === property.Longitude && (
+                      <Popup>
+                        <PropertyCardPopup
+                          property={property}
+                          openModal={openModal}
+                        />
+                        {/* <div
                   onClick={() => {
                     alert("hello");
                   }}
@@ -252,11 +253,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
                   />
                   <h1>{property.addr}</h1>
                 </div> */}
-                    </Popup>
-                  )}
-              </Marker>
-            );
-          })}
+                      </Popup>
+                    )}
+                </Marker>
+              );
+            })}
           {coordinates && (
             <Marker
               position={[coordinates.latitude, coordinates.longitude]}

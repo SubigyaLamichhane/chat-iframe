@@ -209,18 +209,20 @@ const reportData = {
   valuation_source: "A",
 };
 
-let comparablesData: Comparable[] = [];
+// let comparablesData: Comparable[] = [];
 
 const convertComparablesToArray = (data: any) => {
+  const comparablesData: Comparable[] = [];
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
       const element = data[key];
       comparablesData.push({ ml_num: key, ...element });
     }
   }
+  return comparablesData;
 };
 
-convertComparablesToArray(comparablesDataPre);
+// convertComparablesToArray(comparablesDataPre);
 
 interface IChatComponentProps {
   apiURL: string;
@@ -269,12 +271,9 @@ function App({
   const [uttering, setUttering] = useState(false);
   const [tempPropertyData, setTempPropertyData] = useState<any>(sampleTempData);
   const [hoveredProperty, setHoveredProperty] = useState<any>(null);
-  const [coordinates, setCoordinates] = useState<any>({
-    latitude: 43.7019967,
-    longitude: -79.4161304,
-  });
-  const [comparables, setComparables] = useState<Comparable[]>(comparablesData);
-  const [valuationReport, setValuationReport] = useState<any>(reportData);
+  const [coordinates, setCoordinates] = useState<any>(null);
+  const [comparables, setComparables] = useState<Comparable[]>([]);
+  const [valuationReport, setValuationReport] = useState<any>(null);
   const sidebarCustomization = {
     background_color: "#131317",
     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s",
@@ -484,16 +483,44 @@ function App({
 
     var encodedMessage = encodeURIComponent(prevMessage);
 
-    const response = await axios.get(
-      apiURL +
-        `/query?query=${encodedMessage}&thread_id=${thread}&tts=${wasLastMessageVoice}`
-    );
+    let response;
+    try {
+      response = await axios.get(
+        apiURL +
+          `/query?query=${encodedMessage}&thread_id=${thread}&tts=${wasLastMessageVoice}`
+      );
+    } catch (e) {
+      console.log(e);
+      try {
+        response = await axios.get(
+          apiURL +
+            `/query?query=${encodedMessage}&thread_id=${thread}&tts=${wasLastMessageVoice}`
+        );
+      } catch (e) {
+        console.log(e);
+        messages.push({
+          message: "Sorry, Couldn't query your request at this time.",
+          from: "them",
+        });
+        setMessageCount(messageCount + 1);
+        setAnswering(false);
+        messageParent.current && autoAnimate(messageParent.current);
+        bottomRef.current?.scrollIntoView();
+        return;
+      }
+    }
 
     bottomRef.current?.scrollIntoView();
     setAnswering(false);
     try {
       if (response && response.data && response.data.coordinates) {
         setCoordinates(response.data.coordinates);
+        if (response.data.property_report) {
+          setValuationReport(response.data.property_report);
+        }
+        if (response.data.comparables) {
+          setComparables(convertComparablesToArray(response.data.comparables));
+        }
       }
       messages.push({
         message: response.data.message,
