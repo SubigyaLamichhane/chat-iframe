@@ -12,7 +12,7 @@ import MicroPhoneListeningIcon from "./assets/microphone-listening.png";
 import StartRecordingSound from "./assets/start-recording.mp3";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import AddressTooltip from "./components/AddressTooltip";
-import { getPostalCode } from "./utils";
+import { getPostalCode, isArray } from "./utils";
 import remarkExternalLinks from "remark-external-links";
 import PropertyGrid from "./components/PropertyGrid";
 import PropertyCard from "./components/PropertyCard";
@@ -209,7 +209,7 @@ const reportData = {
   valuation_source: "A",
 };
 
-// let comparablesData: Comparable[] = [];
+let comparablesData: Comparable[] = [];
 
 const convertComparablesToArray = (data: any) => {
   const comparablesData: Comparable[] = [];
@@ -222,7 +222,14 @@ const convertComparablesToArray = (data: any) => {
   return comparablesData;
 };
 
-// convertComparablesToArray(comparablesDataPre);
+// comparablesData = convertComparablesToArray(comparablesDataPre);
+comparablesData = [];
+
+// const coordinatesTestData = {
+//   latitude: 43.6997,
+//   longitude: -79.40754,
+// };
+const coordinatesTestData = null;
 
 interface IChatComponentProps {
   apiURL: string;
@@ -271,8 +278,8 @@ function App({
   const [uttering, setUttering] = useState(false);
   const [tempPropertyData, setTempPropertyData] = useState<any>(sampleTempData);
   const [hoveredProperty, setHoveredProperty] = useState<any>(null);
-  const [coordinates, setCoordinates] = useState<any>(null);
-  const [comparables, setComparables] = useState<Comparable[]>([]);
+  const [coordinates, setCoordinates] = useState<any>(coordinatesTestData);
+  const [comparables, setComparables] = useState<Comparable[]>(comparablesData);
   const [valuationReport, setValuationReport] = useState<any>(null);
   const sidebarCustomization = {
     background_color: "#131317",
@@ -294,7 +301,7 @@ function App({
     ],
   };
 
-  console.log(messages);
+  // console.log(messages);
 
   const botId = queryParams.get("botId") || "2";
   const [ID, setID] = useState(crypto.randomUUID());
@@ -1355,7 +1362,9 @@ function App({
           </div>
         )}
         {(coordinates ||
-          (tempPropertyData && tempPropertyData.length != 0)) && (
+          (tempPropertyData &&
+            isArray(tempPropertyData) &&
+            tempPropertyData.length != 0)) && (
           // <Suspense fallback={<p>Loading map...</p>}>
           <div className="w-2/3">
             {" "}

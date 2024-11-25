@@ -528,6 +528,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-leaflet-fullscreen-plugin@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/react-leaflet-fullscreen-plugin/-/react-leaflet-fullscreen-plugin-1.0.3.tgz#31210060c2fde4b4c0851c9e1727ac9d455abdef"
+  integrity sha512-H48WrzVD6smZh7+Nz0JLCSG/qjCsSRCFPgqoVEiIqFU1XIQ1+Ym7jMwtddx/cWsRH653WxIGVawG3m5aB5HJsg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-modal@^3.16.3":
   version "3.16.3"
   resolved "https://registry.npmjs.org/@types/react-modal/-/react-modal-3.16.3.tgz"
@@ -1333,6 +1340,11 @@ leaflet-fullscreen@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/leaflet-fullscreen/-/leaflet-fullscreen-1.0.2.tgz"
   integrity sha512-1Yxm8RZg6KlKX25+hbP2H/wnOAphH7hFcvuADJFb4QZTN7uOSN9Hsci5EZpow8vtNej9OGzu59Jxmn+0qKOO9Q==
+
+leaflet.fullscreen@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/leaflet.fullscreen/-/leaflet.fullscreen-2.4.0.tgz#8503c69b6f6afe6f54594c9cdd5e4f131cfa97b4"
+  integrity sha512-41O0ikdUR0bVC0QfoFN3W5S+9yoeHqL74i0QQafa/W79+ij/G7IRZwpfwPuxoNwpydoUJ/9Mq/6Hp7WZOnkWzQ==
 
 leaflet.markercluster@^1.5.3:
   version "1.5.3"
@@ -2329,6 +2341,13 @@ react-leaflet-cluster@^2.1.0:
   dependencies:
     leaflet.markercluster "^1.5.3"
 
+react-leaflet-fullscreen@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-leaflet-fullscreen/-/react-leaflet-fullscreen-4.1.1.tgz#e59784ab86577de7650e25a6681a193037da94d0"
+  integrity sha512-gADhnB+T3kfyG21eKqD5H89GMLU2EhvPsVhJhS5PsSbKQrw33V3Tl83UJoFehGJYZZLUP7/2NJi8LwO2gNBcCQ==
+  dependencies:
+    leaflet.fullscreen "2.4.0"
+
 react-leaflet@^4.2.1:
   version "4.2.1"
   resolved "https://registry.npmjs.org/react-leaflet/-/react-leaflet-4.2.1.tgz"
@@ -2594,6 +2613,11 @@ scheduler@^0.23.2:
   integrity sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==
   dependencies:
     loose-envify "^1.1.0"
+
+screenfull@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/screenfull/-/screenfull-6.0.2.tgz#3dbe4b8c4f8f49fb8e33caa8f69d0bca730ab238"
+  integrity sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw==
 
 semver@^6.3.1:
   version "6.3.1"

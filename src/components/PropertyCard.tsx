@@ -43,15 +43,16 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
   return (
     <div className="relative bg-white rounded-xl shadow-lg max-w-sm overflow-hidden">
-      {/* Heart icon */}
-      <div className="absolute top-2 right-2 z-10">
-        <AiOutlineHeart className="text-2xl text-gray-600" />
-      </div>
       {/* Property Image */}
       <img
         src={`https://intelligenthomevaluation.com/Lookup/GetPropertyImage?mlsno=${property.ml_num}`}
         alt="Property"
-        className="w-full h-48 object-cover"
+        className="w-full h-56 object-cover"
+        onError={(e) => {
+          e.currentTarget.src =
+            "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg"; // Replace with your fallback image URL
+          e.currentTarget.onerror = null; // Prevent infinite loop in case the fallback image fails too
+        }}
       />
       {/* Property Details */}
       <div className="p-4">

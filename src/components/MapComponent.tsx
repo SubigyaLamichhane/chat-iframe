@@ -7,6 +7,9 @@ import PropertyCardPopupForHover from "./PropertyCardPopupForHover";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"; // Default marker icon
 import redMarkerIconPng from "../assets/red-marker.png";
 import { Property, Comparable, ValuationReport } from "../types";
+import { FullscreenControl } from "react-leaflet-fullscreen";
+import "react-leaflet-fullscreen/styles.css";
+
 import MarkerClusterGroup from "react-leaflet-cluster";
 import ReactDOMServer from "react-dom/server";
 
@@ -15,6 +18,7 @@ import PropertyModal from "./PropertyModal";
 import ComparableCardPopup from "./ComparableCardPopup";
 import ValuationReportPopup from "./ReportPopup";
 import ValuationReportModal from "./ValuationReportModal";
+import { isArray } from "../utils";
 
 // Assuming the data format
 
@@ -107,7 +111,6 @@ const AdjustMapBounds = ({
 
 // create custom icon
 const customIcon = new Icon({
-  // iconUrl: "https://cdn-icons-png.flaticon.com/512/447/447031.png",
   iconUrl: markerIconPng,
   iconSize: [38, 38], // size of the icon
 });
@@ -168,26 +171,39 @@ const MapComponent: React.FC<MapComponentProps> = ({
   //   return <div>No properties to display</div>;
   // }
 
-  // filter data for Latitude and Longitude
-  const filteredData = data
-    ? data.filter(
-        (property) =>
-          property.Latitude !== null &&
-          property.Latitude !== undefined &&
-          property.Longitude !== null &&
-          property.Longitude !== undefined
-      )
-    : [];
+  // console.log(data, isArray(data));
 
-  const filteredComparables = comparables
-    ? comparables.filter(
-        (property) =>
-          property.Latitude !== null &&
-          property.Latitude !== undefined &&
-          property.Longitude !== null &&
-          property.Longitude !== undefined
-      )
-    : [];
+  if (data && !isArray(data)) {
+    console.log("Data is not an array");
+    return <div></div>;
+  }
+
+  // filter data for Latitude and Longitude ensure the data is an array
+  const filteredData =
+    data && isArray(data)
+      ? data.filter(
+          (property) =>
+            property.Latitude !== null &&
+            property.Latitude !== undefined &&
+            property.Longitude !== null &&
+            property.Longitude !== undefined
+        )
+      : [];
+
+  const filteredComparables =
+    comparables && isArray(comparables)
+      ? comparables.filter(
+          (property) =>
+            property.Latitude !== null &&
+            property.Latitude !== undefined &&
+            property.Longitude !== null &&
+            property.Longitude !== undefined
+        )
+      : [];
+
+  if (filteredData.length === 0) {
+    return <div></div>;
+  }
 
   return (
     <div>
@@ -196,7 +212,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           center={
             coordinates
               ? [coordinates.latitude, coordinates.longitude]
-              : [filteredData[0].Latitude, filteredData[0].Longitude]
+              : [filteredData[0].Latitude || 0, filteredData[0].Longitude || 0]
           } // Default to first property
           zoom={12}
           scrollWheelZoom={true}
@@ -205,6 +221,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           //   mapRef.current = mapInstance;
           // }}
         >
+          {/* Add Fullscreen Control */}
           <TileLayer
             attribution="Google Maps"
             // url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" // regular
@@ -213,6 +230,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
             maxZoom={20}
             subdomains={["mt0", "mt1", "mt2", "mt3"]}
           />
+          <FullscreenControl position="topright" />{" "}
           {/* <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createClusterCustomIcon}

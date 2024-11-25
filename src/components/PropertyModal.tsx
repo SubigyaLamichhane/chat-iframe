@@ -30,6 +30,8 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
   const [tab, setTab] = React.useState("Details");
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
+  // if (!property.addr) return null;
+
   const settings = {
     dots: true,
     infinite: true,
@@ -51,18 +53,19 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ property, onClose }) => {
           {/* Image Section */}
           <div className="md:w-2/5 w-full">
             <Slide indicators={true} arrows={false}>
-              {property.images.map((image, index) => (
-                <div key={index}>
-                  <div
-                    style={{
-                      backgroundImage: `url(https://intelligenthomevaluation.com/Lookup/GetPropertyImages?filename=${image})`,
-                    }}
-                    className="h-[500px] bg-cover bg-center relative"
-                  >
-                    {/* You can add a caption here if needed */}
+              {property.images &&
+                property.images.map((image, index) => (
+                  <div key={index}>
+                    <div
+                      style={{
+                        backgroundImage: `url(https://intelligenthomevaluation.com/Lookup/GetPropertyImages?filename=${image})`,
+                      }}
+                      className="h-[500px] bg-cover bg-center relative"
+                    >
+                      {/* You can add a caption here if needed */}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </Slide>
           </div>
 

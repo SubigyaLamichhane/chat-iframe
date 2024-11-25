@@ -58,3 +58,7 @@ export async function getPostalCode(address: string): Promise<string> {
     cancelTokenSource = null;
   }
 }
+
+export function isArray(value: any): value is any[] {
+  return Array.isArray(value);
+}
